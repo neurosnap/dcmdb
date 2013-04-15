@@ -1,0 +1,6 @@
+
+/*MISC CLASSES*/
+.clear {clear:both;}
+.date {font-size:8pt;font-weight:normal;text-transform:lowercase;}
+.hidden { display: none; }
+.unhidden { display: block; }

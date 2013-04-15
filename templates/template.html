@@ -1,0 +1,53 @@
+<!DOCTYPE>
+<html>
+
+	<head>
+	
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
+
+		<title>DICOM DB</title>
+		
+		<script type="text/javascript">
+			var id = '{{ id }}';
+		</script>
+
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.9.1.min.js"> </script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"> </script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/dicom_core.js"> </script>
+		{% block js %}{% endblock %}
+	
+	</head>
+
+	<body>
+	
+		<header>
+		
+			<div id="header"><a class="header_title" href="/">DICOM DB</a> | </div>
+			<div id="subheader">Diagnostic file search engine</div>
+			<div id="nav">
+				<ul id="navlist">
+					<li><a class="button" href="/">Search</a></li>
+					<li><a class="button" href="/users/login">Login</a></li>
+					<li><a class="button" href="/main/about">About</a></li>
+				</ul>
+			</div>
+			<hr />
+		
+		</header>
+		
+		<section id="content">
+			
+			{% block content %}{% endblock %}
+			
+		</section>
+		
+		<footer>
+		</footer>
+	
+	</body>
+
+</html>

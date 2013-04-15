@@ -23,6 +23,31 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+TEMPLATE_DIRS = (
+    BASE_DIR + "/templates",
+    BASE_DIR + "/main",
+    BASE_DIR + "/users",
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+)
+
+STATIC_ROOT = BASE_DIR + '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    BASE_DIR + '/templates/static/',
+    BASE_DIR + '/main/static/',
+    BASE_DIR + '/users/static/',
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+)
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/dev/howto/static-files/
+STATIC_URL = '/static/'
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -34,6 +59,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -72,9 +98,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/dev/howto/static-files/
-
-STATIC_URL = '/static/'
