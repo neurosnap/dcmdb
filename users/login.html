@@ -1,8 +1,48 @@
 {% extends 'template.html' %}
 
 {% block js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/login.js"></script>
 {% endblock %}
 
 {% block content %}
-<div>User Login</div>
+
+<div class="row">
+
+	<div class="span6">
+
+		<label for="user" class="span2">User:</label>
+		<input type="text" name="user" id="user" class="span4" />
+
+		<label for="pass" class="span2">Password:</label>
+		<input type="password" name="pass" id="pass" class="span4" />
+	
+	</div>
+
+</div>
+
+<div class="row">
+
+	<div class="span8" style="padding-left: 20px;">
+
+		<button class="btn btn-primary" id="login">Login!</button>
+
+		<small><a href="/users/forgotPass">Forgot Password?</a></small> | 
+		<small><a href="/users/register">Register!</a></small>
+
+	</div>
+
+</div>
+
+<br />
+
+<div class="row">
+
+	<div class="span8">
+
+		<div id="login_response" class="alert">Please enter required credentials to authenticate user</div>
+
+	</div>
+
+</div>
+
 {% endblock %}

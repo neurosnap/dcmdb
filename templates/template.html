@@ -1,12 +1,12 @@
-<!DOCTYPE>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 	<head>
 	
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
 		<title>DICOM DB</title>
@@ -24,29 +24,33 @@
 
 	<body>
 	
-		<header>
+		<!-- <div class="hero-unit">
 		
-			<div id="header"><a class="header_title" href="/">DICOM DB</a> | </div>
-			<div id="subheader">Diagnostic file search engine</div>
-			<div id="nav">
-				<ul id="navlist">
-					<li><a class="button" href="/">Search</a></li>
-					<li><a class="button" href="/users/login">Login</a></li>
-					<li><a class="button" href="/main/about">About</a></li>
+			<h1><a class="header_title" href="/">DICOM DB</a></h1>
+			<p>Diagnostic file search engine</p>
+
+		</div> -->
+
+		<div class="navbar">
+
+			<div class="navbar-inner">
+
+				<a class="brand" href="#">DICOM DB</a>
+				<ul class="nav">
+					<li><a href="/">Search</a></li>
+					<li><a href="/users/">Profile</a></li>
+					<li><a href="/main/about">About</a></li>
 				</ul>
+
 			</div>
-			<hr />
+
+		</div>
 		
-		</header>
-		
-		<section id="content">
+		<div id="content" class="container">
 			
 			{% block content %}{% endblock %}
 			
-		</section>
-		
-		<footer>
-		</footer>
+		</div>
 	
 	</body>
 
