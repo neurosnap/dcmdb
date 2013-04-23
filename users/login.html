@@ -6,34 +6,54 @@
 
 {% block content %}
 
-<div class="row">
+<form class="form-horizontal">
 
-	<div class="span6">
+	<div class="row">
 
-		<label for="user" class="span2">User:</label>
-		<input type="text" name="user" id="user" class="span4" />
+		<div class="span12">
 
-		<label for="pass" class="span2">Password:</label>
-		<input type="password" name="pass" id="pass" class="span4" />
-	
+			<h3>User Login!</h3>
+
+			<div class="control-group">
+
+				<label for="user" class="control-label">User</label>
+
+				<div class="controls">
+					<input type="text" name="user" id="user" placeholder="Enter username" />
+				</div>
+
+			</div>
+
+			<div class="control-group">
+
+				<label for="pass" class="control-label">Password</label>
+
+				<div class="controls">
+					<input type="password" name="pass" id="pass" placeholder="Enter password" />
+				</div>
+
+			</div>
+		
+		</div>
+
 	</div>
 
-</div>
+	<div class="row">
 
-<div class="row">
+		<div class="span1"></div>
 
-	<div class="span8" style="padding-left: 20px;">
+		<div class="span11">
 
-		<button class="btn btn-primary" id="login">Login!</button>
+			<button class="btn btn-primary" id="login">Login!</button>
 
-		<small><a href="/users/forgotPass">Forgot Password?</a></small> | 
-		<small><a href="/users/register">Register!</a></small>
+			<small><a href="/users/forgotPass">Forgot Password?</a></small> | 
+			<small><a href="/users/register">Register!</a></small>
+
+		</div>
 
 	</div>
 
-</div>
-
-<br />
+</form>
 
 <div class="row">
 

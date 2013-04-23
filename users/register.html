@@ -1,8 +1,85 @@
 {% extends 'template.html' %}
 
 {% block js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/register.js"></script>
 {% endblock %}
 
 {% block content %}
-<div>User Register</div>
+<form class="form-horizontal">
+
+	<div class="row">
+
+		<div class="span12">
+
+			<h3>User Registration</h3>
+
+			<div class="control-group">
+
+				<label for="user" class="control-label">Username</label>
+
+				<div class="controls">
+					<input type="text" id="user" name="user" placeholder="Enter username" />
+					<span class="help-inline"></span>
+				</div>
+
+			</div>
+
+			<div class="control-group">
+
+				<label for="email" class="control-label">Email</label>
+
+				<div class="controls">
+					<input type="text" id="email" name="email" placeholder="Enter email" />
+					<span class="help-inline"></span>
+				</div>
+
+			</div>
+
+			<div class="control-group">
+
+				<label for="pass" class="control-label">Password</label>
+
+				<div class="controls">
+					<input type="text" id="pass" name="pass" placeholder="Enter password" />
+					<span class="help-inline"></span>
+				</div>
+
+			</div>
+
+			<div class="control-group">
+
+				<label for="pass_check" class="control-label">Confirm Password</label>
+
+				<div class="controls">
+					<input type="text" id="pass_check" name="pass_check" placeholder="Enter password again" />
+					<span class="help-inline"></span>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="row">
+
+		<div class="span12">
+
+			<button id="register" class="btn btn-primary" style="margin-left: 45px;">Register!</button>
+
+		</div>
+
+	</div>
+
+</form>
+
+<div class="row">
+
+	<div class="span8">
+
+		<div id="register_response" class="alert">Please enter required credentials to register an account</div>
+
+	</div>
+
+</div>
 {% endblock %}

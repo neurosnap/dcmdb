@@ -29,7 +29,7 @@ login.auth = function(user, pass) {
 				$("#login_response")
 					.removeClass("alert-error")
 					.addClass("alert-success")
-					.html(res.msg);
+					.html(res.msg + '  <a href="/users/">View your profile</a>');
 
 			} else {
 				
