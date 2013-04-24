@@ -7,10 +7,13 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 #ObjectDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
+#Force CSRF Cookie
+from django.views.decorators.csrf import ensure_csrf_cookie
 # JSON encode/decode
 import json
 
 # Create your views here.
+@ensure_csrf_cookie
 def portal(request):
 
 	context = {}
@@ -20,6 +23,7 @@ def portal(request):
 	else:
 		return redirect('/users/login')
 
+@ensure_csrf_cookie
 def login(request):
 
 	context = {}
@@ -29,12 +33,14 @@ def login(request):
 	else:	
 		return render_to_response('login.html', context, context_instance = RequestContext(request))
 
+@ensure_csrf_cookie
 def logout(request):
 
 	auth_logout(request)
 	
 	return redirect('/')
 
+@ensure_csrf_cookie
 def register(request):
 
 	context = {}
