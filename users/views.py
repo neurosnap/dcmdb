@@ -1,14 +1,20 @@
-from django.shortcuts import render_to_response
 from django.http import HttpResponse
+from django.shortcuts import render_to_response
 from django.template import RequestContext
+#uses django's admin User model and default setup
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+#redirects to different page
 from django.shortcuts import redirect
 #auth default for django
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 #ObjectDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
 #Force CSRF Cookie
 from django.views.decorators.csrf import ensure_csrf_cookie
+# email
+from django.core.mail import send_mail
+#mail exception
+#from smtplib import SMTPException
 # JSON encode/decode
 import json
 
@@ -16,7 +22,14 @@ import json
 @ensure_csrf_cookie
 def portal(request):
 
-	context = {}
+	validated = False
+	users_in_group = Group.objects.get(name="email_validated").user_set.all()
+
+	for user in users_in_group:
+		if request.user == user:
+			validated = True
+
+	context = { "validated": validated }
 	
 	if request.user.is_authenticated():
 		return render_to_response('portal.html', context, context_instance = RequestContext(request))
@@ -97,7 +110,26 @@ def createUser(request):
 	u = User.objects.create_user(req_user, req_email, req_pass)
 	u.save()
 
+	#send email(
+	sendValidateEmail({ "user": req_user, "email": req_email })
+	
 	return HttpResponse('{"success": true, "msg": "Account has been created"}', content_type="application/json")
+
+def validateEmail(request):
+
+	req_email = request.GET['email']
+
+	user = User.objects.get(email__exact=req_email)
+
+	group = Group.objects.get(name="email_validated")
+
+	group.user_set.add(user)
+
+	group.save()
+
+	context = { "success": True, "msg": "Account has been validated" }
+
+	return render_to_response('validated.html', context, context_instance = RequestContext(request))
 
 def removeUser(request):
 
@@ -110,3 +142,17 @@ def removeUser(request):
 	context = { "success": True, "msg": "Account has been removed" }
 	
 	return render_to_response('removed.html', context, context_instance = RequestContext(request))
+
+def sendValidateEmail(**kargs):
+
+	#send email
+	email_link = "http://127.0.0.1/users/validateEmail?email=" + kargs["email"]
+	subject = "Welcome to DICOMDB!"
+	body = ("Greetings " + kargs["user"] + "! <br />"
+			" Thank you for signing up for DICOM DB! <br />"
+			" Please click the link below to validate your email address with our website! <br /><br />"
+			" <a href='" + email_link + "'>Validate Email</a> ")
+	from_email = "webmaster@dicomdb.org"
+	to_email = kargs["email"]
+
+	send_mail(subject, body, from_email, [to_email], fail_silently=False)

@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^checkUniqueEmail', views.checkUniqueEmail, name='checkUniqueEmail'),
     url(r'^register', views.register, name='register'),
     url(r'^createUser', views.createUser, name='createUser'),
+    url(r'^validateEmail', views.validateEmail, name='validateEmail'),
     url(r'^removeUser', views.removeUser, name='removeUser'),
 )
