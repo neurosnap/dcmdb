@@ -1,0 +1,76 @@
+{% extends 'template.html' %}
+
+{% block js %}
+{% endblock %}
+
+{% block content %}
+<form  action="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+	<div class="row">
+
+		<div class="span12">
+
+			<div class="control-group">
+
+				<label for="title" class="control-label">Title</label>
+
+				<div class="controls">
+					<input type="text" id="title" name="title" class="input-large" />
+				</div>
+
+			</div>
+
+			<div class="control-group">
+				
+				<label for="dicom_file" class="control-label">File</label>
+
+				<div class="controls">
+					<input type="file" id="dicom_file" name="dicom_file" class="input-large" />
+				</div>
+
+			</div>
+
+			<div class="control-group">
+
+				<label class="radio">
+ 					<input type="radio" name="status" id="status" value="public" checked />
+ 					Public -- Anyone can view this DICOM file
+ 				</label>
+
+ 				<label class="radio">
+ 					<input type="radio" name="status" id="status" value="private" />
+ 					Private -- Only you or people you should it with can view this DICOM file
+ 				</label>
+
+			</div>
+
+			<div class="control-group">
+
+				<button id="dicom_submit" class="btn btn-primary">Upload DICOM!</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</form>
+
+<div class="row">
+
+	<div class="span8">
+
+		{% if form %}
+			<div class="alert alert-error">{{ form }}</div>
+		{% else %}
+			<div class="alert">All DICOM files will be uploaded to our server while ensuring anonymity.</div>
+		{% endif %}
+
+	</div>
+
+</div>
+
+
+
+
+{% endblock %}
