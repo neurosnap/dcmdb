@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-<form  action="POST" enctype="multipart/form-data">
+<form  action="/upload/upload_dicom/" method="POST" enctype="multipart/form-data">
 	{% csrf_token %}
 	<div class="row">
 

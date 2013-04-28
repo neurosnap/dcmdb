@@ -9,7 +9,12 @@
 
 	<div class="span8">
 		
-		<div class="alert alert-success">DICOM file has been uploaded!</div>
+		<div class="alert alert-success">
+			DICOM file has been uploaded! 
+			{% if patient %}
+				Patient {{ patient }}
+			{% endif %}
+		</div>
 
 	</div>
 
