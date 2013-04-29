@@ -54,7 +54,7 @@ def upload_dicom(request):
 		# grab DICOM data
 		dcm = dicom.read_file(dcm_dir)
 
-		context = { "patient": dcm.PatientName }
+		context = { "patient": dcm, "patient_keys": dcm.dir() }
 
 		return render_to_response('success.html', context, context_instance = RequestContext(request))
 
