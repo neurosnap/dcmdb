@@ -10,6 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 import random
 import dicom
 import re
+import pylab
 
 # Create your views here.
 def upload(request):
@@ -46,15 +47,18 @@ def upload_dicom(request):
 		if not os.path.exists(pre_dir + '/' + title_rem):
 			os.makedirs(pre_dir + '/' + title_rem)
 
-		dcm_dir = pre_dir + '/' + title_rem + '/001.dcm'
+		dcm_dir = pre_dir + '/' + title_rem + '/001'
 		
 		# upload file
-		handle_uploaded_file(request.FILES['dicom_file'], dcm_dir)
+		handle_uploaded_file(request.FILES['dicom_file'], dcm_dir + '.dcm')
 
 		# grab DICOM data
-		dcm = dicom.read_file(dcm_dir)
+		# dcm = dicom.read_file(dcm_dir + '.dcm')
 
-		context = { "patient": dcm, "patient_keys": dcm.dir() }
+		# img = pylab.imshow(dcm.pixel_array, cmap = pylab.cm.bone)
+		# img.savefig(dcm_dir + '.png', dpi=300)
+
+		context = {}
 
 		return render_to_response('success.html', context, context_instance = RequestContext(request))
 
