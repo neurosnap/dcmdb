@@ -8,10 +8,11 @@ import json
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 import random
-import dicom
+#import dicom
 import re
-import pylab
+#import pylab
 
+# new comment :D
 # Create your views here.
 def upload(request):
 
