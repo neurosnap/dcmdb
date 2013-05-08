@@ -5,8 +5,12 @@
 
 {% block content %}
 <div class="main">
-	
-	TEST
+	<h3> Available DICOM files</h3>	
+	<ul id="dicom_list">
+		{% for dicom in dicom_list %}
+		<li class="dicom_file"><a href="/upload/dicoms/eric/{{dicom}}">{{dicom}}</a></li>
+		{% endfor %}
+	</ul>
 
 </div>
 {% endblock %}
