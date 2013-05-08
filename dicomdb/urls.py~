@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^users/', include('users.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^upload/', include('upload.urls')),
-    url(r'^browse/', include('browse.urls')),
+    url(r'^browse/', incude('browse.urls'))
 )
 
 urlpatterns += staticfiles_urlpatterns()

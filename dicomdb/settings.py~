@@ -40,7 +40,7 @@ STATICFILES_DIRS = (
     BASE_DIR + '/templates/static/',
     BASE_DIR + '/main/static/',
     BASE_DIR + '/users/static/',
-    BASE_DIR + '/upload/static/',
+    BASE_DIR + '/uploads/static/',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
