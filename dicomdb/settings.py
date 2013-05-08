@@ -28,6 +28,7 @@ TEMPLATE_DIRS = (
     BASE_DIR + "/main",
     BASE_DIR + "/users",
     BASE_DIR + "/upload",
+    BASE_DIR + "/browse",
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -41,6 +42,7 @@ STATICFILES_DIRS = (
     BASE_DIR + '/main/static/',
     BASE_DIR + '/users/static/',
     BASE_DIR + '/upload/static/',
+    BASE_DIR + "/browse",
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -61,8 +63,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'main',
     'users',
     'upload',
+    'browse',
 )
 
 MIDDLEWARE_CLASSES = (
