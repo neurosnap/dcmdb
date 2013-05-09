@@ -3,14 +3,13 @@ from django.http import HttpResponse
 from django.template import RequestContext
 #redirects to different page
 from django.shortcuts import redirect
+from upload import processdicom
 # JSON encode/decode
 import json
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 import random
-#import dicom
 import re
-#import pylab
 
 # new comment :D
 # Create your views here.
@@ -49,9 +48,11 @@ def upload_dicom(request):
 			os.makedirs(pre_dir + '/' + title_rem)
 
 		dcm_dir = pre_dir + '/' + title_rem + '/001'
-		
+		dicom_dir = pre_dir + '/' + title_rem + '/'
+		my_dicom = processdicom.processdicom(request.FILES['dicom_file'])
+		my_dicom.writeFiles(dicom_dir, title_rem)
 		# upload file
-		handle_uploaded_file(request.FILES['dicom_file'], dcm_dir + '.dcm')
+		#handle_uploaded_file(request.FILES['dicom_file'], dcm_dir + '.dcm')
 
 		# grab DICOM data
 		# dcm = dicom.read_file(dcm_dir + '.dcm')

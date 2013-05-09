@@ -12,10 +12,24 @@ def portal(request):
 
 	context = {}
 	dicom_list = [] 
-	for path, dirs, files in os.walk(BASE_DIR + '/upload/dicoms/eric/'):
-		for d in dirs:
-			dicom_list.append(d + '/001.dcm')
+	loc = BASE_DIR + '/upload/dicoms/'
+#	for x in os.walk(loc).next()[1]:
+	for dirs in os.walk(loc).next()[1]:
+		for subdirs in os.walk(loc + dirs).next()[1]:
+			dicom_list.append(dirs + '/' + subdirs)
+#			for files in os.walk(loc+dirs+ '/' + subdirs).next()[2]:
+#				dicom_list.append(dirs + subdirs + files)
+			#dicom_list.append(subdirs)
 
 	context['dicom_list'] = dicom_list
 
 	return render_to_response('browse_portal.html', context, context_instance = RequestContext(request))
+@ensure_csrf_cookie
+def view(request, params):
+	context={}
+	fields = params.split('/')
+	title = fields[1]
+	directory = fields [0]
+	context['title'] = title
+	context['directory'] = directory
+	return render_to_response('view.html', context, context_instance = RequestContext(request))

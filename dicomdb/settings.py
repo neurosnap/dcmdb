@@ -82,6 +82,8 @@ ROOT_URLCONF = 'dicomdb.urls'
 
 WSGI_APPLICATION = 'dicomdb.wsgi.application'
 
+MEDIA_ROOT = BASE_DIR + 'upload/dicoms'
+MEDIA_URL = '/dicoms/' 
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
