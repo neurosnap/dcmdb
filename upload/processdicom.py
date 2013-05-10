@@ -14,6 +14,7 @@ class processdicom(object):
 		pylab.imshow(self.dicom.pixel_array, cmap=pylab.cm.bone)
 		pylab.gca().xaxis.set_visible(False)
 		pylab.gca().yaxis.set_visible(False)
+
 	def writeFiles(self, directory, filename):
 		if not os.path.exists(directory):
 			os.makedirs(directory)

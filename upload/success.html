@@ -13,8 +13,12 @@
 			DICOM file has been uploaded! <br />
 		</div>
 		<div>
-			{% if patient %}
-				{{ patient_keys }}
+			{% if record %}
+				{{ record }}
+			{% endif %}
+			<br />
+			{% if data %}
+				{{ data }}
 			{% endif %}
 		</div>
 
