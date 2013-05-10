@@ -18,6 +18,7 @@ class processdicom(object):
 		if not os.path.exists(directory):
 			os.makedirs(directory)
 		pylab.savefig(directory + "/" + filename + ".tif")
+		pylab.savefig(directory + "/" + filename + ".png")
 		self.dicom.save_as(directory + "/" + filename + ".dcm")
 
 
