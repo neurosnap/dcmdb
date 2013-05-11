@@ -13,6 +13,23 @@ $(function() {
 	    }
 	});
 
+    /* NAVBAR FUNCTIONALITY */
+    var url = document.URL.replace("http://", "").replace("https://", "");
+
+    var first = url.indexOf("/");
+    var uri = url.substring(first, url.length);
+
+    $(".dcm_nav").find("li").each(function() {
+
+        if ($(this).hasClass("active"))
+            $(this).removeClass("active");
+
+        if ($(this).find("a").attr("href") == uri)
+            $(this).addClass("active");
+
+    });
+    /* END NAVBAR FUNCTIONALITY */
+
 });
 
 // using jQuery

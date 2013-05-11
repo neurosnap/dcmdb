@@ -1,4 +1,23 @@
 
+body {
+	padding: 55px;
+}
+
+small {
+	font-size: 10px;
+}
+
+.tab_content {
+	padding-left: 15px;
+}
+
+.dcm_loop {
+	margin-bottom: 15px;
+}
+
+.dcm_search {
+}
+
 /*MISC CLASSES*/
 .clear {clear:both;}
 .date {font-size:8pt;font-weight:normal;text-transform:lowercase;}

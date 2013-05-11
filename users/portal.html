@@ -14,7 +14,7 @@
 		<a href="/users/removeUser">Remove Account</a> <br />
 
 		{% if validated %}
-			<span class="small">Email Validated!</span>
+			<small>Email Validated!</small>
 		{% else %}
 			<a href="">Validate Email</a>
 		{% endif %}
@@ -31,20 +31,26 @@
   		</ul>
 
   		<div class="tab-content">
-  			<div class="tab-pane active" id="public" style="padding: 15px;">
+  			<div class="tab-pane active tab_content" id="public">
 
   				{% if public %}
 					{% for dcm in public %}
-						{{ dcm.title }}
+						<div class="dcm_loop">
+							<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
+							<small>{{ dcm.created_at }}</small>
+						</div>
 					{% endfor %}
 				{% endif %}
 
   			</div>
-  			<div class="tab-pane" id="private" style="padding: 15px;">
+  			<div class="tab-pane tab_content" id="private">
 
   				{% if private %}
 					{% for dcm in private %}
-						{{ dcm.title }}
+						<div class="dcm_loop">
+							<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
+							<small>{{ dcm.created_at }}</small>
+						</div>
 					{% endfor %}
 				{% endif %}
 

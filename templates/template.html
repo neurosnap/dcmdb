@@ -23,32 +23,30 @@
 	</head>
 
 	<body>
-	
-		<!-- <div class="hero-unit">
-		
-			<h1><a class="header_title" href="/">DICOM DB</a></h1>
-			<p>Diagnostic file search engine</p>
 
-		</div> -->
-
-		<div class="navbar">
+		<div class="navbar navbar-fixed-top">
 
 			<div class="navbar-inner">
 
-				<a class="brand" href="/">DICOM DB</a>
-				<ul class="nav">
-					<li><a href="/">Search</a></li>
-					<li><a href="/main/about">About</a></li>
+				<a class="brand" href="/" style="margin-left: 10px;"> dcmdb</a>
+				<ul class="nav dcm_nav">
+					<li class="active"><a href="/">Explore</a></li>
+					<li><a href="/main/about/">About</a></li>
 				{% if user.is_authenticated %}
 					<li><a href="/users/">Profile</a></li>
-					<li><a href="/browse/">Browse Dicoms</a></li>
+					<!-- <li><a href="/browse/">Browse Dicoms</a></li> -->
 					<li><a href="/upload/">Upload</a></li>
-					<li><a href="/users/logout">Logout</a></li>
+					<li><a href="/users/logout/">Logout</a></li>
 				{% else %}
-					<li><a href="/users/login">Login</a></li>
-					<li><a href="/users/register">Register</a></li>
+					<li><a href="/users/login/">Login</a></li>
+					<li><a href="/users/register/">Register</a></li>
 				{% endif %}
 				</ul>
+
+				<form class="navbar-form pull-right" style="margin-right: 10px;">
+    				<input type="text" name="search" id="search" class="span4 dcm_search" placeholder="Search for a DICOM file ...">
+    				<button type="submit" class="btn btn-primary"><i class="icon-search icon-white"> </i> </button>
+    			</form>
 
 			</div>
 
