@@ -96,7 +96,7 @@ def upload_dicom(request):
 			public = False
 
 		record = DICOMS.objects.create(
-			title = title_rem, 
+			title = title, 
 			user_ID = request.user,
 			public = public,
 			directory = pre_dir + '/' + title_rem,

@@ -35,9 +35,14 @@
 
   				{% if public %}
 					{% for dcm in public %}
-						<div class="dcm_loop">
-							<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
-							<small>{{ dcm.created_at }}</small>
+						<div class="dcm_loop row-fluid">
+							<div class="span3">
+								<img data-src="holder.js/100x100" class="img-polaroid" />
+							</div>
+							<div class="span7">
+								<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
+								<small>{{ dcm.created_at }}</small>
+							</div>
 						</div>
 					{% endfor %}
 				{% endif %}
@@ -47,9 +52,14 @@
 
   				{% if private %}
 					{% for dcm in private %}
-						<div class="dcm_loop">
-							<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
-							<small>{{ dcm.created_at }}</small>
+						<div class="dcm_loop row-fluid">
+							<div class="span3">
+								<img data-src="holder.js/100x100" class="img-polaroid" />
+							</div>
+							<div class="span7">
+								<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
+								<small>{{ dcm.created_at }}</small>
+							</div>
 						</div>
 					{% endfor %}
 				{% endif %}
