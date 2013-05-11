@@ -3,6 +3,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 #uses django's admin User model and default setup
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+#DICOMS table
+from upload.models import DICOMS
 #redirects to different page
 from django.shortcuts import redirect
 #auth default for django
@@ -22,14 +24,20 @@ import json
 @ensure_csrf_cookie
 def portal(request):
 
+	#email validation check
 	validated = False
-	users_in_group = Group.objects.get(name="email_validated").user_set.all()
 
+	#A django group, "email_validated" is used to flag whether a user is validated or not
+	users_in_group = Group.objects.get(name = "email_validated").user_set.all()
 	for user in users_in_group:
 		if request.user == user:
 			validated = True
 
-	context = { "validated": validated }
+	# public and private DICOMS
+	public_dcms = DICOMS.objects.filter(user_ID = request.user, public = True)
+	private_dcms = DICOMS.objects.filter(user_ID = request.user, public = False)
+
+	context = { "user": request.user, "validated": validated, "public": public_dcms, "private": private_dcms }
 	
 	if request.user.is_authenticated():
 		return render_to_response('portal.html', context, context_instance = RequestContext(request))

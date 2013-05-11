@@ -10,19 +10,46 @@
 	<div class="span3">
 	
 		<a href="/users/logout">Logout</a> <br />
+
 		<a href="/users/removeUser">Remove Account</a> <br />
 
 		{% if validated %}
-		Email Validated!
+			<span class="small">Email Validated!</span>
 		{% else %}
-		<a href="">Validate Email</a>
+			<a href="">Validate Email</a>
 		{% endif %}
 
 	</div>
 
 	<div class="span9">
 
-		User Portal
+		<h4 style="margin-top: 0px;">{{ user.first_name }}'s Repository</h4>
+
+		<ul class="nav nav-tabs" id="dcm_tabs">
+  			<li class="active"><a href="#public" data-toggle="tab">Public</a></li>
+  			<li><a href="#private" data-toggle="tab">Private</a></li>
+  		</ul>
+
+  		<div class="tab-content">
+  			<div class="tab-pane active" id="public" style="padding: 15px;">
+
+  				{% if public %}
+					{% for dcm in public %}
+						{{ dcm.title }}
+					{% endfor %}
+				{% endif %}
+
+  			</div>
+  			<div class="tab-pane" id="private" style="padding: 15px;">
+
+  				{% if private %}
+					{% for dcm in private %}
+						{{ dcm.title }}
+					{% endfor %}
+				{% endif %}
+
+  			</div>
+  		</div>
 
 	</div>
 
