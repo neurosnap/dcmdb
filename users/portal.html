@@ -39,9 +39,15 @@
 							<div class="span3">
 								<img data-src="holder.js/100x100" class="img-polaroid" />
 							</div>
-							<div class="span7">
-								<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
-								<small>{{ dcm.created_at }}</small>
+							<div class="span8">
+								<h4 style="margin: 0px 0px 5px 0px;"><a href="#">{{ dcm.title }}</a></h4>
+								<small>
+									UID: {{ dcm.UID }} <br />
+									Modality: {{ dcm.modality }} <br />
+									Institution: {{ dcm.institution_name }} <br />
+									Manufacturer: {{ dcm.manufacturer }} <br />
+									Uploaded: {{ dcm.created_at }}
+								</small>
 							</div>
 						</div>
 					{% endfor %}
@@ -56,9 +62,15 @@
 							<div class="span3">
 								<img data-src="holder.js/100x100" class="img-polaroid" />
 							</div>
-							<div class="span7">
-								<a href="#">{{ dcm.title }}</a> ({{ dcm.modality }}) <br />
-								<small>{{ dcm.created_at }}</small>
+							<div class="span8">
+								<h4 style="margin: 0px 0px 5px 0px;"><a href="#">{{ dcm.title }}</a></h4>
+								<small>
+									UID: {{ dcm.UID }} <br />
+									Modality: {{ dcm.modality }} <br />
+									Institution: {{ dcm.institution_name }} <br />
+									Manufacturer: {{ dcm.manufacturer }} <br />
+									Uploaded: {{ dcm.created_at }}
+								</small>
 							</div>
 						</div>
 					{% endfor %}

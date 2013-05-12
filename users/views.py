@@ -4,7 +4,7 @@ from django.template import RequestContext
 #uses django's admin User model and default setup
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 #DICOMS table
-from upload.models import DICOMS
+from upload.models import Study, Series, Image
 #redirects to different page
 from django.shortcuts import redirect
 #auth default for django
@@ -34,8 +34,8 @@ def portal(request):
 			validated = True
 
 	# public and private DICOMS
-	public_dcms = DICOMS.objects.filter(user_ID = request.user, public = True)
-	private_dcms = DICOMS.objects.filter(user_ID = request.user, public = False)
+	public_dcms = Study.objects.filter(user_ID = request.user, public = True)
+	private_dcms = Study.objects.filter(user_ID = request.user, public = False)
 
 	context = { "user": request.user, "validated": validated, "public": public_dcms, "private": private_dcms }
 	
