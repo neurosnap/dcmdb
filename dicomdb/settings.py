@@ -24,11 +24,11 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 TEMPLATE_DIRS = (
-    BASE_DIR + "/templates",
-    BASE_DIR + "/main",
-    BASE_DIR + "/users",
-    BASE_DIR + "/upload",
-    BASE_DIR + "/browse",
+    BASE_DIR + "/templates/",
+    BASE_DIR + "/main/templates/",
+    BASE_DIR + "/users/templates/",
+    BASE_DIR + "/upload/templates/",
+    BASE_DIR + "/browse/templates/",
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -42,7 +42,7 @@ STATICFILES_DIRS = (
     BASE_DIR + '/main/static/',
     BASE_DIR + '/users/static/',
     BASE_DIR + '/upload/static/',
-    BASE_DIR + "/browse",
+    BASE_DIR + "/browse/static/",
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -52,7 +52,7 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 STATIC_URL = '/static/'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['72.240.79.150']
 
 # Application definition
 
@@ -82,7 +82,7 @@ ROOT_URLCONF = 'dicomdb.urls'
 
 WSGI_APPLICATION = 'dicomdb.wsgi.application'
 
-MEDIA_ROOT = BASE_DIR + '/upload/dicoms'
+MEDIA_ROOT = BASE_DIR + '/media'
 MEDIA_URL = '/dicoms/' 
 
 # Database
