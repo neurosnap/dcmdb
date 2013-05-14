@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^upload/', include('upload.urls')),
     url(r'^browse/', include('browse.urls')),
+    url(r'^dcmview/', include('dcmview.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

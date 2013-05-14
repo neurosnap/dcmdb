@@ -1,0 +1,15 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<div class ="main">
+	<h3> Viewing: {{title}}</h3>
+		<table class="table table-striped">
+			{% for key, value in dcm %}
+				<tr>
+					<td> {{key}}</td>
+					<td> {{value}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+</div>
+{% endblock %}
