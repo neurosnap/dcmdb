@@ -4,7 +4,7 @@
 <div class ="main">
 	<h3> Viewing: {{title}}</h3>
 		<table class="table table-striped">
-			{% for key, value in dcm %}
+			{% for key, value in dcm.items %}
 				<tr>
 					<td> {{key}}</td>
 					<td> {{value}}</td>

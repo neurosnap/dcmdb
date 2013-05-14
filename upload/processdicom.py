@@ -9,7 +9,6 @@ class processdicom(object):
 	""" A class of processing DICOM image files"""
 	
 	def __init__(self, filepath):
-		pass
 		self.dicom = dicom.read_file(filepath)
 		pylab.imshow(self.dicom.pixel_array, cmap=pylab.cm.bone)
 		pylab.gca().xaxis.set_visible(False)
@@ -22,6 +21,8 @@ class processdicom(object):
 		pylab.savefig(directory + "/" + filename + ".png", bbox_inches='tight')
 		self.dicom.save_as(directory + "/" + filename + ".dcm")
 
-
-mydicom = processdicom("C:\\dicoms\\OverlayDICOMDataSet.dcm")
-mydicom.writeFiles("C:/dicoms", "test")
+	def getdict(self):
+		ddict = {}
+		for key in self.dicom.dir():
+			ddict[key] = self.dicom.get(key) 
+		return ddict
