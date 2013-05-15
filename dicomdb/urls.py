@@ -15,6 +15,7 @@ if host == "dcmdb.org":
 
     urlpatterns = patterns('',
         url(r'^$', main_views.under_construction, name = "under_construction"),
+         url(r'^main/about/', main_views.about, name = "about"),
     )
 
 else:
