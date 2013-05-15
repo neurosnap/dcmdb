@@ -4,7 +4,7 @@ from django.template import RequestContext
 #redirects to different page
 from django.shortcuts import redirect
 from upload.models import Study, Series, Image
-#from upload import processdicom
+from upload.processdicom import processdicom
 # JSON encode/decode
 import json
 import os
@@ -34,24 +34,43 @@ def upload_dicom(request):
 
 	if request.method == 'POST':
 
-		pre_dir = BASE_DIR + '/upload/dicoms/' + request.user.username
+		#Make media directory if not created already
+		if not os.path.exists(BASE_DIR + '/media'):
+			os.makedirs(BASE_DIR + '/media')
 
-		# create username folder
-		if not os.path.exists(pre_dir):
-			os.makedirs(pre_dir)
+		#Users directory of DICOMS
+		pre_dir = BASE_DIR + '/media/' + request.user.username
+
+		#Whether or not the user selected private or public
+		access = request.POST['status']
+
+		if access == "public":
+			public = True
+		else:
+			public = False
 
     	# title data and manipulation
 		title = request.POST['title']
 		title_rem = re.sub(r'[^ \w]+', '', title)
 		title_rem = title_rem.replace(" ", "_")
 
-		filename = request.POST['fname']
+		filename = title_rem
 
-		# create dicom set folder
-		#if not os.path.exists(pre_dir + '/' + title_rem):
-		#	os.makedirs(pre_dir + '/' + title_rem)
+		# create username folder
+		if not os.path.exists(pre_dir):
+			os.makedirs(pre_dir)
+			os.makedirs(pre_dir + '/public')
+			os.makedirs(pre_dir + '/private')
 
-		dcm = dicom.read_file(request.FILES['dicom_file'])
+		if public:
+			dcm_dir = pre_dir + '/public'
+		else:
+			dcm_dir = pre_dir + '/private'
+
+		my_dicom = processdicom(request.FILES['dicom_file'])
+
+		# upload file
+		dcm = my_dicom.writeFiles(dcm_dir, filename)
 
 		modality = ""
 		institution_name = ""
@@ -119,13 +138,6 @@ def upload_dicom(request):
 			elif tag == "ImageType":
 				image_type = dcm.ImageType
 
-		access = request.POST['status']
-
-		if access == "public":
-			public = True
-		else:
-			public = False
-
 		# Check for study instance uid
 		try:
 			study = Study.objects.get(UID = study_instance_uid)
@@ -138,13 +150,13 @@ def upload_dicom(request):
 				study_date = study_date,
 				title = title, 
 				public = public,
-				directory = pre_dir + '/' + title_rem,
+				directory = dcm_dir,
 				description = study_description,
 				modality = modality,
 				institution_name = institution_name,
 				manufacturer = manufacturer,
 				physician_name = physician_name
-				)
+			)
 
 			study.save()
 
@@ -159,24 +171,9 @@ def upload_dicom(request):
 			instance_number = instance_number,
 			accession_number = accession_number,
 			date = series_date
-			)
+		)
 
 		record.save()
-
-		#dcm_dir = pre_dir + '/' + title_rem + '/'
-		#dicom_dir = pre_dir + '/' + title_rem + '/'
-
-		#my_dicom = processdicom.processdicom(request.FILES['dicom_file'])
-
-		#my_dicom.writeFiles(dicom_dir, title_rem)
-		# upload file
-		#handle_uploaded_file(request.FILES['dicom_file'], dcm_dir + '.dcm')
-
-		# grab DICOM data
-		# dcm = dicom.read_file(dcm_dir + '.dcm')
-
-		# img = pylab.imshow(dcm.pixel_array, cmap = pylab.cm.bone)
-		# img.savefig(dcm_dir + '.png', dpi=300)
 
 		context = { "record": record.id, "data": dcm.dir() }
 

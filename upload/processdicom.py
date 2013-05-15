@@ -17,9 +17,11 @@ class processdicom(object):
 	def writeFiles(self, directory, filename):
 		if not os.path.exists(directory):
 			os.makedirs(directory)
-		pylab.savefig(directory + "/" + filename + ".tif", bbox_inches='tight')
+		#pylab.savefig(directory + "/" + filename + ".tif", bbox_inches='tight')
 		pylab.savefig(directory + "/" + filename + ".png", bbox_inches='tight')
 		self.dicom.save_as(directory + "/" + filename + ".dcm")
+
+		return self.dicom
 
 	def getdict(self):
 		ddict = {}
