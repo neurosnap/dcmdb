@@ -11,7 +11,7 @@ from main import views as main_views
 host = socket.gethostname()
 
 #see if it's production
-if host == "dcmdb.org" or host == "72.240.79.150":
+if host == "dcmdb.org":
 
     urlpatterns = patterns('',
         url(r'^$', main_views.under_construction, name = "under_construction"),
@@ -25,7 +25,8 @@ else:
         # url(r'^blog/', include('blog.urls')),
         #(r'^dicoms/(?P<path>.*)$', 'django.views.static.serve',
     	#    {'document_root': settings.MEDIA_ROOT}),
-        url(r'^$', include('main.urls')),
+        #url(r'^$', main_views.under_construction, name = "under_construction",
+	url(r'^$', include('main.urls')),
         url(r'^main/', include('main.urls')),
         url(r'^users/', include('users.urls')),
         url(r'^admin/', include(admin.site.urls)),
