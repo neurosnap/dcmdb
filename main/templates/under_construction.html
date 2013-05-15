@@ -1,19 +1,62 @@
-{% extends 'template.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block js %}
-{% endblock %}
+	<head>
+	
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
-	<div class="hero-unit">
+		<title>dcmdb | Public DICOM Search Engine</title>
 		
-		<h1>DICOM Database</h1>
-		<p>
-			Diagnostic file search engine
-			Currently Under Construction.
-			Questions? Email <a href="mailto:neurosnap@gmail.com">me</a>
-		</p>
+		<script type="text/javascript">
+			var id = '{{ id }}';
+		</script>
 
-	</div>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.9.1.min.js"> </script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"> </script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/dicom_core.js"> </script>
+	
+	</head>
 
-{% endblock %}
+	<body>
+
+		<div class="navbar navbar-fixed-top">
+
+			<div class="navbar-inner">
+
+				<a class="brand" href="/" style="margin-left: 10px;"> dcmdb</a>
+				<ul class="nav dcm_nav">
+					<li><a href="/main/about/">About</a></li>
+				</ul>
+
+				<form class="navbar-form pull-right" style="margin-right: 10px;">
+    				<input type="text" name="search" id="search" class="span4 dcm_search" placeholder="Search for a DICOM file ...">
+    				<button type="submit" class="btn btn-primary"><i class="icon-search icon-white"> </i> </button>
+    			</form>
+
+			</div>
+
+		</div>
+		
+		<div id="content" class="container">
+			
+			<div class="hero-unit">
+		
+				<h1>DICOM Database</h1>
+				<p>
+					Diagnostic file search engine <br />
+					Currently Under Construction. <br />
+					Questions? Email <a href="mailto:neurosnap@gmail.com">me</a>
+				</p>
+
+			</div>
+			
+		</div>
+	
+	</body>
+
+</html>
