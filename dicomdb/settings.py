@@ -44,6 +44,7 @@ STATICFILES_DIRS = (
     BASE_DIR + '/users/static/',
     BASE_DIR + '/upload/static/',
     BASE_DIR + "/browse/static/",
+    BASE_DIR + "/dcmview/static/",
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

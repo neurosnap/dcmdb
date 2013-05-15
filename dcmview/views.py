@@ -1,6 +1,7 @@
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie
+#you bastard!
 import upload.processdicom
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))

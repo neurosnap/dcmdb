@@ -7,9 +7,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
+		{% block css %}{% endblock %}
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
-		<title>DICOM DB</title>
+		<title>dcmdb | Public DICOM Search Engine</title>
 		
 		<script type="text/javascript">
 			var id = '{{ id }}';

@@ -1,15 +1,35 @@
 {% extends 'template.html' %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/jquery.dataTables.css" />
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.min.js"> </script>
+<script type="text/javascript" src="{{STATIC_URL}}js/dcmview.js"> </script>
+{% endblock %}
+
 {% block content %}
-<div class ="main">
-	<h3> Viewing: {{title}}</h3>
-		<table class="table table-striped">
+<div class ="row-fluid">
+	<div class="span12">
+		<h3> Viewing: {{title}}</h3>
+		
+		<table id="dcm">
+			<thead>
+				<tr>
+					<th>Element</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
 			{% for key, value in dcm.items %}
 				<tr>
 					<td> {{key}}</td>
 					<td> {{value}}</td>
 				</tr>
 			{% endfor %}
+			</tbody>
 		</table>
+	</div>
 </div>
 {% endblock %}
