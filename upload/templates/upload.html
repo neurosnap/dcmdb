@@ -4,7 +4,8 @@
 {% endblock %}
 
 {% block content %}
-<form  action="/upload/upload_dicom/" method="POST" enctype="multipart/form-data">
+{% load widget_tweaks %}
+<form  action="/upload/" method="POST" enctype="multipart/form-data">
 	{% csrf_token %}
 	<div class="row">
 
@@ -15,42 +16,28 @@
 				<label for="title" class="control-label">Title</label>
 
 				<div class="controls">
-					<input type="text" id="title" name="title" class="input-large" />
+					<!-- <input type="text" id="title" name="title" class="input-large" /> -->
+					{{ form.title|add_class:"input-xlarge" }}
 				</div>
 
 			</div>
-
-			<!-- <div class="control-group">
-
-				<label for="fname" class="control-label">Filename</label>
-
-				<div class="controls">
-					<input type="text" id="fname" name="fname" class="input-large" />
-				</div>
-
-			</div> -->
 
 			<div class="control-group">
 				
 				<label for="dicom_file" class="control-label">File</label>
 
 				<div class="controls">
-					<input type="file" id="dicom_file" name="dicom_file" class="input-large" />
+					<!-- <input type="file" id="dicom_file" name="dicom_file" class="input-large" /> -->
+					{{ form.dicom_file }}
 				</div>
 
 			</div>
 
 			<div class="control-group">
 
-				<label class="radio">
- 					<input type="radio" name="status" id="status" value="public" checked />
- 					Public -- Anyone can view this DICOM file
- 				</label>
-
- 				<label class="radio">
- 					<input type="radio" name="status" id="status" value="private" />
- 					Private -- Only you or people you should it with can view this DICOM file
- 				</label>
+				{% for radio in form.status %}
+ 					{{ radio }}
+ 				{% endfor %}
 
 			</div>
 
@@ -70,8 +57,14 @@
 
 	<div class="span8">
 
-		{% if form %}
-			<div class="alert alert-error">{{ form }}</div>
+		{% if success %}
+			<div class="alert alert-success">
+				DICOM file has been uploaded! <br />
+			</div>
+		{% elif error %}
+			<div class="alert alert-error">
+				Error: {{ error }}
+			</div>
 		{% else %}
 			<div class="alert">All DICOM files will be uploaded to our server while ensuring anonymity.</div>
 		{% endif %}

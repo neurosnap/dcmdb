@@ -30,6 +30,11 @@ $(function() {
     });
     /* END NAVBAR FUNCTIONALITY */
 
+    //Select2 Activation
+    $("#dcm_search").select2({
+	"tags": ["red", "green", "blue"],
+	"tokenSeparators": [",", " "]});
+
 });
 
 // using jQuery

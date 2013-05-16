@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django import forms
 
 class Study(models.Model):
 
@@ -50,3 +51,14 @@ class Image(models.Model):
 	image_position_patient = models.CharField(max_length = 50)
 	pixel_offset = models.IntegerField()
 	slice_location = models.DecimalField(decimal_places = 5, max_digits = 20)
+
+class UploadFileForm(forms.Form):
+
+	CHOICES = (('public', 'Public -- Anyone can view this DICOM file',), 
+				('private', 'Private -- Only you or people you should it with can view this DICOM file',))
+
+	title = forms.CharField(max_length = 50)
+    
+	dicom_file  = forms.FileField(widget = forms.FileInput)
+
+	status = forms.ChoiceField(widget = forms.RadioSelect, choices = CHOICES)
