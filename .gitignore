@@ -14,5 +14,6 @@ lib64
 *.py~
 *.html~
 *.txt~
+*.js~
 *.swp
 media/*
