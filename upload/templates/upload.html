@@ -1,6 +1,12 @@
 {% extends 'template.html' %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/select2.css" />
+{% endblock %}
+
 {% block js %}
+<script src="{{STATIC_URL}}js/select2.min.js" type="text/javascript"></script>
+<script src="{{STATIC_URL}}js/upload.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
@@ -13,11 +19,31 @@
 
 			<div class="control-group">
 
+				{% for radio in form.new_or_existing %}
+ 					{{ radio }}
+ 				{% endfor %}
+
+			</div>
+
+			<div class="control-group" id="new_dcm_title" style="display: none;">
+
 				<label for="title" class="control-label">Title</label>
 
 				<div class="controls">
-					<!-- <input type="text" id="title" name="title" class="input-large" /> -->
 					{{ form.title|add_class:"input-xlarge" }}
+				</div>
+
+			</div>
+
+			<div class="control-group" id="existing_dcm_title" style="display: none;">
+
+				<label for="title" class="control-label">Title</label>
+
+				<div class="controls">
+					<select class="inp_dcm_title">
+						<option>One</option>
+						<option>Two</option>
+					</select>
 				</div>
 
 			</div>

@@ -54,11 +54,16 @@ class Image(models.Model):
 
 class UploadFileForm(forms.Form):
 
-	CHOICES = (('public', 'Public -- Anyone can view this DICOM file',), 
+	new_or_existing_options = (('new', 'New Series -- Do you want this DICOM to be part of a new collection of DICOM files?'), 
+				('existing', 'Existing Series -- Do you want this DICOM to be part of an existing collection of DICOM files?'))
+
+	status_options = (('public', 'Public -- Anyone can view this DICOM file',), 
 				('private', 'Private -- Only you or people you should it with can view this DICOM file',))
+
+	new_or_existing = forms.ChoiceField(widget = forms.RadioSelect, choices = new_or_existing_options)
 
 	title = forms.CharField(max_length = 50)
     
 	dicom_file  = forms.FileField(widget = forms.FileInput)
 
-	status = forms.ChoiceField(widget = forms.RadioSelect, choices = CHOICES)
+	status = forms.ChoiceField(widget = forms.RadioSelect, choices = status_options)

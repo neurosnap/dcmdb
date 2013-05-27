@@ -1,0 +1,64 @@
+{% extends 'template.html' %}
+
+{% block js %}
+<script src="{{STATIC_URL}}js/change_pass.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+
+	<div class="row-fluid">
+
+		<div class="span12">
+			<form class="form-horizontal">
+			{% if active %}
+
+  				<div class="control-group">
+					<label class="control-label" for="cur_pass">Current Password</label>
+					<div class="controls">
+						<input type="password" id="cur_pass" name="cur_pass">
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="new_pass">New Password</label>
+					<div class="controls">
+						<input type="password" id="new_pass" name="new_pass">
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="new_pass_conf">Verify New Password</label>
+					<div class="controls">
+						<input type="password" id="new_pass_conf" name="new_pass_conf">
+					</div>
+				</div>
+
+				<div class="control-group">
+    				<div class="controls">
+    					<button id="btn_pass_change" class="btn btn-primary">Update!</button>
+    				</div>
+    			</div>
+
+			{% else %}
+
+				<div class="control-group">
+					<label class="control-label" for="user_email">Enter username or email</label>
+					<div class="controls">
+						<input type="text" id="user_email" name="user_email" class="input-xlarge">
+					</div>
+				</div>
+
+				<div class="control-group">
+    				<div class="controls">
+    					<button id="btn_pass_change" class="btn btn-primary">Request New Password!</button>
+    				</div>
+    			</div>
+
+			{% endif %}
+
+			</form>
+		</div>
+
+	</div>
+
+{% endblock %}

@@ -164,3 +164,12 @@ def sendValidateEmail(**kargs):
 	to_email = kargs["email"]
 
 	send_mail(subject, body, from_email, [to_email], fail_silently=False)
+
+def changePass(request):
+
+	if request.user.is_active:
+		context = { "active": True }
+	else:
+		context = { "active": False }
+	
+	return render_to_response('change_pass.html', context, context_instance = RequestContext(request))
