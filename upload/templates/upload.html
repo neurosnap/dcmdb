@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block content %}
-{% load widget_tweaks %}
 <form  action="/upload/" method="POST" enctype="multipart/form-data">
 	{% csrf_token %}
 	<div class="row">
@@ -19,30 +18,37 @@
 
 			<div class="control-group">
 
-				{% for radio in form.new_or_existing %}
- 					{{ radio }}
- 				{% endfor %}
+ 				<label class="radio">
+ 					<input type="radio" name="new_or_existing" value="new">
+ 					New Series -- Do you want this DICOM to be part of a new collection of DICOM files?
+ 				</label>
+
+ 				<label class="radio">
+ 					<input type="radio" name="new_or_existing" value="existing">
+ 					Existing Series -- Do you want this DICOM to be part of an existing collection of DICOM files?
+ 				</label>
 
 			</div>
 
 			<div class="control-group" id="new_dcm_title" style="display: none;">
 
-				<label for="title" class="control-label">Title</label>
+				<label for="new_title" class="control-label">Title</label>
 
 				<div class="controls">
-					{{ form.title|add_class:"input-xlarge" }}
+					<input type="text" id="new_title" name="new_title" class="input-xlarge">
 				</div>
 
 			</div>
 
 			<div class="control-group" id="existing_dcm_title" style="display: none;">
 
-				<label for="title" class="control-label">Title</label>
+				<label for="existing_title" class="control-label">Title</label>
 
 				<div class="controls">
-					<select class="inp_dcm_title">
-						<option>One</option>
-						<option>Two</option>
+					<select class="inp_dcm_title" name="existing_title">
+						{% for study in existing_studies %}
+							<option value="{{ study.id }}">{{ study.title }}</option>
+						{% endfor %}
 					</select>
 				</div>
 
@@ -53,22 +59,28 @@
 				<label for="dicom_file" class="control-label">File</label>
 
 				<div class="controls">
-					<!-- <input type="file" id="dicom_file" name="dicom_file" class="input-large" /> -->
-					{{ form.dicom_file }}
+					<input type="file" id="dicom_file" name="dicom_file" class="input-large" />
 				</div>
 
 			</div>
 
 			<div class="control-group">
 
-				{% for radio in form.status %}
- 					{{ radio }}
- 				{% endfor %}
+ 				<label class="radio">
+ 					<input type="radio" name="status" value="new">
+ 					Public -- Anyone can view this DICOM file
+ 				</label>
+
+ 				<label class="radio">
+ 					<input type="radio" name="status" value="new">
+ 					Private -- Only you or people you should it with can view this DICOM file
+ 				</label>
 
 			</div>
 
 			<div class="control-group">
 
+				<input type="hidden" name="new_study" id="new_study" value="">
 				<button id="dicom_submit" class="btn btn-primary">Upload DICOM!</button>
 
 			</div>

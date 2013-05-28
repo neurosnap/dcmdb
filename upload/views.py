@@ -19,90 +19,96 @@ def upload(request):
 
 	if request.method == 'POST':
 
-		form = UploadFileForm(request.POST, request.FILES)
-
 		temp_file = request.FILES['dicom_file']
 
 		error = ""
 
-		if form.is_valid():
+		if temp_file.content_type == "image/dicom" or temp_file.content_type == "image/x-dicom" or temp_file.content_type == "application/dicom":
 
-			if temp_file.content_type == "image/dicom" or temp_file.content_type == "image/x-dicom" or temp_file.content_type == "application/dicom":
+			#Make media directory if not created already
+			if not os.path.exists(MEDIA_DIR):
+				os.makedirs(MEDIA_DIR)
 
-				#Make media directory if not created already
-				if not os.path.exists(MEDIA_DIR):
-					os.makedirs(MEDIA_DIR)
+			#Users directory of DICOMS
+			pre_dir = MEDIA_DIR + '/' + request.user.username
 
-				#Users directory of DICOMS
-				pre_dir = MEDIA_DIR + '/' + request.user.username
+			#Whether or not the user selected private or public
+			access = request.POST['status']
 
-				#Whether or not the user selected private or public
-				access = request.POST['status']
-
-				if access == "public":
-					public = True
-				else:
-					public = False
-
-		    	# title data and manipulation
-				title = request.POST['title']
-				filename = re.sub(r'[^ \w]+', '', title).replace(" ", "_")
-				#title_rem = title_rem.replace(" ", "_")
-
-				#filename = title_rem
-
-				# create username folder
-				if not os.path.exists(pre_dir):
-					os.makedirs(pre_dir)
-					os.makedirs(pre_dir + '/public')
-					os.makedirs(pre_dir + '/private')
-
-				if public:
-					dcm_dir = pre_dir + '/public'
-				else:
-					dcm_dir = pre_dir + '/private'
-
-				my_dicom = processdicom(temp_file)
-
-				# upload file
-				dcm = my_dicom.writeFiles(dcm_dir, filename)
-
-				record = add_dcm_record(dcm, dcm_dir, filename, title, public, request)
-
-				if record.id:
-					success = True
-				else:
-					success = False
-
-			elif temp_file.content_type == "application/zip" or temp_file.content_type == "application/octet-stream":
-
-				error = "found zip file, maybe rar"
-				success = False
-
+			if access == "public":
+				public = True
 			else:
+				public = False
 
-				error = temp_file.content_type + " is invalid"
+			#Figure out if the record is new or existing
+			new_study = request.POST['new_study']
+
+			if new_study == "true":
+				new_study = True
+				title = request.POST['new_title']
+			else:
+				new_study = False
+				title = request.POST['existing_title']
+				study = Study.objects.get(pk = title)
+				title = study.title
+
+			filename = re.sub(r'[^ \w]+', '', title).replace(" ", "_")
+
+			# create username folder
+			if not os.path.exists(pre_dir):
+				os.makedirs(pre_dir)
+				os.makedirs(pre_dir + '/public')
+				os.makedirs(pre_dir + '/private')
+
+			if public:
+				dcm_dir = pre_dir + '/public'
+			else:
+				dcm_dir = pre_dir + '/private'
+
+			my_dicom = processdicom(temp_file)
+
+			# upload file
+			dcm = my_dicom.writeFiles(dcm_dir, filename)
+
+			args = {
+				"dcm": dcm,
+				"dcm_dir": dcm_dir,
+				"filename" filename,
+				"title": title,
+				"public": public,
+				"request": request,
+				"study": study
+			}
+
+			record = add_dcm_record(args)
+
+			if record.id:
+				success = True
+			else:
 				success = False
-				
-		else:
 
-			error = "Validation didnt pass"
+		elif temp_file.content_type == "application/zip" or temp_file.content_type == "application/octet-stream":
+
+			error = "found zip file, maybe rar"
 			success = False
 
-		if success:
-			form = UploadFileForm()
+		else:
 
-		context = { "success": success, "error": error, "form": form }
+			error = temp_file.content_type + " is invalid"
+			success = False
+
+		context = { "success": success, "error": error }
 
 		return render_to_response('upload.html', context, context_instance = RequestContext(request))
 
 	else:
-
-		form = UploadFileForm()
-
-		context = { "form": form }
 	
 		if request.user.is_authenticated():
+
+			existing_studies = Study.objects.filter(user_ID = request.user)
+
+			context = { "existing_studies": existing_studies }
+
 			return render_to_response('upload.html', context, context_instance = RequestContext(request))
 		else:
 			return redirect('/users/login')
@@ -116,7 +122,9 @@ def handle_uploaded_file(file, dir):
 
 #Creates a new record in our database for the DICOM file
 #Right now we hard-coded a list of keys we are interested in
-def add_dcm_record(dcm, dcm_dir, filename, title, public, request):
+def add_dcm_record(**args):
+
+	#dcm, dcm_dir, filename, title, public, request, study
 
 	modality = ""
 	institution_name = ""
