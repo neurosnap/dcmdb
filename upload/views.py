@@ -73,7 +73,7 @@ def upload(request):
 			args = {
 				"dcm": dcm,
 				"dcm_dir": dcm_dir,
-				"filename" filename,
+				"filename": filename,
 				"title": title,
 				"public": public,
 				"request": request,
