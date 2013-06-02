@@ -22,6 +22,9 @@ class Study(models.Model):
 	updated_at = models.DateTimeField(auto_now = True)
 	#
 
+	def get_fields(self):
+		return [(field.name, field.value_to_string(self)) for field in Study._meta.fields]
+
 # Create your models here.
 class Series(models.Model):
 

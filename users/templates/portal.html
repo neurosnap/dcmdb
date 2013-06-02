@@ -39,7 +39,13 @@
 					{% for dcm in public %}
 						<div class="dcm_loop row-fluid">
 							<div class="span3">
-								<img data-src="holder.js/100x100" class="img-polaroid" />
+								<!-- <img data-src="holder.js/100x100" class="img-polaroid" /> -->
+								{% for series in study_imgs %}
+									{% if dcm == series.dcm_study %}
+										<img src="/media/{{ user.first_name|lower }}/public/{{ series.filename }}.png" class="img-polaroid" style="width: 100px; height: 100px;" /> 
+									{% endif %}
+								{% endfor %}
+
 							</div>
 							<div class="span8">
 								<h4 style="margin: 0px 0px 5px 0px;"><a href="#">{{ dcm.title }}</a></h4>
@@ -48,7 +54,8 @@
 									Modality: {{ dcm.modality }} <br />
 									Institution: {{ dcm.institution_name }} <br />
 									Manufacturer: {{ dcm.manufacturer }} <br />
-									Uploaded: {{ dcm.created_at }}
+									Uploaded: {{ dcm.created_at }} <br />
+									File Count: {{ dcm.related_count }}
 								</small>
 							</div>
 						</div>
@@ -62,7 +69,12 @@
 					{% for dcm in private %}
 						<div class="dcm_loop row-fluid">
 							<div class="span3">
-								<img data-src="holder.js/100x100" class="img-polaroid" />
+								{% for series in study_imgs %}
+									{% if dcm == series.dcm_study %}
+											<img src="/media/{{ user.first_name|lower }}/private/{{ series.filename }}.png" class="img-polaroid" style="width: 100px; height: 100px;" /> 
+									{% endif %}
+									<!-- <img data-src="holder.js/100x100" class="img-polaroid" /> -->
+								{% endfor %}
 							</div>
 							<div class="span8">
 								<h4 style="margin: 0px 0px 5px 0px;"><a href="#">{{ dcm.title }}</a></h4>
@@ -71,7 +83,8 @@
 									Modality: {{ dcm.modality }} <br />
 									Institution: {{ dcm.institution_name }} <br />
 									Manufacturer: {{ dcm.manufacturer }} <br />
-									Uploaded: {{ dcm.created_at }}
+									Uploaded: {{ dcm.created_at }} <br />
+									File Count: {{ dcm.related_count }}
 								</small>
 							</div>
 						</div>

@@ -3,6 +3,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #import settings
 from django.contrib import admin
 import socket
+from django.conf import settings
 
 admin.autodiscover()
 
@@ -33,6 +34,9 @@ else:
         url(r'^upload/', include('upload.urls')),
         url(r'^browse/', include('browse.urls')),
         url(r'^dcmview/', include('dcmview.urls')),
+        url(r'^media/(?P<path>.*)$',
+            'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT, }),
     )
 
 urlpatterns += staticfiles_urlpatterns()

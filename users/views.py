@@ -19,6 +19,7 @@ from django.core.mail import send_mail
 #from smtplib import SMTPException
 # JSON encode/decode
 import json
+from django.db.models import Count
 
 # Create your views here.
 @ensure_csrf_cookie
@@ -34,10 +35,12 @@ def portal(request):
 			validated = True
 
 	# public and private DICOMS
-	public_dcms = Study.objects.filter(user_ID = request.user, public = True)
-	private_dcms = Study.objects.filter(user_ID = request.user, public = False)
+	public_dcms = Study.objects.annotate(related_count = Count('series')).filter(user_ID = request.user, public = True)
+	private_dcms = Study.objects.annotate(related_count = Count('series')).filter(user_ID = request.user, public = False)
 
-	context = { "user": request.user, "validated": validated, "public": public_dcms, "private": private_dcms }
+	study_imgs = Series.objects.filter(dcm_study__user_ID = request.user)
+
+	context = { "user": request.user, "validated": validated, "public": public_dcms, "private": private_dcms, "study_imgs": study_imgs }
 	
 	if request.user.is_authenticated():
 		return render_to_response('portal.html', context, context_instance = RequestContext(request))

@@ -9,6 +9,7 @@ from upload.processdicom import processdicom
 import json
 import os
 import random
+import string
 import re
 import dicom
 
@@ -32,30 +33,36 @@ def upload(request):
 			#Users directory of DICOMS
 			pre_dir = MEDIA_DIR + '/' + request.user.username
 
-			#Whether or not the user selected private or public
-			access = request.POST['status']
-
-			if access == "public":
-				public = True
-			else:
-				public = False
-
 			#Figure out if the record is new or existing
 			new_study = request.POST['new_study']
 
 			if new_study == "true":
+
 				new_study = True
 				title = request.POST['new_title']
+
+				access = request.POST['status']
+
+				if access == "public":
+					public = True
+				else:
+					public = False
+
 			else:
+
 				new_study = False
 				title = request.POST['existing_title']
 				study = Study.objects.get(pk = title)
 				title = study.title
 
-			filename = re.sub(r'[^ \w]+', '', title).replace(" ", "_")
+				public = study.public
+
+			#driven into madness, all that remains is a whisper
+			filename = re.sub(r'[^ \w]+', '', title).replace(" ", "_") + "_" + id_generator()
 
 			# create username folder
 			if not os.path.exists(pre_dir):
+
 				os.makedirs(pre_dir)
 				os.makedirs(pre_dir + '/public')
 				os.makedirs(pre_dir + '/private')
@@ -65,9 +72,8 @@ def upload(request):
 			else:
 				dcm_dir = pre_dir + '/private'
 
+			#now upload the file
 			my_dicom = processdicom(temp_file)
-
-			# upload file
 			dcm = my_dicom.writeFiles(dcm_dir, filename)
 
 			args = {
@@ -77,10 +83,10 @@ def upload(request):
 				"title": title,
 				"public": public,
 				"request": request,
-				"study": study
+				"new_study": new_study
 			}
 
-			record = add_dcm_record(args)
+			record = add_dcm_record(**args)
 
 			if record.id:
 				success = True
@@ -122,7 +128,7 @@ def handle_uploaded_file(file, dir):
 
 #Creates a new record in our database for the DICOM file
 #Right now we hard-coded a list of keys we are interested in
-def add_dcm_record(**args):
+def add_dcm_record(**kwargs):
 
 	#dcm, dcm_dir, filename, title, public, request, study
 
@@ -144,6 +150,8 @@ def add_dcm_record(**args):
 	series_number = ""
 	series_date = ""
 	image_type = ""
+
+	dcm = kwargs['dcm']
 	
 	for tag in dcm.dir():
 
@@ -193,31 +201,39 @@ def add_dcm_record(**args):
 			image_type = dcm.ImageType
 
 	# Check for study instance uid
-	try:
-		study = Study.objects.get(UID = study_instance_uid)
-	except (Study.DoesNotExist):
+	if kwargs['new_study']:
 
-		study = Study.objects.create(
-			UID = study_instance_uid,
-			user_ID = request.user,
-			study_id = study_id,
-			study_date = study_date,
-			title = title, 
-			public = public,
-			directory = dcm_dir,
-			description = study_description,
-			modality = modality,
-			institution_name = institution_name,
-			manufacturer = manufacturer,
-			physician_name = physician_name
-		)
+		try:
+			#study = Study.objects.get(UID = study_instance_uid)
+			study = Study.objects.get(title = kwargs['title'], user_ID = kwargs['request'].user)
 
-		study.save()
+		except (Study.DoesNotExist):
+
+			study = Study.objects.create(
+				UID = study_instance_uid,
+				user_ID = kwargs['request'].user,
+				study_id = study_id,
+				study_date = study_date,
+				title = kwargs['title'], 
+				public = kwargs['public'],
+				directory = kwargs['dcm_dir'],
+				description = study_description,
+				modality = modality,
+				institution_name = institution_name,
+				manufacturer = manufacturer,
+				physician_name = physician_name
+			)
+
+			study.save()
+
+	else:
+
+		study = Study.objects.get(title = kwargs['title'], user_ID = kwargs['request'].user)
 
 	record = Series.objects.create(
 		dcm_study = study,
 		UID = series_instance_uid,
-		filename = filename,
+		filename = kwargs['filename'],
 		bits_allocated = bits_allocated,
 		bits_stored = bits_stored,
 		sop_instance_uid = sop_instance_uid,
@@ -240,3 +256,7 @@ def convert_date(date, delim):
 	day = date[6:8]
 
 	return delim.join([year, month, day])	
+
+def id_generator(size = 6, chars = string.ascii_lowercase + string.digits):
+
+	return ''.join(random.choice(chars) for x in range(size))
