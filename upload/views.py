@@ -20,9 +20,11 @@ def upload(request):
 
 	if request.method == 'POST':
 
+		error = ""
+
 		temp_file = request.FILES['dicom_file']
 
-		error = ""
+		dcm = dicom.read_file(temp_file)
 
 		if temp_file.content_type == "image/dicom" or temp_file.content_type == "image/x-dicom" or temp_file.content_type == "application/dicom":
 
@@ -53,6 +55,21 @@ def upload(request):
 				new_study = False
 				title = request.POST['existing_title']
 				study = Study.objects.get(pk = title)
+
+				#Study Instance UID must match for each series within a study
+				if study.UID == dcm.StudyInstanceUID:
+					pass
+				else:
+					existing_studies = Study.objects.filter(user_ID = request.user)
+
+					context = { 
+						"success": False, 
+						"error": "Study Instance UID does not match '" + study.title + "' Study Instance UID", 
+						"existing_studies": existing_studies 
+					}
+
+					return render_to_response('upload.html', context, context_instance = RequestContext(request))
+
 				title = study.title
 
 				public = study.public
@@ -73,8 +90,23 @@ def upload(request):
 				dcm_dir = pre_dir + '/private'
 
 			#now upload the file
-			my_dicom = processdicom(temp_file)
+			my_dicom = processdicom(dcm)
 			dcm = my_dicom.writeFiles(dcm_dir, filename)
+
+			#Test to see if the pixel array is compressed
+			if dcm['success'] == False:
+
+				existing_studies = Study.objects.filter(user_ID = request.user)
+
+				context = { 
+					"success": False, 
+					"error": dcm['error'], 
+					"existing_studies": existing_studies 
+				}
+
+				return render_to_response('upload.html', context, context_instance = RequestContext(request))
+
+			dcm = dcm['dicom']
 
 			args = {
 				"dcm": dcm,
@@ -88,10 +120,13 @@ def upload(request):
 
 			record = add_dcm_record(**args)
 
+			print record
+
 			if record.id:
 				success = True
 			else:
 				success = False
+				error = record.error
 
 		elif temp_file.content_type == "application/zip" or temp_file.content_type == "application/octet-stream":
 
@@ -103,7 +138,9 @@ def upload(request):
 			error = temp_file.content_type + " is invalid"
 			success = False
 
-		context = { "success": success, "error": error }
+		existing_studies = Study.objects.filter(user_ID = request.user)
+
+		context = { "success": success, "error": error, "existing_studies": existing_studies }
 
 		return render_to_response('upload.html', context, context_instance = RequestContext(request))
 
@@ -230,20 +267,31 @@ def add_dcm_record(**kwargs):
 
 		study = Study.objects.get(title = kwargs['title'], user_ID = kwargs['request'].user)
 
-	record = Series.objects.create(
-		dcm_study = study,
-		UID = series_instance_uid,
-		filename = kwargs['filename'],
-		bits_allocated = bits_allocated,
-		bits_stored = bits_stored,
-		sop_instance_uid = sop_instance_uid,
-		sop_class_uid = sop_class_uid,
-		instance_number = instance_number,
-		accession_number = accession_number,
-		date = series_date
-	)
+	try:
+		Series.objects.get(UID = series_instance_uid, instance_number = instance_number)
+	except (Series.DoesNotExist):
 
-	record.save()
+		record = Series.objects.create(
+			dcm_study = study,
+			UID = series_instance_uid,
+			series_number = series_number,
+			filename = kwargs['filename'],
+			bits_allocated = bits_allocated,
+			bits_stored = bits_stored,
+			sop_instance_uid = sop_instance_uid,
+			sop_class_uid = sop_class_uid,
+			instance_number = instance_number,
+			accession_number = accession_number,
+			date = series_date
+		)
+
+		record.save()
+
+		return record
+
+	record = lambda: None
+	record.id = False
+	record.error = "Instance number already exists for this study "
 
 	return record
 

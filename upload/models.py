@@ -30,6 +30,7 @@ class Series(models.Model):
 
 	dcm_study = models.ForeignKey(Study)
 	UID = models.CharField(max_length = 100)
+	series_number = models.CharField(max_length = 100)
 	filename = models.CharField(max_length = 100)
 	#
 	bits_allocated = models.IntegerField()
