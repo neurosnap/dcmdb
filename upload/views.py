@@ -120,8 +120,6 @@ def upload(request):
 
 			record = add_dcm_record(**args)
 
-			print record
-
 			if record.id:
 				success = True
 			else:
@@ -233,9 +231,12 @@ def add_dcm_record(**kwargs):
 			series_number = dcm.SeriesNumber
 		elif tag == "SeriesDate":
 			series_date = dcm.SeriesDate
-			series_date = convert_date(series_date, "-")
+			series_date = convert_date(series_date, "-").encode('utf-8')
 		elif tag == "ImageType":
 			image_type = dcm.ImageType
+
+	if series_date == "":
+		series_date = "1990-01-01"
 
 	# Check for study instance uid
 	if kwargs['new_study']:

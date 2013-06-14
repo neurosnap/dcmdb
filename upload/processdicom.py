@@ -1,9 +1,10 @@
 import dicom
 import os
+import gdcm
 import numpy
 import matplotlib as mpl
 mpl.use('Agg')
-import pylab
+from pylab import *
 
 class processdicom(object):
 	""" A class of processing DICOM image files"""
@@ -14,22 +15,30 @@ class processdicom(object):
 
 	def writeFiles(self, directory, filename):
 
+		dcm_file = directory + "/" + filename + ".dcm"
+
+		self.dicom.save_as(dcm_file)
+
+		self.img_process = gdcm.ImageReader()
+		self.img_process.SetFileName(dcm_file.encode('utf-8'))
+
+		if not self.img_process.Read():
+			print "gdcm failed to grab file"
+
 		try:
-			pxl_arr = self.dicom.pixel_array
+			pxl_arr = gdcm_to_numpy(self.img_process.GetImage())
 		except:
 			return { "success": False, "error": "Unsuppported transfer syntax " + self.transferSyntax(self.dicom.file_meta.TransferSyntaxUID) }
 
-		pylab.imshow(pxl_arr, cmap = pylab.cm.bone)
+		imshow(pxl_arr, interpolation='bilinear', cmap=cm.bone)
 
-		pylab.gca().xaxis.set_visible(False)
-		pylab.gca().yaxis.set_visible(False)
+		gca().xaxis.set_visible(False)
+		gca().yaxis.set_visible(False)
 
 		if not os.path.exists(directory):
 			os.makedirs(directory)
 
-		#pylab.savefig(directory + "/" + filename + ".tif", bbox_inches='tight')
-		pylab.savefig(directory + "/" + filename + ".png", bbox_inches = 'tight')
-		self.dicom.save_as(directory + "/" + filename + ".dcm")
+		savefig(directory + "/" + filename + ".png", bbox_inches = 'tight')
 
 		return { "success": True, "dicom": self.dicom }
 
@@ -72,3 +81,41 @@ class processdicom(object):
 			ddict[key] = self.dicom.get(key) 
 
 		return ddict
+
+def get_gdcm_to_numpy_typemap():
+	"""Returns the GDCM Pixel Format to numpy array type mapping."""
+	_gdcm_np = {gdcm.PixelFormat.UINT8  :numpy.int8,
+				gdcm.PixelFormat.INT8   :numpy.uint8,
+				gdcm.PixelFormat.UINT16 :numpy.uint16,
+				gdcm.PixelFormat.INT16  :numpy.int16,
+				gdcm.PixelFormat.UINT32 :numpy.uint32,
+				gdcm.PixelFormat.INT32  :numpy.int32,
+				gdcm.PixelFormat.FLOAT32:numpy.float32,
+				gdcm.PixelFormat.FLOAT64:numpy.float64 }
+	return _gdcm_np
+
+def get_numpy_array_type(gdcm_pixel_format):
+	"""Returns a numpy array typecode given a GDCM Pixel Format."""
+	return get_gdcm_to_numpy_typemap()[gdcm_pixel_format]
+
+def gdcm_to_numpy(image):
+	"""Converts a GDCM image to a numpy array.
+	"""
+	pf = image.GetPixelFormat().GetScalarType()
+
+	assert pf in get_gdcm_to_numpy_typemap().keys(), \
+		"Unsupported array type %s"%pf
+	
+	d = image.GetDimension(0), image.GetDimension(1)
+
+	dtype = get_numpy_array_type(pf)
+	gdcm_array = image.GetBuffer()
+	## use float for accurate scaling
+	result = numpy.frombuffer(gdcm_array, dtype=dtype).astype(float)
+	## optional gamma scaling
+	#maxV = float(result[result.argmax()])
+	#result = result + .5*(maxV-result)
+	#result = numpy.log(result+50) ## apprx background level
+	result.shape = d
+	
+	return result
