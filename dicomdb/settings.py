@@ -72,7 +72,7 @@ INSTALLED_APPS = (
     'main',
     'users',
     'upload',
-    'browse',
+    'dcmview',
 )
 
 MIDDLEWARE_CLASSES = (

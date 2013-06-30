@@ -6,14 +6,43 @@
 
 {% block js %}
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.min.js"> </script>
+<script type="text/javascript">
+	//obj singleton used in dcmview.js
+	var dcm = {
+
+		"study": {{study|safe}},
+		"series": {{series|safe}},
+		"datatable": null
+
+	};
+</script>
 <script type="text/javascript" src="{{STATIC_URL}}js/dcmview.js"> </script>
 {% endblock %}
 
 {% block content %}
 <div class ="row-fluid">
+	<div class="span12" id="dcm_header">
+	</div>
+</div>
+
+<div class="row-fluid">
+	<div class="span6" id="dcm_primary_image">
+		<h4>Image</h4>
+			<img src="holder.js/400x400" style="height: 400px; width: 400px;" class="img-polaroid" />
+	</div>
+	<div class="span6">
+		<h4>Study Gallery</h4>
+		<div class="row-fluid">
+			<div class="span12" id="study_gallery">
+				Gallery
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row-fluid">
 	<div class="span12">
-		<h3> Viewing: {{title}}</h3>
-		
+		<h4>Tags</h4>
 		<table id="dcm">
 			<thead>
 				<tr>

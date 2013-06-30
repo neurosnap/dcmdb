@@ -9,9 +9,12 @@ from pylab import *
 class processdicom(object):
 	""" A class of processing DICOM image files"""
 	
-	def __init__(self, dicom):
+	def __init__(self, dcm = False, filepath = False):
 		#self.dicom = dicom.read_file(filepath)
-		self.dicom = dicom
+		if dcm:
+			self.dicom = dcm
+		elif filepath:
+			self.dicom = dicom.read_file(filepath)
 
 	def writeFiles(self, directory, filename):
 
