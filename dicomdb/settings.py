@@ -95,6 +95,7 @@ MEDIA_URL = '/dicoms/'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 # Check for production environment
+
 if host == "dcmdb.org":
 
     DATABASES = {
@@ -115,8 +116,13 @@ else:
         }
     }
 
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL SETTINGS
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dcmdb.email@gmail.com'
+EMAIL_HOST_PASSWORD = 'milka123'
+EMAIL_PORT = 587
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
