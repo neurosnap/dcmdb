@@ -40,7 +40,7 @@
 						<div class="dcm_loop row-fluid">
 							<div class="span3">
 								<!-- <img data-src="holder.js/100x100" class="img-polaroid" /> -->
-								{% for series in study_imgs %}
+								{% for series in study_imgs|slice:":1" %}
 									{% if dcm == series.dcm_study %}
 										<img src="/media/{{ user.first_name|lower }}/public/{{ series.filename }}.png" class="img-polaroid" style="width: 100px; height: 100px;" /> 
 									{% endif %}

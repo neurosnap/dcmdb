@@ -17,17 +17,43 @@ $(function() {
 		});
 
 		//checks to make sure both passwords match
-		if ($("#pass").val() != $("#pass_check").val()) {
+		if ($("#pass").val() == "" || $("#pass").val() == " ") {
 
 			errors++;
 
-			register.validate({ "success": false, "msg": "Passwords do not match" }, document.getElementById("pass"));
-			register.validate({ "success": false }, document.getElementById("pass_check"));
+			register.validate({ 
+				"success": false, 
+				"msg": "Password cannot be blank" 
+			}, document.getElementById("pass"));
+
+			register.validate({ 
+				"success": false, 
+				"msg": "Password cannot be blank" 
+			}, document.getElementById("pass_check"));
+
+		} else if ($("#pass").val() != $("#pass_check").val()) {
+
+			errors++;
+
+			register.validate({ 
+				"success": false, 
+				"msg": "Passwords do not match" 
+			}, document.getElementById("pass"));
+
+			register.validate({ 
+				"success": false 
+			}, document.getElementById("pass_check"));
 
 		} else {
 
-			register.validate({ "success": true, "msg": "Passwords match" }, document.getElementById("pass"));
-			register.validate({ "success": true }, document.getElementById("pass_check"));
+			register.validate({ 
+				"success": true, 
+				"msg": "Passwords match" 
+			}, document.getElementById("pass"));
+			
+			register.validate({ 
+				"success": true 
+			}, document.getElementById("pass_check"));
 
 		}
 

@@ -3,11 +3,6 @@ $(function() {
 	//dynamically change type to object instead of an array
 	dcm.study = dcm.study[0];
 
-	//dataTables initialization
-	dcm.datatable = $("#dcm").dataTable({
-		"sPaginationType": "bootstrap"
-	});
-
 	$("#study_gallery").html('something');
 	$("#dcm_header").html('<h3>' + dcm.study.title + '</h3>');
 
@@ -17,7 +12,7 @@ $(function() {
 
 	for (var i = 0; i < dcm.series.length; i++) {
 
-		gal_content += '<a href="/dcmview/' + dcm.study.id + '/series/' + dcm.series[i].id + '" class="dcm_series">' + 
+		gal_content += '<a href="/dcmview/' + dcm.study.id + '/series/' + dcm.series[i].id + '" series_ID="' + dcm.series[i].id + '" class="dcm_series">' + 
 					   '	<img src="' + dcm.study.directory + '/' + dcm.series[i].filename + 
 					   		'.png" style="width: 60px; height: 60px; margin: 5px;" class="img-polaroid" />' + 
 					   	'</a>';
@@ -34,9 +29,50 @@ $(function() {
 
 		$("#dcm_primary_image").find('img').attr('src', switch_img);
 
+		$.ajax({
+			"url": "/dcmview/series/" + $(this).attr("series_ID"),
+			"type": "POST",
+			"dataType": "json",
+			"success": function(res) {
+				dcm.study = res.study;
+				dcm.dicom = res.dcm;
+
+				dcm.reloadTags();
+			}
+		});
+
 	});
 
+	dcm.reloadTags();
+
 });
+
+dcm.reloadTags = function() {
+
+	var tag_content = '';
+
+	for (key in dcm.dicom) {
+
+		if (dcm.dicom[key] !== "" || dcm.dicom[key] !== " ") {
+
+			tag_content += '<tr>' + 
+					  '	<td>' + key + '</td>' + 
+					  '	<td>' + dcm.dicom[key].replace(/["']/g, "") + '</td>' + 
+					  '</tr>';
+
+		}
+
+	}
+
+	$("#dcm").find("tbody").html(tag_content);
+
+	//dataTables initialization
+	dcm.datatable = $("#dcm").dataTable({
+		"sPaginationType": "bootstrap",
+		"bDestroy": true
+	});
+
+};
 
 /* API method to get paging information */
 $.fn.dataTableExt.oApi.fnPagingInfo = function ( oSettings )

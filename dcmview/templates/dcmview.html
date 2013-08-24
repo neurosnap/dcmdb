@@ -12,6 +12,7 @@
 
 		"study": {{study|safe}},
 		"series": {{series|safe}},
+		"dicom": {{dcm|safe}},
 		"datatable": null
 
 	};
@@ -51,12 +52,6 @@
 				</tr>
 			</thead>
 			<tbody>
-			{% for key, value in dcm.items %}
-				<tr>
-					<td> {{key}}</td>
-					<td> {{value}}</td>
-				</tr>
-			{% endfor %}
 			</tbody>
 		</table>
 	</div>
