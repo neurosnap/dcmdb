@@ -1,6 +1,7 @@
 {% extends 'template.html' %}
 
 {% block js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/index.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -11,6 +12,14 @@
 		<p>
 			Diagnostic file search engine
 		</p>
+
+	</div>
+
+	<div id="explore">
+
+		{% for series in dcms %}
+			<img src="/media/{{ series.dcm_study.user_ID.first_name|lower }}/public/{{ series.filename }}.png" class="img-polaroid" style="width: 100px; height: 100px;" /> 
+		{% endfor %}
 
 	</div>
 

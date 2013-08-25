@@ -1,13 +1,19 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
+from upload.models import Study, Series, Image
 # JSON encode/decode
 import json
+from django.db.models import Count
 
 # Create your views here.
 def index(request):
 
-	context = {}
+	dcms = Series.objects.filter(dcm_study__public = True).select_related
+
+	context = {
+		"dcms": dcms
+	}
 	
 	return render_to_response('index.html', context, context_instance = RequestContext(request))
 

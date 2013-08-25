@@ -1,5 +1,8 @@
 $(function() {
 	
+	//disabled email change for now
+	$("#email").attr("disabled", "enabled");
+
 	$("#save_info").on("click", function(e) {
 
 		e.preventDefault();
