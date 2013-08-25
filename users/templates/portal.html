@@ -9,27 +9,40 @@
 	
 	<div class="span3">
 	
-		<a href="/users/logout">Logout</a> <br />
+		<a href="/users/logout" class="btn btn-info">Logout</a> <br /> <br />
+
+		<h5>Management</h5>
+		<hr />
+
+		<a href="/users/updateInfo">Update Information</a><br />
 
 		<a href="/users/changePass">Change Password</a> <br />
 
-		<a href="/users/removeUser">Remove Account</a> <br />
-
+		<br />
 		{% if validated %}
-			<small>Email Validated!</small>
+			<div class="alert alert-success"><small>Email Validated!</small></div>
 		{% else %}
-			<a href="">Validate Email</a>
+			<button id="email_validate" class="btn btn-success">Validate Email</button><br /><br />
+			<div id="email_validate_info" class="alert">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<span></span>
+			</div>
 		{% endif %}
+
+		<br />
+		<a href="/users/removeUser" class="btn btn-danger">Remove Account</a> <br />
 
 	</div>
 
 	<div class="span9">
 
-		<h4 style="margin-top: 0px;">{{ user.first_name }}'s Repository</h4>
+		<h4 style="margin-top: 0px;">{{ user.username }}'s Repository</h4>
 
 		<ul class="nav nav-tabs" id="dcm_tabs">
   			<li class="active"><a href="#public" data-toggle="tab">Public</a></li>
   			<li><a href="#private" data-toggle="tab">Private</a></li>
+  			<li><a href="#favorites" data-toggle="tab">Favorites</a></li>
+  			<li><a href="#comments" data-toggle="tab">Comments</a></li>
   		</ul>
 
   		<div class="tab-content">
@@ -60,6 +73,12 @@
 							</div>
 						</div>
 					{% endfor %}
+				{% else %}
+					<div class="row-fluid">
+						<div class="span8">
+							<div id="dcm_pub_response" class="alert">No public studies found.</div>
+						</div>
+					</div>
 				{% endif %}
 
   			</div>
@@ -89,8 +108,36 @@
 							</div>
 						</div>
 					{% endfor %}
+				{% else %}
+					<div class="row-fluid">
+						<div class="span8">
+							<div id="dcm_priv_response" class="alert">No private studies found.</div>
+						</div>
+					</div>
 				{% endif %}
 
+  			</div>
+  			<div class="tab-pane tab_content" id="favorites">
+  				<div class="row-fluid">
+  					<div class="span12">
+  						<div class="row-fluid">
+							<div class="span8">
+								<div class="alert">Favorites section is a work in progress.</div>
+							</div>
+						</div>
+  					</div>
+  				</div>
+  			</div>
+  			<div class="tab-pane tab_content" id="comments">
+  				<div class="row-fluid">
+  					<div class="span12">
+  						<div class="row-fluid">
+							<div class="span8">
+								<div class="alert">Comments section is a work in progress.</div>
+							</div>
+						</div>
+  					</div>
+  				</div>
   			</div>
   		</div>
 

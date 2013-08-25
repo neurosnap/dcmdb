@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 #Force CSRF Cookie
 from django.views.decorators.csrf import ensure_csrf_cookie
 # email
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 #mail exception
 #from smtplib import SMTPException
 # JSON encode/decode
@@ -121,8 +121,8 @@ def createUser(request):
 	u = User.objects.create_user(req_user, req_email, req_pass)
 	u.save()
 
-	#send email(
-	sendValidateEmail({ "user": req_user, "email": req_email })
+	#send email
+	sendValidateEmail(user=req_user, email=req_email)
 	
 	return HttpResponse('{"success": true, "msg": "Account has been created"}', content_type="application/json")
 
@@ -154,19 +154,29 @@ def removeUser(request):
 	
 	return render_to_response('removed.html', context, context_instance = RequestContext(request))
 
+def sendValidation(request):
+
+	sendValidateEmail(user = request.user.username, email = request.user.email)
+
+	return HttpResponse('{"success": true, "msg": "Email validation sent!"}', content_type="application/json")
+
 def sendValidateEmail(**kargs):
 
 	#send email
-	email_link = "http://127.0.0.1/users/validateEmail?email=" + kargs["email"]
-	subject = "Welcome to DICOMDB!"
+	email_link = "http://dcmdb.org/users/validateEmail?email=" + kargs["email"]
+	
+	subject = "Welcome to dcmdb!"
+	
 	body = ("Greetings " + kargs["user"] + "! <br />"
-			" Thank you for signing up for DICOM DB! <br />"
+			" Thank you for signing up for dcmdb! <br />"
 			" Please click the link below to validate your email address with our website! <br /><br />"
 			" <a href='" + email_link + "'>Validate Email</a> ")
-	from_email = "webmaster@dicomdb.org"
+	
 	to_email = kargs["email"]
 
-	send_mail(subject, body, from_email, [to_email], fail_silently=False)
+	email = EmailMessage(subject, body, to=[to_email])
+	email.content_subtype = "html"
+	email.send()
 
 def changePass(request):
 
@@ -176,3 +186,145 @@ def changePass(request):
 		context = { "active": False }
 	
 	return render_to_response('change_pass.html', context, context_instance = RequestContext(request))
+
+def chngPassConfirm(request):
+
+	email = None
+	cur_pass = None
+
+	# if an email is present in the POST data then that means they are 
+	# requesting a new password without knowing their old password
+	if "cur_pass" not in request.POST:
+		email = request.POST['email']
+	else:
+		cur_pass = request.POST['cur_pass']
+
+	new_pass = request.POST['new_pass']
+
+	if email is not None:
+
+		u = User.objects.get(email__exact = email)
+		u.set_password(new_pass)
+		u.save()
+
+		return HttpResponse('{"success": true, "msg": "Password changed!"}', content_type="application/json")
+
+	else:
+
+		user = authenticate(username = request.user.username, password = cur_pass)
+
+		if user is not None:
+
+			u = User.objects.get(email__exact = request.user.email)
+			u.set_password(new_pass)
+			u.save()
+
+			return HttpResponse('{"success": true, "msg": "Password changed!"}', content_type="application/json")
+
+		else:
+
+			return HttpResponse('{"success": false, "msg": "Current password is invalid!"}', content_type="application/json")
+
+def sendPass(request):
+
+	user_email = request.POST['user_email']
+
+	try:
+
+		user = User.objects.get(username__exact = user_email)
+
+		#send email
+		email_link = "http://dcmdb.org/users/reqPass?email=" + user.email
+		
+		subject = "dcmdb Password Change Request"
+		
+		body = ("Greetings " + user.username + "! <br />"
+				" It appears someone has requested to reset your password. <br />"
+				" Please click the link below to finish the password change process with our website! <br /><br />"
+				" <a href='" + email_link + "'>Change Password</a> ")
+		
+		to_email = user.email
+
+		email = EmailMessage(subject, body, to=[to_email])
+		email.content_subtype = "html"
+
+		email.send()
+
+		return HttpResponse('{"success": true, "msg": "Password reset sent to email!"}', content_type="application/json")
+
+	except ObjectDoesNotExist:
+
+		try:
+			
+			user = User.objects.get(email__exact = user_email)
+
+			#send email
+			email_link = "http://dcmdb.org/users/reqPass?email=" + user.email
+			
+			subject = "dcmdb Password Change Request"
+			
+			body = ("Greetings " + user.username + "! <br />"
+					" It appears someone has requested to reset your password. <br />"
+					" Please click the link below to finish the password change process with our website! <br /><br />"
+					" <a href='" + email_link + "'>Change Password</a> ")
+			
+			to_email = user.email
+
+			email = EmailMessage(subject, body, to=[to_email])
+			email.content_subtype = "html"
+
+			email.send()
+
+			return HttpResponse('{"success": true, "msg": "Password reset sent to email!"}', content_type="application/json")
+
+		except ObjectDoesNotExist:
+
+			return HttpResponse('{"success": false, "msg": "Username or email was not found in our records!"}', 
+								content_type="application/json")
+
+def reqPass(request):
+
+	context = {
+		"req_pass": True,
+		"email": request.GET['email']
+	}
+
+	return render_to_response('change_pass.html', context, context_instance = RequestContext(request))
+
+def updateInfo(request):
+
+	if request.user.is_authenticated():
+
+		context = {
+			"user": request.user
+		}
+
+		return render_to_response('update_info.html', context, context_instance = RequestContext(request))
+
+	else:
+
+		return redirect("users/login")
+
+def saveInfo(request):
+
+	if request.user.is_authenticated():
+
+		first_name = request.POST['first_name']
+		last_name = request.POST['last_name']
+		email = request.POST['email']
+
+		user = User.objects.get(username__exact = request.user.username)
+
+		user.first_name = first_name
+		user.last_name = last_name
+
+		user.save()
+
+		return HttpResponse('{"success": true, "msg": "User information has been updated!"}', content_type="application/json")
+
+	else:
+
+		return redirect("users/login")	
+
+
+

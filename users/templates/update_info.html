@@ -1,0 +1,82 @@
+{% extends 'template.html' %}
+
+{% block js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/update_info.js"></script>
+{% endblock %}
+
+{% block content %}
+
+{% if user %}
+	<form class="form-horizontal">
+
+		<div class="row">
+
+			<div class="span12">
+
+				<h3>Update User Information</h3>
+
+				<hr />
+
+				<div class="control-group">
+
+					<label for="first_name" class="control-label">First Name</label>
+
+					<div class="controls">
+						<input type="text" name="first_name" id="first_name" value="{{user.first_name}}" placeholder="Enter first name" />
+						<span class="help-inline"></span>
+					</div>
+
+				</div>
+
+				<div class="control-group">
+
+					<label for="last_name" class="control-label">Last Name</label>
+
+					<div class="controls">
+						<input type="text" name="last_name" id="last_name" value="{{user.last_name}}" placeholder="Enter last name" />
+						<span class="help-inline"></span>
+					</div>
+
+				</div>
+
+				<div class="control-group">
+
+					<label for="email" class="control-label">Email</label>
+
+					<div class="controls">
+						<input type="text" name="email" id="email" value="{{user.email}}" placeholder="Enter email" />
+						<span class="help-inline">email validation will be reset if changed</span>
+					</div>
+
+				</div>
+			
+			</div>
+
+		</div>
+
+		<div class="row">
+
+			<div class="span1"></div>
+
+			<div class="span11">
+
+				<button class="btn btn-primary" id="save_info">Save!</button>
+
+			</div>
+
+		</div>
+
+	</form>
+{% endif %}
+
+<div class="row">
+
+	<div class="span8">
+
+		<div id="info_response" class="alert">Update information as needed and then save it!</div>
+
+	</div>
+
+</div>
+
+{% endblock %}
