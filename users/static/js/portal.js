@@ -2,10 +2,6 @@ $(function() {
 	
 	$("#email_validate_info").hide();
 
-	$(function () {
-		$('#dcm_tab a:last').tab('show');
-	});
-
 	$("#email_validate").on("click", function(e) {
 
 		$.ajax({

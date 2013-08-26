@@ -34,6 +34,7 @@ else:
         url(r'^upload/', include('upload.urls')),
         url(r'^browse/', include('browse.urls')),
         url(r'^dcmview/', include('dcmview.urls')),
+        url(r'^dcmupload/', include('dcmupload.urls')),
         url(r'^media/(?P<path>.*)$',
             'django.views.static.serve',
             {'document_root': settings.MEDIA_ROOT, }),

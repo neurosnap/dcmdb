@@ -32,7 +32,7 @@
 		<div class="row-fluid">
 			<div class="span2">
 				
-				<h6>Tools</h6>
+				<h6>Filters</h6>
 				<hr />
 
 				Contrast
@@ -48,12 +48,13 @@
 				Saturation
 				<input type="text" id="saturation" class="input-mini filter" value="0" />
 				<br />
-				<button id="invert" class="btn">Invert</button>
+				<button id="invert" class="btn">Invert</button> <br /><br />
+				<button id="reset" class="btn btn-danger">Reset</button>
 
 			</div>
 			<div class="span10">
 				<h4>Image</h4>
-					<img src="" style="height: 500px; width: 500px;" class="img-polaroid" id="dcmview_image" />
+				<img src="" style="height: 500px; width: 500px;" class="img-polaroid" id="dcmview_image" />
 			</div>
 		</div>
 	</div>
@@ -66,20 +67,42 @@
 		</div>
 	</div>
 </div>
-
+<br />
 <div class="row-fluid">
 	<div class="span12">
-		<h4>Tags</h4>
-		<table id="dcm">
-			<thead>
-				<tr>
-					<th>Element</th>
-					<th>Value</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+
+		<ul class="nav nav-tabs" id="dcm_tabs">
+  			<li class="active"><a href="#data" data-toggle="tab">Meta-Data</a></li>
+  			<li><a href="#discussion" data-toggle="tab">Discussion</a></li>
+  			<li><a href="#export" data-toggle="tab">Download</a></li>
+  		</ul>
+
+  		<div class="tab-content">
+  			<div class="tab-pane active" id="data">
+
+				<table id="dcm">
+				</table>
+
+			</div>
+		</div>
+
+		<div class="tab-content">
+  			<div class="tab-pane" id="discussion">
+
+				<div id="discussion_response" class="alert">Discussion is a work in progress.</div>
+
+			</div>
+		</div>
+
+		<div class="tab-content">
+  			<div class="tab-pane" id="export">
+
+				<div id="export_response" class="alert">Exporting data is a work in progress.</div>
+
+			</div>
+		</div>
+
+
 	</div>
 </div>
 {% endblock %}

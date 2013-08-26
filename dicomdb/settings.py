@@ -34,6 +34,7 @@ TEMPLATE_DIRS = (
     BASE_DIR + "/upload/templates/",
     BASE_DIR + "/browse/templates/",
     BASE_DIR + "/dcmview/templates",
+    BASE_DIR + "/dcmupload/templates",
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -49,6 +50,7 @@ STATICFILES_DIRS = (
     BASE_DIR + '/upload/static/',
     BASE_DIR + "/browse/static/",
     BASE_DIR + "/dcmview/static/",
+    BASE_DIR + "/dcmupload/static/",
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -73,6 +75,7 @@ INSTALLED_APPS = (
     'users',
     'upload',
     'dcmview',
+    'dcmupload',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,0 +1,71 @@
+{% extends 'template.html' %}
+
+{% block css %}
+<link href="{{STATIC_URL}}css/fineuploader-3.8.0.min.css" rel="stylesheet">
+<style>
+	.qq-upload-list {
+		text-align: left;
+	}
+
+	/* For the bootstrapped demos */
+	li.alert-success {
+		background-color: #DFF0D8;
+	}
+
+	li.alert-error {
+		background-color: #F2DEDE;
+	}
+
+	.alert-error .qq-upload-failed-text {
+		display: inline;
+	}
+</style>
+{% endblock %}
+
+{% block js %}
+<script src="{{STATIC_URL}}js/dcmupload.js" type="text/javascript"></script>
+ <script src="{{STATIC_URL}}js/s3.jquery.fineuploader-3.8.0.min.js"></script>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="row-fluid">
+
+	<div class="span12">
+
+		<div class="control-group">
+			
+			<label for="dicom_file" class="control-label">DICOM File</label>
+
+			<div class="controls">
+				<div id="fineuploader-s3"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+<div class="row-fluid">
+
+	<div class="span8">
+
+		{% if success %}
+			<div class="alert alert-success">
+				DICOM file has been uploaded! <br />
+			</div>
+		{% elif error %}
+			<div class="alert alert-error">
+				Error: {{ error }}
+			</div>
+		{% else %}
+			<div class="alert">All DICOM files will be uploaded to our server while ensuring anonymity.</div>
+		{% endif %}
+
+	</div>
+
+</div>
+
+
+{% endblock %}

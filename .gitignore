@@ -1,3 +1,4 @@
+conf/rootkey.csv
 static/*
 .installed.cfg
 bin

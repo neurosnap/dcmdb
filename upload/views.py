@@ -90,7 +90,7 @@ def upload(request):
 				dcm_dir = pre_dir + '/private'
 
 			#now upload the file
-			my_dicom = processdicom(dicom = dcm)
+			my_dicom = processdicom(dcm = dcm)
 			dcm = my_dicom.writeFiles(dcm_dir, filename)
 
 			#Test to see if the pixel array is compressed
