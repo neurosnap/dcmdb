@@ -1,3 +1,4 @@
+dicomdb/settings.py
 conf/rootkey.csv
 static/*
 .installed.cfg
