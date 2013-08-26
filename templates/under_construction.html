@@ -9,6 +9,7 @@
 		<meta name=”description” content=”DCMDB is an open-source, open-access search engine for medical diagnostic images (DICOMS)”>
 
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
+		{% block css %}{% endblock %}
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
 		<title>DCMDB | Public DICOM Search Engine</title>
@@ -19,8 +20,8 @@
 
 		<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.9.1.min.js"> </script>
 		<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"> </script>
-		<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script>
 		<script type="text/javascript" src="{{STATIC_URL}}js/dicom_core.js"> </script>
+		{% block js %}{% endblock %}
 	
 	</head>
 
@@ -32,7 +33,7 @@
 
 				<a class="brand" href="/" style="margin-left: 10px;"> dcmdb</a>
 				<ul class="nav dcm_nav">
-					<li><a href="#">Under Construction!</a></li>
+					<li><a href="/main/about/">About</a></li>
 				</ul>
 
 			</div>
@@ -41,16 +42,7 @@
 		
 		<div id="content" class="container">
 			
-			<div class="hero-unit">
-		
-				<h1>DICOM Database</h1>
-				<p>
-					Diagnostic file search engine <br />
-					Currently Under Construction. <br />
-					Questions? Email <a href="mailto:neurosnap@gmail.com">me</a>
-				</p>
-
-			</div>
+			{% block content %}{% endblock %}
 			
 		</div>
 	

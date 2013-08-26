@@ -17,14 +17,24 @@ def index(request):
 	
 	return render_to_response('index.html', context, context_instance = RequestContext(request))
 
-def about(request):
-
-	context = {}
-	
-	return render_to_response('about.html', context, context_instance = RequestContext(request))
-
 def under_construction(request):
 
 	context = {}
 	
-	return render_to_response('under_construction.html', context, context_instance = RequestContext(request))
+	return render_to_response('uc_index.html', context, context_instance = RequestContext(request))
+
+def about(request):
+
+	context = {
+		"template": "template.html"
+	}
+	
+	return render_to_response('about.html', context, context_instance = RequestContext(request))
+
+def about_construction(request):
+
+	context = {
+		"template": "under_construction.html"
+	}
+
+	return render_to_response('about.html', context, context_instance = RequestContext(request))
