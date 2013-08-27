@@ -5,17 +5,17 @@ $(function() {
           // REQUIRED: We are using a custom domain
           // for our S3 bucket, in this case.  You can
           // use any valid URL that points to your bucket.
-          "endpoint": "dicoms.s3-website-us-east-1.amazonaws.com",
+          "endpoint": "dcmdb.org.s3-website-us-east-1.amazonaws.com",
 
           // REQUIRED: The AWS public key for the client-side user
           // we provisioned.
-          "accessKey": "AKIAITUKA4QJV4JFOK4A"
+          "accessKey": "CZOS6JDDZZIVLR54ROWQXNHTY5ZPD6TU"
       },
 
       // REQUIRED: Path to our local server where requests
       // can be signed.
       "signature": {
-          "endpoint": "/s3demo.php"
+          "endpoint": "/dcmupload/signature"
       },
 
       // OPTIONAL: An endopint for Fine Uploader to POST to
@@ -23,13 +23,13 @@ $(function() {
       // Server-side, we can declare this upload a failure
       // if something is wrong with the file.
       "uploadSuccess": {
-          "endpoint": "/s3demo.php?success"
+          "endpoint": "/dcmupload/success"
       },
 
       // USUALLY REQUIRED: Blank file on the same domain
       // as this page, for IE9 and older support.
       "iframeSupport": {
-          "localBlankPagePath": "/server/success.html"
+          "localBlankPagePath": "/dcmupload/blank"
       },
 
       // optional feature
