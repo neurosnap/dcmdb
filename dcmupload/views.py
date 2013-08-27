@@ -53,7 +53,7 @@ def success_redirect_endpoint(request):
     """ This is where the upload will snd a POST request after the 
     file has been stored in S3.
     """
-    return make_response(200)
+    return make_response(200, json.dumps({"success": True, "msg": "hello?"}))
 
 @csrf_exempt
 def handle_s3(request):
