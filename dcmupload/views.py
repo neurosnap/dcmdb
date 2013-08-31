@@ -73,10 +73,16 @@ def handle_POST(request):
     to sign the headers to start a multipart encoded request.
     """
     if request.POST.get('success', None):
+
         return make_response(200)
+
     else:
+
+        handle_dcm(request)
+
         request_payload = json.loads(request.body)
         headers = request_payload.get('headers', None)
+
         if headers:
             # The presence of the 'headers' property in the request payload 
             # means this is a request to sign a REST/multipart request 
@@ -84,8 +90,14 @@ def handle_POST(request):
             response_data = sign_headers(headers)
         else:
             response_data = sign_policy_document(request_payload)
+
         response_payload = json.dumps(response_data)
+
         return make_response(200, response_payload)
+
+def handle_dcm(request):
+
+    print request
 
 def handle_DELETE(request):
     """ Handle file deletion requests. For this, we use the Amazon Python SDK,

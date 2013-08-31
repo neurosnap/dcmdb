@@ -35,15 +35,14 @@
 				<a class="brand" href="/" style="margin-left: 10px;"> dcmdb</a>
 				<ul class="nav dcm_nav">
 					<li class="active"><a href="/">Explore</a></li>
+					<li><a href="/dcmupload/">Upload</a></li>
 					<li><a href="/main/about/">About</a></li>
 				{% if user.is_authenticated %}
-					<li><a href="/users/">Profile</a></li>
-					<!-- <li><a href="/browse/">Browse Dicoms</a></li> -->
-					<li><a href="/dcmupload/">Upload</a></li>
-					<li><a href="/users/logout/">Logout</a></li>
+					<!-- <li><a href="/users/">Profile</a></li> -->
+					<!-- <li><a href="/users/logout/">Logout</a></li> -->
 				{% else %}
-					<li><a href="/users/login/">Login</a></li>
-					<li><a href="/users/register/">Register</a></li>
+					<!-- <li><a href="/users/login/">Login</a></li> -->
+					<!-- <li><a href="/users/register/">Register</a></li> -->
 				{% endif %}
 				</ul>
 
