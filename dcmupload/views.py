@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from upload.models import Study, Series, Image
 from upload.processdicom import processdicom
 
-import base64, hmac, hashlib, json, sys
+import json, simplejson
 import random
 import string
 import re
@@ -20,17 +20,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 MEDIA_DIR = BASE_DIR + "/media"
-
-try:
-    import boto
-    from boto.s3.connection import Key, S3Connection
-    boto.set_stream_logger('boto')
-    S3 = S3Connection(settings.AWS_SERVER_PUBLIC_KEY, settings.AWS_SERVER_SECRET_KEY)
-except ImportError, e:
-    print("Could not import boto, the Amazon SDK for Python.")
-    print("Deleting files will not work.")
-    print("Install boto with")
-    print("$ pip install boto")
 
 dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
@@ -49,113 +38,130 @@ def blank(request):
 	return render_to_response('blank.html', context, context_instance = RequestContext(request))
 
 @csrf_exempt
-def success_redirect_endpoint(request):
-    """ This is where the upload will snd a POST request after the 
-    file has been stored in S3.
-    """
-    return make_response(200, json.dumps({"success": True, "msg": "hello?"}))
+def handle_upload(request):
 
-@csrf_exempt
-def handle_s3(request):
-    """ View which handles all POST and DELETE requests sent by Fine Uploader
-    S3. You will need to adjust these paths/conditions based on your setup.
-    """
-    if request.method == "POST":
-        return handle_POST(request)
-    elif request.method == "DELETE":
-        return handle_DELETE(request)
-    else:
-        return HttpResponse(status=405)
+     # used to generate random unique id
+    import uuid
 
-def handle_POST(request):
-    """ Handle S3 uploader POST requests here. For files <=5MiB this is a simple
-    request to sign the policy document. For files >5MiB this is a request
-    to sign the headers to start a multipart encoded request.
-    """
-    if request.POST.get('success', None):
-
-        return make_response(200)
-
-    else:
-
-        handle_dcm(request)
-
-        request_payload = json.loads(request.body)
-        headers = request_payload.get('headers', None)
-
-        if headers:
-            # The presence of the 'headers' property in the request payload 
-            # means this is a request to sign a REST/multipart request 
-            # and NOT a policy document
-            response_data = sign_headers(headers)
-        else:
-            response_data = sign_policy_document(request_payload)
-
-        response_payload = json.dumps(response_data)
-
-        return make_response(200, response_payload)
-
-def handle_dcm(request):
-
-    print request
-
-def handle_DELETE(request):
-    """ Handle file deletion requests. For this, we use the Amazon Python SDK,
-    boto.
-    """
-    if boto:
-        bucket_name = request.REQUEST.get('bucket')
-        key_name = request.REQUEST.get('key')
-        aws_bucket = S3.get_bucket(bucket_name, validate=False)
-        aws_key = Key(aws_bucket, key_name)
-        aws_key.delete()
-        return make_response(200)
-    else:
-        return make_response(500)
-
-def make_response(status=200, content=None):
-    """ Construct an HTTP response. Fine Uploader expects 'application/json'.
-    """
-    response = HttpResponse()
-    response.status_code = status
-    response['Content-Type'] = "application/json"
-    response.content = content
-    return response
-
-def is_valid_policy(policy_document):
-    """ Verify the policy document has not been tampered with client-side
-    before sending it off. 
-    """
-    #bucket = settings.AWS_EXPECTED_BUCKET
-    #parsed_max_size = settings.AWS_MAX_SIZE
-    bucket = ''
-    parsed_max_size = 0
-
-    for condition in policy_document['conditions']:
-        if isinstance(condition, list) and condition[0] == 'content-length-range':
-            parsed_max_size = condition[2]
-        else:
-            if condition.get('bucket', None):
-                bucket = condition['bucket']
-
-    return bucket == settings.AWS_EXPECTED_BUCKET and parsed_max_size == settings.AWS_MAX_SIZE
-
-def sign_policy_document(policy_document):
-    """ Sign and return the policy doucument for a simple upload.
-    http://aws.amazon.com/articles/1434/#signyours3postform
-    """
-    policy = base64.b64encode(json.dumps(policy_document))
-    signature = base64.b64encode(hmac.new(settings.AWS_CLIENT_SECRET_KEY, policy, hashlib.sha1).digest())
-    return {
-        'policy': policy,
-        'signature': signature
+    # settings for the file upload
+    #   you can define other parameters here
+    #   and check validity late in the code
+    options = {
+        # the maximum file size (must be in bytes)
+        "maxfilesize": 2 * 2 ** 20, # 2 Mb
+        # the minimum file size (must be in bytes)
+        "minfilesize": 1 * 2 ** 10, # 1 Kb
+        # the file types which are going to be allowed for upload
+        #   must be a mimetype
+        "acceptedformats": (
+            "image/gif",
+            "image/jpeg",
+            "image/png",
+            "application/dicom",
+        )
     }
 
-def sign_headers(headers):
-    """ Sign and return the headers for a chunked upload. """
-    return {
-        'signature': base64.b64encode(hmac.new(settings.AWS_CLIENT_SECRET_KEY, headers, hashlib.sha1).digest())
-    }
+
+    # POST request
+    #   meaning user has triggered an upload action
+    if request.method == 'POST':
+        # figure out the path where files will be uploaded to
+        temp_path = MEDIA_DIR
+
+        # if 'f' query parameter is not specified
+        # file is being uploaded
+        if not ("f" in request.GET.keys()): # upload file
+
+            # make sure some files have been uploaded
+            if not request.FILES:
+                return HttpResponseBadRequest('Must upload a file')
+
+            # get the uploaded file
+            file = request.FILES[u'files[]']
+
+            # initialize the error
+            # If error occurs, this will have the string error message so
+            # uploader can display the appropriate message
+            error = False
+
+            # check against options for errors
+
+            # file size
+            if file.size > options["maxfilesize"]:
+                error = "maxFileSize"
+            if file.size < options["minfilesize"]:
+                error = "minFileSize"
+                # allowed file type
+            if file.content_type not in options["acceptedformats"]:
+                error = "acceptFileTypes"
+
+
+            # the response data which will be returned to the uploader as json
+            response_data = {
+                "name": file.name,
+                "size": file.size,
+                "type": file.content_type
+            }
+
+            # if there was an error, add error message to response_data and return
+            if error:
+                # append error message
+                response_data["error"] = error
+                # generate json
+                response_data = simplejson.dumps([response_data])
+                # return response to uploader with error
+                # so it can display error message
+                return HttpResponse(response_data, mimetype='application/json')
+
+
+            # make temporary dir if not exists already
+            if not os.path.exists(temp_path):
+                os.makedirs(temp_path)
+
+            # get the absolute path of where the uploaded file will be saved
+            # all add some random data to the filename in order to avoid conflicts
+            # when user tries to upload two files with same filename
+            filename = os.path.join(temp_path, str(uuid.uuid4()) + file.name)
+            # open the file handler with write binary mode
+            destination = open(filename, "wb+")
+            # save file data into the disk
+            # use the chunk method in case the file is too big
+            # in order not to clutter the system memory
+            for chunk in file.chunks():
+                destination.write(chunk)
+                # close the file
+            destination.close()
+
+            # here you can add the file to a database,
+            #                           move it around,
+            #                           do anything,
+            #                           or do nothing and enjoy the demo
+            # just make sure if you do move the file around,
+            # then make sure to update the delete_url which will be send to the server
+            # or not include that information at all in the response...
+
+            # allows to generate properly formatted and escaped url queries
+            import urllib
+
+            # generate the json data
+            response_data = simplejson.dumps([response_data])
+            # response type
+            response_type = "application/json"
+
+            # QUIRK HERE
+            # in jQuey uploader, when it falls back to uploading using iFrames
+            # the response content type has to be text/html
+            # if json will be send, error will occur
+            # if iframe is sending the request, it's headers are a little different compared
+            # to the jQuery ajax request
+            # they have different set of HTTP_ACCEPT values
+            # so if the text/html is present, file was uploaded using jFrame because
+            # that value is not in the set when uploaded by XHR
+            if "text/html" in request.META["HTTP_ACCEPT"]:
+                response_type = "text/html"
+
+            # return the data to the uploading plugin
+            return HttpResponse(response_data, mimetype=response_type)
 
 # Method that takes a date "20130513" and converts it to "2013-05-13" or whatever
 # delimiter inputed
