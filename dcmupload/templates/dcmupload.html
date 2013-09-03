@@ -2,16 +2,11 @@
 
 {% block css %}
 <link href="{{STATIC_URL}}css/jquery.fileupload-ui.css" rel="stylesheet">
-<style>
-	.bar {
-    	height: 18px;
-    	background: green;
-	}
-</style>
 {% endblock %}
 
 {% block js %}
 <script src="{{STATIC_URL}}js/jquery.ui.widget.min.js" type="text/javascript"></script>
+<!-- <script src="{{STATIC_URL}}js/jquery.ui.progressbar.min.js" type="text/javascript"></script> -->
 <script src="{{STATIC_URL}}js/jquery.iframe-transport.js" type="text/javascript"></script>
 <script src="{{STATIC_URL}}js/jquery.fileupload.js" type="text/javascript"></script>
 <script src="{{STATIC_URL}}js/jquery.fileupload-process.js" type="text/javascript"></script>
@@ -24,41 +19,52 @@
 	{% csrf_token %}
 	<div class="row-fluid fileupload-buttonbar">
 
-		<div class="span12">
+		<div class="span8">
 
 			<!-- The fileinput-button span is used to style the file input field as button -->
             <span class="btn btn-success fileinput-button">
-                <i class="glyphicon glyphicon-plus"></i>
-                <span>Add files...</span>
+                <i class="fui-plus"></i>
+                <span>Add DICOM files ...</span>
                 <input type="file" name="files[]" multiple>
             </span>
 
-            <button type="submit" class="btn btn-primary start">
-                <i class="glyphicon glyphicon-upload"></i>
+            <button type="submit" id="send_files" class="btn btn-info start">
+                <i class="fui-play"></i>
                 <span>Start upload</span>
             </button>
 
-            <button type="reset" class="btn btn-warning cancel">
-                <i class="glyphicon glyphicon-ban-circle"></i>
+            <!-- <button type="reset" class="btn btn-danger cancel">
+                <i class="fui-cross"></i>
                 <span>Cancel upload</span>
-            </button>
+            </button> -->
 
             <!-- The loading indicator is shown during file processing -->
             <span class="fileupload-loading"></span>
+       
         </div>
 
-        <div class="span12">
+    </div>
+    <div class="row-fluid">
 
-			<div class="fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                </div>
-                <!-- The extended global progress information -->
-                <div class="progress-extended">&nbsp;</div>
+		<div class="span8 fileupload-progress">
+
+            <!-- The global progress bar -->
+            <div id="progress" class="progress progress-striped">
+                <div class="bar" style="width: 0%;"></div>
             </div>
+            <!-- The extended global progress information -->
+            <div class="progress-extended">&nbsp;</div>
 
-            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+        </div>
+
+	</div>
+
+	<div class="row-fluid">
+
+		<div class="span8">
+
+			<div id="display_uploads"></div>
+       		<!-- <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table> -->
 
 		</div>
 

@@ -54,10 +54,9 @@ def handle_upload(request):
         # the file types which are going to be allowed for upload
         #   must be a mimetype
         "acceptedformats": (
-            "image/gif",
-            "image/jpeg",
-            "image/png",
             "application/dicom",
+            "image/dicom",
+            "image/x-dicom"
         )
     }
 
@@ -95,7 +94,6 @@ def handle_upload(request):
             if file.content_type not in options["acceptedformats"]:
                 error = "acceptFileTypes"
 
-
             # the response data which will be returned to the uploader as json
             response_data = {
                 "name": file.name,
@@ -121,7 +119,9 @@ def handle_upload(request):
             # get the absolute path of where the uploaded file will be saved
             # all add some random data to the filename in order to avoid conflicts
             # when user tries to upload two files with same filename
-            filename = os.path.join(temp_path, str(uuid.uuid4()) + file.name)
+            file_name = str(uuid.uuid4()) + file.name
+            filename = os.path.join(temp_path, file_name)
+
             # open the file handler with write binary mode
             destination = open(filename, "wb+")
             # save file data into the disk
@@ -131,6 +131,26 @@ def handle_upload(request):
                 destination.write(chunk)
                 # close the file
             destination.close()
+
+            # strip patient data
+            anonymize(filename, filename)
+
+            dcm = processdicom(filename = filename)
+
+            save_image = dcm.writeFiles(filename)
+            
+            if not save_image['success']:
+                print save_image['error']
+
+            response_data['file_name'] = "/media/" + file_name[:-4] + ".png"
+
+            args = {
+                "dcm": dcm,
+                "filename": file_name[:-4],
+                "request": request,
+            }
+
+            add_dcm_record(args)
 
             # here you can add the file to a database,
             #                           move it around,
@@ -163,6 +183,133 @@ def handle_upload(request):
             # return the data to the uploading plugin
             return HttpResponse(response_data, mimetype=response_type)
 
+#Creates a new record in our database for the DICOM file
+#Right now we hard-coded a list of keys we are interested in
+def add_dcm_record(**kwargs):
+
+    #dcm, dcm_dir, filename, title, public, request, study
+
+    modality = ""
+    institution_name = ""
+    manufacturer = ""
+    physician_name = ""
+    bits_allocated = ""
+    bits_store = ""
+    study_id = ""
+    study_description = ""
+    study_date = ""
+    study_time = ""
+    study_instance_uid = ""
+    sop_clas_uid = ""
+    instance_number = ""
+    accession_number = ""
+    series_instance_uid = ""
+    series_number = ""
+    series_date = ""
+    image_type = ""
+
+    dcm = kwargs['dcm']
+    
+    for tag in dcm.dir():
+
+        if tag == "Modality":
+            modality = dcm.Modality
+        elif tag == "InstitutionName":
+            institution_name = dcm.InstitutionName
+            institution_name = institution_name.decode('utf-8')
+        elif tag == "Manufacturer":
+            manufacturer = dcm.Manufacturer
+        elif tag == "BitsAllocated":
+            bits_allocated = dcm.BitsAllocated
+        elif tag == "BitsStored":
+            bits_stored = dcm.BitsStored
+        elif tag == "StudyID":
+            study_id = dcm.StudyID
+        elif tag == "StudyDescription":
+            study_description = dcm.StudyDescription
+            study_description = ""
+            # study_description = study_description.decode('utf-8')
+        elif tag == "StudyDate":
+            study_date = dcm.StudyDate
+            study_date = convert_date(study_date, "-")
+        elif tag == "StudyTime":
+            study_time = dcm.StudyTime
+        elif tag == "StudyInstanceUID":
+            # unique identifier for the study
+            study_instance_uid = dcm.StudyInstanceUID
+        elif tag == "SOPInstanceUID":
+            sop_instance_uid = dcm.SOPInstanceUID
+        elif tag == "SOPClassUID":
+            sop_class_uid = dcm.SOPClassUID
+        elif tag == "InstanceNumber":
+            instance_number = dcm.InstanceNumber
+        elif tag == "AccessionNumber":
+            accession_number = dcm.AccessionNumber
+        elif tag == "SeriesInstanceUID":
+            # unique identifier for the series
+            series_instance_uid = dcm.SeriesInstanceUID
+        elif tag == "SeriesNumber":
+            series_number = dcm.SeriesNumber
+        elif tag == "SeriesDate":
+            series_date = dcm.SeriesDate
+            series_date = convert_date(series_date, "-").encode('utf-8')
+        elif tag == "ImageType":
+            image_type = dcm.ImageType
+        elif tag == "Laterality":
+            laterality = dcm.Laterality
+
+    if series_date == "":
+        series_date = "1990-01-01"
+
+    try:
+
+        check_study = Study.objects.get(instance_UID = study_instance_uid)
+
+    except (Study.DoesNotExist):
+
+        study = Study.objects.create(
+                UID = study_instance_uid,
+                study_id = study_id,
+                study_date = study_date,
+                study_time = study_time,
+                description = study_description,
+                modality = modality,
+                institution_name = institution_name,
+                manufacturer = manufacturer,
+                accession_number = accession_number
+            )
+
+            study.save()
+
+    try:
+
+        Series.objects.get(instance_UID = series_instance_uid, series_number = series_number)
+
+    except (Series.DoesNotExist):
+
+        record = Series.objects.create(
+            dcm_study = study,
+            instance_UID = series_instance_uid,
+            series_number = series_number,
+            filename = kwargs['filename'],
+            bits_allocated = bits_allocated,
+            bits_stored = bits_stored,
+            sop_instance_uid = sop_instance_uid,
+            sop_class_uid = sop_class_uid,
+            instance_number = instance_number,
+            date = series_date
+        )
+
+        record.save()
+
+        return record
+
+    #record = lambda: None
+    #record.id = False
+    #record.error = "Instance number already exists for this study "
+
+    return record
+
 # Method that takes a date "20130513" and converts it to "2013-05-13" or whatever
 # delimiter inputed
 def convert_date(date, delim):
@@ -176,3 +323,50 @@ def convert_date(date, delim):
 def id_generator(size = 6, chars = string.ascii_lowercase + string.digits):
 
 	return ''.join(random.choice(chars) for x in range(size))
+
+def anonymize(filename, output_filename, new_person_name="anonymous",
+              new_patient_id="id", remove_curves=True, remove_private_tags=True):
+    """Replace data element values to partly anonymize a DICOM file.
+    Note: completely anonymizing a DICOM file is very complicated; there
+    are many things this example code does not address. USE AT YOUR OWN RISK.
+    """
+
+    # Define call-back functions for the dataset.walk() function
+    def PN_callback(ds, data_element):
+        """Called from the dataset "walk" recursive function for all data elements."""
+        if data_element.VR == "PN":
+            data_element.value = new_person_name
+    def curves_callback(ds, data_element):
+        """Called from the dataset "walk" recursive function for all data elements."""
+        if data_element.tag.group & 0xFF00 == 0x5000:
+            del ds[data_element.tag]
+    
+    # Load the current dicom file to 'anonymize'
+    dataset = dicom.read_file(filename)
+    
+    # Remove patient name and any other person names
+    dataset.walk(PN_callback)
+    
+    # Change ID
+    dataset.PatientID = new_patient_id
+    
+    # Remove data elements (should only do so if DICOM type 3 optional) 
+    # Use general loop so easy to add more later
+    # Could also have done: del ds.OtherPatientIDs, etc.
+    for name in ['OtherPatientIDs', 'OtherPatientIDsSequence']:
+        if name in dataset:
+            delattr(dataset, name)
+
+    # Same as above but for blanking data elements that are type 2.
+    for name in ['PatientBirthDate']:
+        if name in dataset:
+            dataset.data_element(name).value = ''
+    
+    # Remove private tags if function argument says to do so. Same for curves
+    if remove_private_tags:
+        dataset.remove_private_tags()
+    if remove_curves:
+        dataset.walk(curves_callback)
+        
+    # write the 'anonymized' DICOM out under the new filename
+    dataset.save_as(output_filename)
