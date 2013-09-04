@@ -8,8 +8,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from upload.models import Study, Series, Image
-from upload.processdicom import processdicom
+from dcmupload.models import Study, Series, Image
+from dcmupload.processdicom import processdicom
 
 import json, simplejson
 import random
@@ -145,12 +145,12 @@ def handle_upload(request):
             response_data['file_name'] = "/media/" + file_name[:-4] + ".png"
 
             args = {
-                "dcm": dcm,
+                "dcm": save_image['dicom'],
                 "filename": file_name[:-4],
                 "request": request,
             }
 
-            add_dcm_record(args)
+            add_dcm_record(**args)
 
             # here you can add the file to a database,
             #                           move it around,
@@ -262,16 +262,19 @@ def add_dcm_record(**kwargs):
         series_date = "1990-01-01"
 
     try:
-
-        check_study = Study.objects.get(instance_UID = study_instance_uid)
+        print "try study"
+        study = Study.objects.get(UID = study_instance_uid)
+        print study
 
     except (Study.DoesNotExist):
+
+        print "study does not exist"
 
         study = Study.objects.create(
                 UID = study_instance_uid,
                 study_id = study_id,
-                study_date = study_date,
-                study_time = study_time,
+                #study_date = study_date,
+                #study_time = study_time,
                 description = study_description,
                 modality = modality,
                 institution_name = institution_name,
@@ -279,17 +282,22 @@ def add_dcm_record(**kwargs):
                 accession_number = accession_number
             )
 
-            study.save()
+        study.save()
 
     try:
-
-        Series.objects.get(instance_UID = series_instance_uid, series_number = series_number)
+        print "try series"
+        print series_instance_uid
+        print instance_number
+        record = Series.objects.get(UID = series_instance_uid, instance_number = instance_number)
+        print record
 
     except (Series.DoesNotExist):
 
+        print "record does not exist"
+
         record = Series.objects.create(
             dcm_study = study,
-            instance_UID = series_instance_uid,
+            UID = series_instance_uid,
             series_number = series_number,
             filename = kwargs['filename'],
             bits_allocated = bits_allocated,

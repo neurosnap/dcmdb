@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 
 class Study(models.Model):
 
-	instance_UID = models.CharField(max_length = 100)
+	UID = models.CharField(max_length = 100)
 	tag = models.CharField(max_length = 50)
-	user_ID = models.ForeignKey(User)
+	#user_ID = models.ForeignKey(User)
 	study_id = models.CharField(max_length = 50)
-	study_date = models.DateField()
-	study_time = models.TimeField()
+	#study_date = models.DateField()
+	#study_time = models.TimeField()
 	accession_number = models.CharField(max_length = 100)
 	description = models.CharField(max_length = 500)
 	#
@@ -27,7 +27,7 @@ class Study(models.Model):
 class Series(models.Model):
 
 	dcm_study = models.ForeignKey(Study)
-	instance_UID = models.CharField(max_length = 100)
+	UID = models.CharField(max_length = 100)
 	series_number = models.CharField(max_length = 100)
 	filename = models.CharField(max_length = 100)
 	#
@@ -48,7 +48,7 @@ class Series(models.Model):
 
 class Image(models.Model):
 
-	instance_UID = models.CharField(max_length = 100)
+	UID = models.CharField(max_length = 100)
 	series_ID = models.ForeignKey(Series)
 	number = models.IntegerField()
 	image_position_patient = models.CharField(max_length = 50)
