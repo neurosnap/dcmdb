@@ -4,12 +4,14 @@ from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie
 #you bastard!
 import dicom
-from upload.models import Study, Series
+from dcmupload.models import Study, Series
 import json
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+MEDIA_DIR = BASE_DIR + "/media"
 
 dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
@@ -17,14 +19,19 @@ dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) el
 @ensure_csrf_cookie
 def dcmview(request, dcm_uid):
 
-	#filepath = BASE_DIR + '/test.dcm'
+	try:
 
-	study = Study.objects.filter(UID = dcm_uid)
+		study = Study.objects.filter(UID = dcm_uid)
+
+	except ObjectDoesNotExist:
+
+		print "study does not exist"
+	
 	series = Series.objects.filter(dcm_study = study)
 
 	first_series = list(series[:1])[0]
 
-	filepath = BASE_DIR + study[0].directory + '/' + first_series.filename + '.dcm'
+	filepath = MEDIA_DIR + '/' + first_series.filename + '.dcm'
 
 	dcm = dicom.read_file(filepath)
 
