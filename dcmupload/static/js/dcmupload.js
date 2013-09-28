@@ -60,8 +60,9 @@ $(function() {
             $.each(data.result, function (index, file) {
                 $(".queued").each(function() {
                     if (file.name == $(this).attr("dcm_name")) {
+                        console.log(file);
                         $(this).find(".dcm_done").show();
-                        $(this).find(".dcm_preview").html('<a href="/dcmview/">View DCM</a><img src="' + file.file_name + '" style="height: 150px; width: 150px;" />');
+                        $(this).find(".dcm_preview").html('<a href="/dcmview/' + file.study_uid + '">View DCM</a><img src="' + file.file_name + '" style="height: 150px; width: 150px;" />');
                     }
                 })
             });

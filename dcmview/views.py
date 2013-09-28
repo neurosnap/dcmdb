@@ -15,11 +15,11 @@ dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) el
 
 # Create your views here.
 @ensure_csrf_cookie
-def dcmview(request, dcm_id):
+def dcmview(request, dcm_uid):
 
 	#filepath = BASE_DIR + '/test.dcm'
 
-	study = Study.objects.filter(pk = dcm_id)
+	study = Study.objects.filter(UID = dcm_uid)
 	series = Series.objects.filter(dcm_study = study)
 
 	first_series = list(series[:1])[0]

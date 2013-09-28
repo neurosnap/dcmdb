@@ -150,7 +150,11 @@ def handle_upload(request):
                 "request": request,
             }
 
-            add_dcm_record(**args)
+            new_series = add_dcm_record(**args)
+
+            print "DCM STUDY UID: " + new_series.dcm_study.get_fields()[1][1]
+            response_data['study_uid'] = new_series.dcm_study.get_fields()[1][1]
+            response_data['series_uid'] = new_series.UID
 
             # here you can add the file to a database,
             #                           move it around,
