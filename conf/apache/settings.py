@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.append('/srv/www/dicomdb-python')
+sys.path.append('/srv/www/dcmdb')
 
 os.environ['PYTHON_EGG_CACHE'] = '/srv/www/.python-egg'
 
