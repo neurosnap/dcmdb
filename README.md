@@ -1,7 +1,7 @@
 dcmdb.org
 ==========
 
-DICOM Search Engine and Educational Tool
+DCMDB is a DICOM Search Engine and Educational Tool
 
 This website was developed by Eric Bower.  The mission of this service is to create a repository of easy to access, publicly available, anonymous medical diagnotic images.  With this repository we also wish to create a social platform for discussion, teaching, and learning.
 
