@@ -6,6 +6,7 @@ import matplotlib as mpl
 mpl.use('Agg')
 from pylab import cm 
 import matplotlib.pyplot as plt
+from PIL import Image
 
 class processdicom(object):
 	""" A class of processing DICOM image files"""
@@ -21,7 +22,7 @@ class processdicom(object):
 
 	def writeFiles(self, filename):
 
-		#self.dicom.save_as(dcm_file)
+		png_filename = filename.replace(' ', '')[:-4]
 
 		self.img_process = gdcm.ImageReader()
 		self.img_process.SetFileName(filename.encode('utf-8'))
@@ -37,16 +38,28 @@ class processdicom(object):
 			return { "success": False, "error": "Unsuppported transfer syntax " + self.transferSyntax(self.dicom.file_meta.TransferSyntaxUID) }
 
 		try:
-			#plt.imshow(self.pxl_arr, interpolation='bilinear', cmap=cm.bone)
-			self.imsave(fname = filename.replace(' ', '')[:-4] + ".png", arr = self.pxl_arr, cmap = cm.bone)
+			# save normal resolution image
+			self.imsave(fname = png_filename + ".png", arr = self.pxl_arr, cmap = cm.bone)
+			
+			# save thumbnail via PIL
+			try:
+				pil = Image.open(png_filename + ".png")
+			except:
+				return { "success": False, "error": "Image could not be loaded into PIL." }
+
+			try:
+				thumb_size = 150, 150
+				pil.thumbnail(thumb_size, Image.ANTIALIAS)
+			except:
+				return { "success": False, "error": "Image could not be resized using PIL." }
+			
+			try:
+				pil.save(png_filename + "_thumb.png", "PNG")
+			except:
+				return { "success": False, "error": "Thumbnail could not be saved." }
+
 		except:
-			print "imshow failure"
-
-		#plt.gca().xaxis.set_visible(False)
-		#plt.gca().yaxis.set_visible(False)
-
-		#plt.savefig(filename.replace(' ', '')[:-4] + ".png", bbox_inches = 'tight')
-		#plt.close()
+			return { "success": False, "error": "Could not save image." }
 
 		return { "success": True, "dicom": self.dicom }
 
@@ -81,6 +94,9 @@ class processdicom(object):
 		else:
 			return transferSyntaxUID
 
+	def getDCM(self):
+		return self.dicom
+
 	def getdict(self):
 
 		ddict = {}
@@ -113,7 +129,7 @@ class processdicom(object):
 
 		assert pf in self.get_gdcm_to_numpy_typemap().keys(), \
 			"Unsupported array type %s"%pf
-		
+
 		d = image.GetDimension(0), image.GetDimension(1)
 
 		dtype = self.get_numpy_array_type(pf)
@@ -129,6 +145,7 @@ class processdicom(object):
 		return result
 
 	def imsave(self, fname, arr, vmin=None, vmax=None, cmap=None, format=None, origin=None):
+
 		from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 		from matplotlib.figure import Figure
 

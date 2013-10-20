@@ -1,0 +1,36 @@
+{% extends 'template.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	//obj singleton used in dcmview.js
+	var dcm = {
+
+		"study": {{study|safe}},
+		"series": {{series|safe}}
+
+	};
+</script>
+<script type="text/javascript" src="{{STATIC_URL}}js/dcmstudy.js"> </script>
+{% endblock %}
+
+{% block content %}
+<ol class="breadcrumb"><li><a href="/main/explore">Search</a></li><li>Study</li></ol>
+
+<div class ="row">
+	<div class="col-md-12" id="dcm_header">
+		<h4>{{ study.UID }}</h4>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12" id="dcm_study">
+		{% for item in series %}
+			<a href="/dcmview/series/{{ item.UID }}"><img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail" /></a>
+		{% endfor %}
+	</div>
+</div>
+<br /><br />
+{% endblock %}

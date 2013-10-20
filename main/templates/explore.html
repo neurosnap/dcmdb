@@ -1,0 +1,26 @@
+{% extends 'template.html' %}
+
+{% block js %}
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Explore</h4>
+		</div>
+	</div>
+
+	<div id="explore" class="row">
+
+		<div class="col-md-12">
+
+			{% for item in series %}
+				<a href="/dcmview/study/{{ item.dcm_study.UID }}"><img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail" style="height: 150px; width: 150px;" /> </a>
+			{% endfor %}
+
+		</div>
+
+	</div>
+
+{% endblock %}

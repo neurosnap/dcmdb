@@ -8,6 +8,7 @@ from dcmupload.models import Study, Series
 import json
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
+from django.core import serializers
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -17,19 +18,24 @@ dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) el
 
 # Create your views here.
 @ensure_csrf_cookie
-def dcmview(request, dcm_uid):
+def view(request, dcm_uid):
 
 	try:
 
-		study = Study.objects.filter(UID = dcm_uid)
+		first_series = Series.objects.get(sop_instance_uid = dcm_uid)
+
+		study = first_series.dcm_study
+
+		series = Series.objects.filter(UID = first_series.UID).order_by("sop_instance_uid")
 
 	except ObjectDoesNotExist:
 
-		print "study does not exist"
-	
-	series = Series.objects.filter(dcm_study = study)
+		context = {
+			"success": False,
+			"msg": "Object does not exist: " + dcm_uid
+		}
 
-	first_series = list(series[:1])[0]
+		return render_to_response('view.html', context, context_instance = RequestContext(request))
 
 	filepath = MEDIA_DIR + '/' + first_series.filename + '.dcm'
 
@@ -38,30 +44,65 @@ def dcmview(request, dcm_uid):
 	dcm_dict = getdict(dcm)
 
 	context = {
-		"study": json.dumps(list(study.values()), default=dthandler),
-		"series": json.dumps(list(series.values()), default=dthandler),
+		"success": True,
+		"study": serializers.serialize("json", [study]),
+		"series": serializers.serialize("json", series),
+		"first_series": serializers.serialize("json", [first_series]),
+		"fs": first_series,
+		"ss": study,
 		"dcm": dcm_dict
 	}
 
-	return render_to_response('dcmview.html', context, context_instance = RequestContext(request))
+	return render_to_response('view.html', context, context_instance = RequestContext(request))
 
 @ensure_csrf_cookie
-def dcmseries(request, series_id):
+def study(request, dcm_uid):
 
-	series = Series.objects.filter(pk = series_id)
-	study = list(series[:1])[0].dcm_study
-	#study = Study.objects.filter(pk = list(series[:1])[0].dcm_study.id)
+	try:
 
-	filepath = BASE_DIR + study.directory + '/' + list(series[:1])[0].filename + '.dcm'
-	print filepath
+		study = Study.objects.get(UID = dcm_uid)
 
-	context = {}
+	except ObjectDoesNotExist:
 
-	context['study'] = study
-	context['dcm'] = getdict(dicom.read_file(filepath))
+		context = {
+			"success": False,
+			"msg": "Object does not exist: " + dcm_uid
+		}
 
-	return HttpResponse(json.dumps(context, default=dthandler, ensure_ascii=False), content_type="application/json")
-	#return render_to_response('dcmview.html', context, context_instance = RequestContext(request))
+		return render_to_response('study.html', context, context_instance = RequestContext(request))
+
+	series = Series.objects.filter(dcm_study = study).distinct("UID")
+
+	context = {
+		"success": True,
+		"study": study,
+		"series": series
+	}
+
+	return render_to_response('study.html', context, context_instance = RequestContext(request))
+
+@ensure_csrf_cookie
+def series(request, dcm_uid):
+
+	try:
+
+		series = Series.objects.filter(UID = dcm_uid)
+
+	except ObjectDoesNotExist:
+
+		context = {
+			"success": False,
+			"msg": "Object does not exist: " + dcm_uid
+		}
+
+		return render_to_response('series.html', context, context_instance = RequestContext(request))
+
+	context = {
+		"success": True,
+		"series": series
+	}
+
+	return render_to_response('series.html', context, context_instance = RequestContext(request))
 
 
 def getdict(dcm):

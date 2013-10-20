@@ -3,7 +3,8 @@ from django.conf.urls import patterns, url
 from dcmview import views
 
 urlpatterns = patterns('',
-	url(r'^(?P<dcm_uid>.*)$', views.dcmview, name='dcmview'),
-	url(r'^series/(?P<series_id>\w+)$', views.dcmseries, name='dcmseries'),
+	url(r'^viewer/(?P<dcm_uid>.*)$', views.view, name='dcmview'),
+	url(r'^study/(?P<dcm_uid>.*)$', views.study, name='dcmstudy'),
+	url(r'^series/(?P<dcm_uid>.*)$', views.series, name='dcmseries'),
 )
 #(?P<path>.*)$

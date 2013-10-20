@@ -4,7 +4,7 @@ from django.template import RequestContext
 #uses django's admin User model and default setup
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 #DICOMS table
-from upload.models import Study, Series, Image
+from dcmupload.models import Study, Series, Image
 #redirects to different page
 from django.shortcuts import redirect
 #auth default for django

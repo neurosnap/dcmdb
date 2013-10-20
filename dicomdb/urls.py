@@ -9,8 +9,8 @@ admin.autodiscover()
 
 from main import views as main_views
 
-host = socket.gethostname()
-
+#host = socket.gethostname()
+host = "dev"
 #see if it's production
 # ubuntu
 # dcmdb.org
@@ -30,14 +30,13 @@ else:
         #(r'^dicoms/(?P<path>.*)$', 'django.views.static.serve',
     	#    {'document_root': settings.MEDIA_ROOT}),
         #url(r'^$', main_views.under_construction, name = "under_construction",
-	url(r'^$', include('main.urls')),
+	    url(r'^$', include('main.urls')),
         url(r'^main/', include('main.urls')),
         url(r'^users/', include('users.urls')),
         url(r'^admin/', include(admin.site.urls)),
-        url(r'^upload/', include('upload.urls')),
-        url(r'^browse/', include('browse.urls')),
         url(r'^dcmview/', include('dcmview.urls')),
         url(r'^dcmupload/', include('dcmupload.urls')),
+        url(r'^down/', include('down.urls')),
         url(r'^media/(?P<path>.*)$',
             'django.views.static.serve',
             {'document_root': settings.MEDIA_ROOT, }),

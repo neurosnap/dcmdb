@@ -6,20 +6,12 @@
 
 {% block content %}
 
-	<div class="hero-unit">
+	<div class="jumbotron">
 		
-		<h1>DICOM Database</h1>
+		<h1>dcmdb.org, a DICOM database</h1>
 		<p>
-			Diagnostic file search engine
+			An open-source anonymous medical diagnostic image database, search engine, and learning utility.
 		</p>
-
-	</div>
-
-	<div id="explore">
-
-		{% for series in dcms %}
-			<img src="/media/{{ series.dcm_study.user_ID.first_name|lower }}/public/{{ series.filename }}.png" class="img-polaroid" style="width: 100px; height: 100px;" /> 
-		{% endfor %}
 
 	</div>
 

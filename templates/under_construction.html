@@ -9,6 +9,8 @@
 		<meta name=”description” content=”DCMDB is an open-source, open-access search engine for medical diagnostic images (DICOMS)”>
 
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap-theme.min.css" />
+		<!-- <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/flat-ui.css" /> -->
 		{% block css %}{% endblock %}
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
@@ -20,6 +22,7 @@
 
 		<script type="text/javascript" src="{{STATIC_URL}}js/jquery-2.0.3.min.js"> </script>
 		<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"> </script>
+		<!-- <script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script> -->
 		<script type="text/javascript" src="{{STATIC_URL}}js/dicom_core.js"> </script>
 		{% block js %}{% endblock %}
 	
@@ -27,18 +30,32 @@
 
 	<body>
 
-		<div class="navbar navbar-fixed-top">
+		<nav class="navbar navbar-default" role="navigation">
 
-			<div class="navbar-inner">
+			<div class="navbar-header">
 
-				<a class="brand" href="/" style="margin-left: 10px;"> dcmdb</a>
-				<ul class="nav dcm_nav">
-					<li><a href="/main/about/">About</a></li>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+
+				<a class="navbar-brand" href="/">dcmdb</a>
+
+			</div>
+
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+
+				<ul class="nav navbar-nav">
+
+					<li><a href="/main/about">About</a></li>
+
 				</ul>
 
 			</div>
 
-		</div>
+		</nav>
 		
 		<div id="content" class="container">
 			

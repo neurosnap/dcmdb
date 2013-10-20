@@ -56,7 +56,10 @@ def handle_upload(request):
         "acceptedformats": (
             "application/dicom",
             "image/dicom",
-            "image/x-dicom"
+            "image/x-dicom",
+            "application/octet-stream",
+            "application/x-rar-compressed",
+            "application/zip",
         )
     }
 
@@ -120,6 +123,10 @@ def handle_upload(request):
             # all add some random data to the filename in order to avoid conflicts
             # when user tries to upload two files with same filename
             file_name = str(uuid.uuid4()) + file.name
+
+            if not file_name.endswith(".dcm"):
+                file_name = file_name + '.dcm'
+
             filename = os.path.join(temp_path, file_name)
 
             # open the file handler with write binary mode
@@ -130,6 +137,7 @@ def handle_upload(request):
             for chunk in file.chunks():
                 destination.write(chunk)
                 # close the file
+
             destination.close()
 
             # strip patient data
@@ -137,32 +145,36 @@ def handle_upload(request):
 
             dcm = processdicom(filename = filename)
 
-            save_image = dcm.writeFiles(filename)
-            
-            if not save_image['success']:
-                print save_image['error']
-
-            response_data['file_name'] = "/media/" + file_name[:-4] + ".png"
-
+            #Save 
             args = {
-                "dcm": save_image['dicom'],
+                "dcm": dcm.getDCM(),
                 "filename": file_name[:-4],
                 "request": request,
             }
 
             new_series = add_dcm_record(**args)
 
-            print "DCM STUDY UID: " + new_series.dcm_study.get_fields()[1][1]
-            response_data['study_uid'] = new_series.dcm_study.get_fields()[1][1]
-            response_data['series_uid'] = new_series.UID
+            if not new_series['success']:
+                #remove recently uploaded dcm file
+                os.remove(filename)
+                return HttpResponse(simplejson.dumps([{ 
+                    "success": False, "msg": 
+                    "DCM already found in database.", 
+                    "name": file.name, 
+                    "series_uid": new_series['series'].UID, 
+                    "study_uid": new_series['study'].UID 
+                }]), mimetype="application/json")
 
-            # here you can add the file to a database,
-            #                           move it around,
-            #                           do anything,
-            #                           or do nothing and enjoy the demo
-            # just make sure if you do move the file around,
-            # then make sure to update the delete_url which will be send to the server
-            # or not include that information at all in the response...
+            #save image and thumbnail
+            save_image = dcm.writeFiles(filename)
+            
+            if not save_image['success']:
+                return HttpResponse(simplejson.dumps(save_image), mimetype="application/json")
+
+            response_data['file_name'] = "/media/" + file_name[:-4]
+            
+            response_data['study_uid'] = new_series['study'].UID
+            response_data['series_uid'] = new_series['series'].UID
 
             # allows to generate properly formatted and escaped url queries
             import urllib
@@ -266,13 +278,9 @@ def add_dcm_record(**kwargs):
         series_date = "1990-01-01"
 
     try:
-        print "try study"
         study = Study.objects.get(UID = study_instance_uid)
-        print study
 
     except (Study.DoesNotExist):
-
-        print "study does not exist"
 
         study = Study.objects.create(
                 UID = study_instance_uid,
@@ -289,17 +297,17 @@ def add_dcm_record(**kwargs):
         study.save()
 
     try:
-        print "try series"
-        print series_instance_uid
-        print instance_number
-        record = Series.objects.get(UID = series_instance_uid, instance_number = instance_number)
-        print record
+        series = Series.objects.get(UID = series_instance_uid, instance_number = instance_number)
+
+        return {
+            "success": False,
+            "series": series,
+            "study": study
+        }
 
     except (Series.DoesNotExist):
 
-        print "record does not exist"
-
-        record = Series.objects.create(
+        series = Series.objects.create(
             dcm_study = study,
             UID = series_instance_uid,
             series_number = series_number,
@@ -312,15 +320,19 @@ def add_dcm_record(**kwargs):
             date = series_date
         )
 
-        record.save()
+        series.save()
 
-        return record
+        return {
+            "success": True,
+            "series": series,
+            "study": study
+        }
 
-    #record = lambda: None
-    #record.id = False
-    #record.error = "Instance number already exists for this study "
+    #series = lambda: None
+    #series.id = False
+    #series.error = "Instance number already exists for this study "
 
-    return record
+    #return series
 
 # Method that takes a date "20130513" and converts it to "2013-05-13" or whatever
 # delimiter inputed

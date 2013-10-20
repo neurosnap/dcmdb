@@ -1,0 +1,112 @@
+{% extends 'template.html' %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/jquery.dataTables.css" />
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/caman.full.min.js"> </script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.min.js"> </script>
+<script type="text/javascript">
+	//obj singleton used in dcmview.js
+	var dcm = {
+
+		"study": {{ study|safe }},
+		"series": {{ series|safe }},
+		"first_series": {{ first_series|safe }},
+		"dicom": {{ dcm|safe }},
+		"datatable": null
+
+	};
+	dcm.first_series = dcm.first_series[0];
+</script>
+<script type="text/javascript" src="{{STATIC_URL}}js/view.js"> </script>
+{% endblock %}
+
+{% block content %}
+<ol class="breadcrumb"></ol>
+
+<div class ="row">
+	<div class="col-md-12" id="dcm_header">
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-9">
+		<div class="row">
+			<div class="col-md-2">
+				
+				<h6>Filters</h6>
+				<hr />
+
+				Contrast
+				<input type="text" id="contrast" class="form-control filter" value="0" />
+				Brightness
+				<input type="text" id="brightness" class="form-control filter" value="0" />
+				Exposure
+				<input type="text" id="exposure" class="form-control filter" value="0" />
+				Gamma
+				<input type="text" id="gamma" class="form-control filter" value="1" />
+				Hueee
+				<input type="text" id="hue" class="form-control filter" value="0" />
+				Saturation
+				<input type="text" id="saturation" class="form-control filter" value="0" />
+				<br />
+				<button id="invert" class="btn">Invert</button> <br /><br />
+				<button id="reset" class="btn btn-danger">Reset</button>
+
+			</div>
+			<div class="col-md-8">
+				<h4>Diagnostic Image</h4>
+				<img src="" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+				<div id="dcmview_status" class="alert alert-warning" style="margin: 5px; width: 490px;">Image Rendered</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<h4>Series Gallery</h4>
+		<div class="row">
+			<div class="col-md-12" id="study_gallery">
+				Gallery
+			</div>
+		</div>
+	</div>
+</div>
+<br />
+<div class="row">
+	<div class="col-md-12">
+
+		<ul class="nav nav-tabs" id="dcm_tabs">
+  			<li class="active"><a href="#data" data-toggle="tab">Meta-Data</a></li>
+  			<li><a href="#discussion" data-toggle="tab">Discussion</a></li>
+  			<li><a href="#export" data-toggle="tab">Download</a></li>
+  		</ul>
+
+  		<div class="tab-content">
+  			<div class="tab-pane active" style="margin: 20px;" id="data">
+
+				<table id="dcm" class="table">
+				</table>
+
+			</div>
+
+  			<div class="tab-pane" style="margin: 20px;" id="discussion">
+
+				<div id="discussion_response" class="alert alert-info">Discussion is a work in progress.</div>
+
+			</div>
+
+  			<div class="tab-pane" style="margin: 20px;" id="export">
+
+				<a class="btn btn-info" href="/down/zip/dcm/{{ fs.sop_instance_uid }}">Download DCM</a> <br /> <br />
+				<a class="btn btn-primary" href="/down/zip/series/{{ fs.UID }}">Download Series</a> <br /> <br />
+				<a class="btn btn-success" href="/down/zip/study/{{ ss.UID }}">Download Study</a> <br /> <br />
+
+			</div>
+
+		</div>
+
+	</div>
+</div>
+<br /><br />
+{% endblock %}
