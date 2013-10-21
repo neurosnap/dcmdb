@@ -1,6 +1,7 @@
 {% extends 'template.html' %}
 
 {% block js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +17,11 @@
 		<div class="col-md-12">
 
 			{% for item in series %}
-				<a href="/dcmview/study/{{ item.dcm_study.UID }}"><img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail" style="height: 150px; width: 150px;" /> </a>
+				{% if item.image_gen %}
+				<a href="/dcmview/study/{{ item.dcm_study.UID }}"><img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail dcmthumb" /> </a>
+				{% else %}
+				<a href="/dcmview/study/{{ item.dcm_study.UID }}"><img src="holder.js/150x150" class="img-thumbnail dcmthumb" /> </a>
+				{% endif %}
 			{% endfor %}
 
 		</div>

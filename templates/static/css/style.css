@@ -17,6 +17,11 @@ small {
 .dcm_search {
 }
 
+.dcmthumb {
+	width: 150px;
+	height: 150px;
+}
+
 /*MISC CLASSES*/
 .clear {clear:both;}
 .date {font-size:8pt;font-weight:normal;text-transform:lowercase;}

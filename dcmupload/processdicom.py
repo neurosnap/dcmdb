@@ -28,14 +28,14 @@ class processdicom(object):
 		self.img_process.SetFileName(filename.encode('utf-8'))
 
 		if not self.img_process.Read():
-			print "gdcm failed to grab file"
+			return { "success": False, "msg": "Could not read DCM." }
 
 		self.pxl_arr = None
 
 		try:
 			self.pxl_arr = self.gdcm_to_numpy(self.img_process.GetImage())
 		except:
-			return { "success": False, "error": "Unsuppported transfer syntax " + self.transferSyntax(self.dicom.file_meta.TransferSyntaxUID) }
+			return { "success": False, "msg": "Unsuppported transfer syntax " + self.transferSyntax(self.dicom.file_meta.TransferSyntaxUID) }
 
 		try:
 			# save normal resolution image
@@ -45,21 +45,21 @@ class processdicom(object):
 			try:
 				pil = Image.open(png_filename + ".png")
 			except:
-				return { "success": False, "error": "Image could not be loaded into PIL." }
+				return { "success": False, "msg": "Image could not be loaded into PIL." }
 
 			try:
 				thumb_size = 150, 150
 				pil.thumbnail(thumb_size, Image.ANTIALIAS)
 			except:
-				return { "success": False, "error": "Image could not be resized using PIL." }
+				return { "success": False, "msg": "Image could not be resized using PIL." }
 			
 			try:
 				pil.save(png_filename + "_thumb.png", "PNG")
 			except:
-				return { "success": False, "error": "Thumbnail could not be saved." }
+				return { "success": False, "msg": "Thumbnail could not be saved." }
 
 		except:
-			return { "success": False, "error": "Could not save image." }
+			return { "success": False, "msg": "Could not save image." }
 
 		return { "success": True, "dicom": self.dicom }
 

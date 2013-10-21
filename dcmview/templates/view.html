@@ -1,41 +1,75 @@
 {% extends 'template.html' %}
 
 {% block css %}
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/view.css" />
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="{{STATIC_URL}}js/caman.full.min.js"> </script>
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.min.js"> </script>
+
+{% if image.image_gen %}
+<script type="text/javascript" src="{{STATIC_URL}}js/caman.full.min.js"> </script>
+{% endif %}
+
+<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script>
+
+{% if image %}
 <script type="text/javascript">
 	//obj singleton used in dcmview.js
 	var dcm = {
 
-		"study": {{ study|safe }},
-		"series": {{ series|safe }},
-		"first_series": {{ first_series|safe }},
 		"dicom": {{ dcm|safe }},
+		"image_gen": {% if image.image_gen %}true{% else %}false{% endif %},
 		"datatable": null
 
 	};
-	dcm.first_series = dcm.first_series[0];
 </script>
+{% endif %}
+
 <script type="text/javascript" src="{{STATIC_URL}}js/view.js"> </script>
 {% endblock %}
 
 {% block content %}
-<ol class="breadcrumb"></ol>
+<ol class="breadcrumb">
+	<li>
+		<a href="/main/explore">Search</a>
+	</li>
+	<li>
+		{% if study %}
+		<a href="/dcmview/study/{{ study.UID }}">Study</a>
+		{% else %}
+		Study
+		{% endif %}
+	</li>
+	<li>
+		{% if series %}
+		<a href="/dcmview/series/{{ series.UID }}">Series</a>
+		{% else %}
+		Series
+		{% endif %}
+	</li>
+	<li>DCM</li>
+</ol>
 
 <div class ="row">
 	<div class="col-md-12" id="dcm_header">
+		<h4>
+			{% if series %}
+			{{ series.UID }}
+			{% else %}
+			???
+			{% endif %}
+		</h4>
 	</div>
 </div>
 
+{% if image %}
 <div class="row">
-	<div class="col-md-9">
+	<div class="col-md-8">
 		<div class="row">
 			<div class="col-md-2">
 				
+				{% if image.image_gen %}
 				<h6>Filters</h6>
 				<hr />
 
@@ -52,22 +86,39 @@
 				Saturation
 				<input type="text" id="saturation" class="form-control filter" value="0" />
 				<br />
-				<button id="invert" class="btn">Invert</button> <br /><br />
-				<button id="reset" class="btn btn-danger">Reset</button>
+				<button id="invert" class="btn btn-warning">Invert</button> <br /><br />
+				<button id="apply" class="btn btn-success">Apply</button>
+				<button id="reset" class="btn btn-link">Reset</button>
+				{% endif %}
 
 			</div>
 			<div class="col-md-8">
 				<h4>Diagnostic Image</h4>
-				<img src="" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+				{% if image.image_gen %}
+				<img src="/media/{{ image.filename }}.png" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+				{% else %}
+				<img src="holder.js/500x500" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+				{% endif %}
 				<div id="dcmview_status" class="alert alert-warning" style="margin: 5px; width: 490px;">Image Rendered</div>
 			</div>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-4">
 		<h4>Series Gallery</h4>
 		<div class="row">
 			<div class="col-md-12" id="study_gallery">
-				Gallery
+				{% if all_images %}
+					{% for item in all_images %}
+
+						{% if item.image_gen %}
+						<a href="/dcmview/viewer/{{ item.UID }}" class="dcm_series">
+							<img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
+						</a>
+						{% else %}
+						<img src="holder.js/100x100" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
+						{% endif %}
+					{% endfor %}
+				{% endif %}
 			</div>
 		</div>
 	</div>
@@ -85,7 +136,7 @@
   		<div class="tab-content">
   			<div class="tab-pane active" style="margin: 20px;" id="data">
 
-				<table id="dcm" class="table">
+				<table id="dcm" class="table table-striped">
 				</table>
 
 			</div>
@@ -98,9 +149,9 @@
 
   			<div class="tab-pane" style="margin: 20px;" id="export">
 
-				<a class="btn btn-info" href="/down/zip/dcm/{{ fs.sop_instance_uid }}">Download DCM</a> <br /> <br />
-				<a class="btn btn-primary" href="/down/zip/series/{{ fs.UID }}">Download Series</a> <br /> <br />
-				<a class="btn btn-success" href="/down/zip/study/{{ ss.UID }}">Download Study</a> <br /> <br />
+				<a class="btn btn-info" href="/down/zip/dcm/{{ image.UID }}">Download DCM</a> <br /> <br />
+				<a class="btn btn-primary" href="/down/zip/series/{{ image.UID }}">Download Series</a> <br /> <br />
+				<a class="btn btn-success" href="/down/zip/study/{{ study.UID }}">Download Study</a> <br /> <br />
 
 			</div>
 
@@ -108,5 +159,10 @@
 
 	</div>
 </div>
+{% else %}
+	{% if msg %}
+	<div class="alert alert-danger">{{ msg }}</div>
+	{% endif %}
+{% endif %}
 <br /><br />
 {% endblock %}

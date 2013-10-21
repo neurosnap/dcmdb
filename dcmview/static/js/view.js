@@ -1,122 +1,81 @@
 $(function() {
 
-    console.log(dcm);
+    dcm.reloadTags(true);
 
-    //$('#dcm_tabs a:last').tab('show');
+    if (dcm.image_gen) {
 
-	//dynamically change type to object instead of an array
-	dcm.study = dcm.study[0];
+        dcm.invert = false;
 
-    dcm.invert = false;
+        Caman.Event.listen("processComplete", function(job) {
+            $("#dcmview_status").html(job.name);
+        });
 
-    $(".breadcrumb").html('<li><a href="/main/explore">Search</a></li><li><a href="/dcmview/study/' + dcm.study.fields.UID + '">Study</a></li><li><a href="/dcmview/series/' + dcm.first_series.fields['UID'] + '">Series</a></li><li>DCM</li>');
+        Caman.Event.listen("renderFinished", function() {
+            $("#dcmview_status").html("Render finished!");
+        });
 
-	$("#dcm_header").html('<h4>' + dcm.first_series.fields.sop_instance_uid + '</h4>');
+    	$(".dcm_series").on("click", function(e) {
 
-	$("#dcmview_image").attr('src', '/media/' + dcm.first_series.fields.filename + '.png');
+            $("#dcmview_status").html("Loading ...");
 
-    //dcm.imageRender();
+    		e.preventDefault();
 
-	var gal_content = '';
+    		var switch_img = $(this).find("img").attr("src").replace("_thumb", "");
 
-	for (var i = 0; i < dcm.series.length; i++) {
+            $("#dcmview_image").removeAttr("data-caman-id");
 
-		gal_content += '<a href="/dcmview/viewer/' + dcm.series[i].fields.sop_instance_uid + '" class="dcm_series">' + 
-					   '	<img src="/media/' + dcm.series[i].fields.filename + '_thumb.png" class="img-thumbnail" style="width: 120px; height: 120px; margin: 2px;" />' + 
-					   	'</a>';
+            Caman("#dcmview_image", switch_img, function() {
 
-	}
+                dcm.getFilters(this);
 
-	$("#study_gallery").html(gal_content);
+                $("#dcmview_status").html("Applying filters ...");
 
-    Caman.Event.listen("processComplete", function(job) {
-        $("#dcmview_status").html(job.name);
-    });
+                this.render();
 
-    Caman.Event.listen("renderFinished", function() {
-        $("#dcmview_status").html("Render finished!");
-    });
+            });
 
-	$(".dcm_series").on("click", function(e) {
+    	});
 
-        $("#dcmview_status").html("Loading ...");
+        $("#apply").on("click", function(e) {
 
-		e.preventDefault();
+            Caman("#dcmview_image", function() {
+                
+                var that = this;
 
-		var switch_img = $(this).find("img").attr("src").replace("_thumb", "");
+                this.revert();
 
-        $("#dcmview_image").removeAttr("data-caman-id");
+                dcm.getFilters(that);
 
-        Caman("#dcmview_image", switch_img, function() {
+                //this.contrast($("#contrast").val());
+                //this.brightness($("#brightness").val());
+                //this.exposure($("#exposure").val());
+                //this.gamma($("#gamma").val());
+                //this.hue($("#hue").val());
+                //this.saturation($("#saturation").val());
 
-            dcm.getFilters(this);
+                this.render();
 
-            $("#dcmview_status").html("Applying filters ...");
-
-            this.render();
+            });
 
         });
 
-		//$("#dcmview_image").attr('src', switch_img);
+        $("#invert").on("click", function() {
 
-         //dcm.imageRender();
+            if (dcm.invert)
+                dcm.invert = false;
+            else
+                dcm.invert = true;
 
-		/*$.ajax({
-			"url": "/dcmview/series/" + $(this).attr("series_ID"),
-			"type": "POST",
-			"dataType": "json",
-			"success": function(res) {
-				dcm.study = res.study;
-				dcm.dicom = $.parseJSON(res.dcm);
-
-				dcm.reloadTags();
-			}
-		});*/
-
-	});
-
-
-
-	dcm.reloadTags(true);
-
-    $(".filter").on("keyup", function(e) {
-
-        Caman("#dcmview_image", function() {
-            
-            var that = this;
-
-            this.revert();
-
-            dcm.getFilters(that);
-
-            //this.contrast($("#contrast").val());
-            //this.brightness($("#brightness").val());
-            //this.exposure($("#exposure").val());
-            //this.gamma($("#gamma").val());
-            //this.hue($("#hue").val());
-            //this.saturation($("#saturation").val());
-
-            this.render();
-
+            Caman("#dcmview_image", function() {
+                this.invert().render();
+            });
         });
 
-    });
-
-    $("#invert").on("click", function() {
-
-        if (dcm.invert)
-            dcm.invert = false;
-        else
-            dcm.invert = true;
-
-        Caman("#dcmview_image", function() {
-            this.invert().render();
+        $("#reset").on("click", function() {
+            dcm.resetFilters();
         });
-    });
 
-    $("#reset").on("click", function() {
-        dcm.resetFilters();
-    });
+    }
 
 });
 
@@ -161,13 +120,6 @@ dcm.resetFilters = function() {
 
 }
 
-dcm.imageRender = function() {
-
-    dcm.caman = Caman("#dcmview_image");
-    console.log('imageRender');
-
-}
-
 dcm.reloadTags = function(first) {
 
     if (typeof first === "undefined")
@@ -196,23 +148,13 @@ dcm.reloadTags = function(first) {
 
     tag_content += '</tbody>';
 
-    /*if (!first) {
+    var options = {
+        "bDestroy": true
+    };
 
-        dcm.datatable.fnClearTable();
-        $("#dcm").html(tag_content);
-        dcm.datatable.fnDraw();
-
-    } else {*/
-
-        var options = {
-            "bDestroy": true
-        };
-
-        //dataTables initialization
-        $("#dcm").html(tag_content);
-        dcm.datatable = $("#dcm").dataTable(options);
-
-    //}
+    //dataTables initialization
+    $("#dcm").html(tag_content);
+    dcm.datatable = $("#dcm").dataTable(options);
 
 };
 

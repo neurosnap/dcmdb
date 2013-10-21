@@ -4,33 +4,39 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
-	//obj singleton used in dcmview.js
-	var dcm = {
-
-		"study": {{study|safe}},
-		"series": {{series|safe}}
-
-	};
-</script>
-<script type="text/javascript" src="{{STATIC_URL}}js/dcmstudy.js"> </script>
+<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script>
 {% endblock %}
 
 {% block content %}
+
 <ol class="breadcrumb"><li><a href="/main/explore">Search</a></li><li>Study</li></ol>
 
+{% if study %}
 <div class ="row">
 	<div class="col-md-12" id="dcm_header">
 		<h4>{{ study.UID }}</h4>
 	</div>
 </div>
+{% endif %}
 
+{% if series %}
 <div class="row">
 	<div class="col-md-12" id="dcm_study">
 		{% for item in series %}
-			<a href="/dcmview/series/{{ item.UID }}"><img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail" /></a>
+			<a href="/dcmview/series/{{ item.UID }}">
+				{% if item.image_gen %}
+				<img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail dcmthumb" />
+				{% else %}
+				<img src="holder.js/150x150" class="img-thumbnail dcmthumb" />
+				{% endif %}
+			</a>
 		{% endfor %}
 	</div>
 </div>
+{% endif %}
+
+{% if msg %}
+<div class="alert alert-danger">{{ msg }}</div>
+{% endif %}
 <br /><br />
 {% endblock %}

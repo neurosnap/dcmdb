@@ -65,10 +65,11 @@ $(function() {
 
                         $(this).find(".dcm_done").show();
 
-                        if (file.hasOwnProperty("success") && !file.success)
-                            $(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.msg + ' <a href="/dcmview/viewer/' + file.study_uid + '/series/' + file.series_uid + '">View DCM</a></div>');
-                        else
-                            $(this).find(".dcm_preview").html('<a href="/dcmview/viewer/' + file.study_uid + '">View DCM</a><img src="' + file.file_name + '_thumb.png" style="margin-left: 15px;" />');
+                        if (file.hasOwnProperty("success") && !file.success) {
+                            $(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.msg + '</div>');
+                        } else {
+                            $(this).find(".dcm_preview").html('<a href="/dcmview/viewer/' + file.image_uid + '">View DCM</a><img src="' + file.file_name + '_thumb.png" style="margin-left: 15px;" />');
+                        }
 
                     }
 

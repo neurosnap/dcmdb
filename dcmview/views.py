@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie
 #you bastard!
 import dicom
-from dcmupload.models import Study, Series
+from dcmupload.models import Study, Series, Image
 import json
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,34 +22,33 @@ def view(request, dcm_uid):
 
 	try:
 
-		first_series = Series.objects.get(sop_instance_uid = dcm_uid)
+		image = Image.objects.get(UID = dcm_uid)
 
-		study = first_series.dcm_study
+		series = image.dcm_series
 
-		series = Series.objects.filter(UID = first_series.UID).order_by("sop_instance_uid")
+		study = series.dcm_study
+
+		images = Image.objects.filter(dcm_series = series)
 
 	except ObjectDoesNotExist:
 
 		context = {
-			"success": False,
-			"msg": "Object does not exist: " + dcm_uid
+			"msg": "Oops, it appears the SOP Instance UID: " + dcm_uid + " does not exist in our system yet."
 		}
 
 		return render_to_response('view.html', context, context_instance = RequestContext(request))
 
-	filepath = MEDIA_DIR + '/' + first_series.filename + '.dcm'
+	filepath = MEDIA_DIR + '/' + image.filename + '.dcm'
 
 	dcm = dicom.read_file(filepath)
 
 	dcm_dict = getdict(dcm)
 
 	context = {
-		"success": True,
-		"study": serializers.serialize("json", [study]),
-		"series": serializers.serialize("json", series),
-		"first_series": serializers.serialize("json", [first_series]),
-		"fs": first_series,
-		"ss": study,
+		"image": image,
+		"all_images": images,
+		"series": series,
+		"study": study,
 		"dcm": dcm_dict
 	}
 
@@ -65,8 +64,7 @@ def study(request, dcm_uid):
 	except ObjectDoesNotExist:
 
 		context = {
-			"success": False,
-			"msg": "Object does not exist: " + dcm_uid
+			"msg": "Oops, it appears the Study UID: " + dcm_uid + " does not exist in our system yet."
 		}
 
 		return render_to_response('study.html', context, context_instance = RequestContext(request))
@@ -74,7 +72,6 @@ def study(request, dcm_uid):
 	series = Series.objects.filter(dcm_study = study).distinct("UID")
 
 	context = {
-		"success": True,
 		"study": study,
 		"series": series
 	}
@@ -91,14 +88,12 @@ def series(request, dcm_uid):
 	except ObjectDoesNotExist:
 
 		context = {
-			"success": False,
-			"msg": "Object does not exist: " + dcm_uid
+			"msg": "Oops, it appears the Series UID: " + dcm_uid + " does not exist in our system yet."
 		}
 
 		return render_to_response('series.html', context, context_instance = RequestContext(request))
 
 	context = {
-		"success": True,
 		"series": series
 	}
 

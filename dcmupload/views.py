@@ -157,10 +157,12 @@ def handle_upload(request):
             if not new_series['success']:
                 #remove recently uploaded dcm file
                 os.remove(filename)
+
                 return HttpResponse(simplejson.dumps([{ 
-                    "success": False, "msg": 
-                    "DCM already found in database.", 
+                    "success": False, 
+                    "msg": "DCM already found in database. <a href='/dcmview/series/" + new_series['series'].UID + "'>View DCM</a>", 
                     "name": file.name, 
+                    "image_uid": new_series['image'].UID,
                     "series_uid": new_series['series'].UID, 
                     "study_uid": new_series['study'].UID 
                 }]), mimetype="application/json")
@@ -168,11 +170,25 @@ def handle_upload(request):
             #save image and thumbnail
             save_image = dcm.writeFiles(filename)
             
-            if not save_image['success']:
-                return HttpResponse(simplejson.dumps(save_image), mimetype="application/json")
+            if save_image['success']:
+                # set image generated flag to true in series record
+                new_series['image'].image_gen = True
+                new_series['image'].save()
+
+            #not able to save images?  return an error with the saved DCM file
+            else:
+
+                save_image['image_uid'] = new_series['image'].UID
+                save_image['series_uid'] = new_series['series'].UID
+                save_image['study_uid'] = new_series['study'].UID 
+                save_image['msg'] += " <a href='/dcmview/series/" + new_series['series'].UID + "'>View DCM</a>" 
+                save_image['name'] = file.name
+                
+                return HttpResponse(simplejson.dumps([save_image]), mimetype="application/json")
 
             response_data['file_name'] = "/media/" + file_name[:-4]
             
+            response_data['image_uid'] = new_series['image'].UID
             response_data['study_uid'] = new_series['study'].UID
             response_data['series_uid'] = new_series['series'].UID
 
@@ -205,24 +221,31 @@ def add_dcm_record(**kwargs):
 
     #dcm, dcm_dir, filename, title, public, request, study
 
+    # Study
+    study_instance_uid = ""
+    study_id = ""
+    study_date = ""
+    study_time = ""
+    accession_number = ""
+    study_description = ""
+    sop_class_uid = ""
+    # Series
+    series_instance_uid = ""
     modality = ""
     institution_name = ""
     manufacturer = ""
-    physician_name = ""
-    bits_allocated = ""
-    bits_store = ""
-    study_id = ""
-    study_description = ""
-    study_date = ""
-    study_time = ""
-    study_instance_uid = ""
-    sop_clas_uid = ""
-    instance_number = ""
-    accession_number = ""
-    series_instance_uid = ""
     series_number = ""
+    laterality = ""
     series_date = ""
-    image_type = ""
+    # Image
+    sop_instance_uid = ""
+    image_number = ""
+    patient_position = ""
+    image_orientation_patient = ""
+    image_position_patient = ""
+    content_date = ""
+    content_time = ""
+    transfer_syntax_uid = ""
 
     dcm = kwargs['dcm']
     
@@ -235,10 +258,6 @@ def add_dcm_record(**kwargs):
             institution_name = institution_name.decode('utf-8')
         elif tag == "Manufacturer":
             manufacturer = dcm.Manufacturer
-        elif tag == "BitsAllocated":
-            bits_allocated = dcm.BitsAllocated
-        elif tag == "BitsStored":
-            bits_stored = dcm.BitsStored
         elif tag == "StudyID":
             study_id = dcm.StudyID
         elif tag == "StudyDescription":
@@ -247,18 +266,19 @@ def add_dcm_record(**kwargs):
             # study_description = study_description.decode('utf-8')
         elif tag == "StudyDate":
             study_date = dcm.StudyDate
-            study_date = convert_date(study_date, "-")
+            study_date = convert_date(study_date, "-").encode('utf-8')
         elif tag == "StudyTime":
             study_time = dcm.StudyTime
         elif tag == "StudyInstanceUID":
             # unique identifier for the study
             study_instance_uid = dcm.StudyInstanceUID
         elif tag == "SOPInstanceUID":
+            # unique identifier for the image
             sop_instance_uid = dcm.SOPInstanceUID
         elif tag == "SOPClassUID":
             sop_class_uid = dcm.SOPClassUID
         elif tag == "InstanceNumber":
-            instance_number = dcm.InstanceNumber
+            image_number = dcm.InstanceNumber
         elif tag == "AccessionNumber":
             accession_number = dcm.AccessionNumber
         elif tag == "SeriesInstanceUID":
@@ -269,13 +289,28 @@ def add_dcm_record(**kwargs):
         elif tag == "SeriesDate":
             series_date = dcm.SeriesDate
             series_date = convert_date(series_date, "-").encode('utf-8')
-        elif tag == "ImageType":
-            image_type = dcm.ImageType
         elif tag == "Laterality":
             laterality = dcm.Laterality
+        elif tag == "TransferSyntaxUID":
+            transfer_syntax_uid = dcm.TransferSyntaxUID
+        elif tag == "PatientOrientation":
+            patient_position = dcm.PatientOrientation
+        elif tag == "ImageOrientationPatient":
+            image_orientation_patient = dcm.ImageOrientationPatient
+        elif tag == "ImagePositionPatient":
+            image_position_patient = dcm.ImagePositionPatient
+        elif tag == "ContentDate":
+            content_date = dcm.ContentDate
+            content_date = convert_date(content_date, "-").encode('utf-8')
+        elif tag == "ContentTime":
+            content_time = dcm.ContentTime
+            content_time = ""
 
     if series_date == "":
         series_date = "1990-01-01"
+
+    if content_date == "":
+        content_date = "1990-01-01"
 
     try:
         study = Study.objects.get(UID = study_instance_uid)
@@ -285,54 +320,72 @@ def add_dcm_record(**kwargs):
         study = Study.objects.create(
                 UID = study_instance_uid,
                 study_id = study_id,
-                #study_date = study_date,
-                #study_time = study_time,
+                study_date = study_date,
+                study_time = study_time,
+                accession_number = accession_number,
                 description = study_description,
-                modality = modality,
-                institution_name = institution_name,
-                manufacturer = manufacturer,
-                accession_number = accession_number
+                sop_class_uid = sop_class_uid
             )
 
         study.save()
 
     try:
-        series = Series.objects.get(UID = series_instance_uid, instance_number = instance_number)
 
-        return {
-            "success": False,
-            "series": series,
-            "study": study
-        }
+        series = Series.objects.get(UID = series_instance_uid)
 
     except (Series.DoesNotExist):
 
         series = Series.objects.create(
             dcm_study = study,
             UID = series_instance_uid,
+            modality = modality,
+            institution_name = institution_name,
+            manufacturer = manufacturer,
             series_number = series_number,
-            filename = kwargs['filename'],
-            bits_allocated = bits_allocated,
-            bits_stored = bits_stored,
-            sop_instance_uid = sop_instance_uid,
-            sop_class_uid = sop_class_uid,
-            instance_number = instance_number,
+            laterality = laterality,
             date = series_date
         )
 
         series.save()
 
+    try:
+
+        image = Image.objects.get(UID = sop_instance_uid)
+
         return {
-            "success": True,
+            "success": False,
+            "image": image,
             "series": series,
             "study": study
         }
 
-    #series = lambda: None
-    #series.id = False
-    #series.error = "Instance number already exists for this study "
+    except (Image.DoesNotExist):
 
-    #return series
+        print patient_position
+        print content_date
+        print content_time
+
+        image = Image.objects.create(
+            dcm_series = series,
+            UID = sop_instance_uid,
+            filename = kwargs['filename'],
+            transfer_syntax_uid = transfer_syntax_uid,
+            image_number = image_number,
+            #image_orientation_patient = image_orientation_patient,
+            #image_position_patient = image_position_patient,
+            #patient_position = patient_position,
+            #content_date = content_date
+            #content_time = content_time
+        )
+
+        image.save()
+
+    return {
+        "success": True,
+        "image": image,
+        "series": series,
+        "study": study
+    }
 
 # Method that takes a date "20130513" and converts it to "2013-05-13" or whatever
 # delimiter inputed
