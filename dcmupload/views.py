@@ -48,7 +48,7 @@ def handle_upload(request):
     #   and check validity late in the code
     options = {
         # the maximum file size (must be in bytes)
-        "maxfilesize": 2 * 2 ** 20, # 2 Mb
+        "maxfilesize": 15 * 2 ** 20, # 15 Mb
         # the minimum file size (must be in bytes)
         "minfilesize": 1 * 2 ** 10, # 1 Kb
         # the file types which are going to be allowed for upload
@@ -141,7 +141,14 @@ def handle_upload(request):
             destination.close()
 
             # strip patient data
-            anonymize(filename, filename)
+            try:
+                anonymize(filename, filename)
+            except:
+                return HttpResponse(simplejson.dumps([{ 
+                    "success": False, 
+                    "msg": "Missing required DICM marker, are you sure this is a DICOM file?", 
+                    "name": file.name
+                }]), mimetype="application/json")
 
             dcm = processdicom(filename = filename)
 
@@ -222,30 +229,28 @@ def add_dcm_record(**kwargs):
     #dcm, dcm_dir, filename, title, public, request, study
 
     # Study
-    study_instance_uid = ""
-    study_id = ""
-    study_date = ""
-    study_time = ""
-    accession_number = ""
-    study_description = ""
-    sop_class_uid = ""
+    study_instance_uid = None
+    study_id = None
+    study_date = None
+    study_time = None
+    accession_number = None
+    study_description = None
+    sop_class_uid = None
     # Series
-    series_instance_uid = ""
-    modality = ""
-    institution_name = ""
-    manufacturer = ""
-    series_number = ""
-    laterality = ""
-    series_date = ""
+    series_instance_uid = None
+    modality = None
+    institution_name = None
+    manufacturer = None
+    series_number = None
+    laterality = None
+    series_date = None
     # Image
-    sop_instance_uid = ""
-    image_number = ""
-    patient_position = ""
-    image_orientation_patient = ""
-    image_position_patient = ""
-    content_date = ""
-    content_time = ""
-    transfer_syntax_uid = ""
+    sop_instance_uid = None
+    image_number = None
+    patient_position = None
+    content_date = None
+    content_time = None
+    transfer_syntax_uid = None
 
     dcm = kwargs['dcm']
     
@@ -283,7 +288,7 @@ def add_dcm_record(**kwargs):
             accession_number = dcm.AccessionNumber
         elif tag == "SeriesInstanceUID":
             # unique identifier for the series
-            series_instance_uid = dcm.SeriesInstanceUID
+            series_instance_uid = dcm.SeriesInstanceUID.encode('utf-8')
         elif tag == "SeriesNumber":
             series_number = dcm.SeriesNumber
         elif tag == "SeriesDate":
@@ -292,25 +297,23 @@ def add_dcm_record(**kwargs):
         elif tag == "Laterality":
             laterality = dcm.Laterality
         elif tag == "TransferSyntaxUID":
-            transfer_syntax_uid = dcm.TransferSyntaxUID
+            transfer_syntax_uid = dcm.file_meta.TransferSyntaxUID
         elif tag == "PatientOrientation":
             patient_position = dcm.PatientOrientation
-        elif tag == "ImageOrientationPatient":
-            image_orientation_patient = dcm.ImageOrientationPatient
-        elif tag == "ImagePositionPatient":
-            image_position_patient = dcm.ImagePositionPatient
         elif tag == "ContentDate":
             content_date = dcm.ContentDate
             content_date = convert_date(content_date, "-").encode('utf-8')
         elif tag == "ContentTime":
             content_time = dcm.ContentTime
-            content_time = ""
 
-    if series_date == "":
+    if series_date == None:
         series_date = "1990-01-01"
 
-    if content_date == "":
+    if content_date == None:
         content_date = "1990-01-01"
+
+    if content_time == None:
+        content_time = "0"
 
     try:
         study = Study.objects.get(UID = study_instance_uid)
@@ -361,21 +364,19 @@ def add_dcm_record(**kwargs):
 
     except (Image.DoesNotExist):
 
-        print patient_position
-        print content_date
-        print content_time
+        content_time = content_time.decode('utf-8')
 
         image = Image.objects.create(
             dcm_series = series,
             UID = sop_instance_uid,
             filename = kwargs['filename'],
             transfer_syntax_uid = transfer_syntax_uid,
+            content_time = content_time,
+            content_date = content_date,
             image_number = image_number,
-            #image_orientation_patient = image_orientation_patient,
             #image_position_patient = image_position_patient,
-            #patient_position = patient_position,
-            #content_date = content_date
-            #content_time = content_time
+            patient_position = patient_position
+            #image_orientation_patient = image_orientation_patient
         )
 
         image.save()

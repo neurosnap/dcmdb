@@ -5,13 +5,13 @@ class Study(models.Model):
 
 	UID = models.CharField(max_length = 100)
 	#user_ID = models.ForeignKey(User)
-	study_id = models.CharField(max_length = 50)
+	study_id = models.CharField(max_length = 50, null = True, blank = True)
 	#
-	study_date = models.DateField()
-	study_time = models.CharField(max_length = 50)
+	study_date = models.CharField(max_length = 50, null = True, blank = True)
+	study_time = models.CharField(max_length = 50, null = True, blank = True)
 	#
-	accession_number = models.CharField(max_length = 100)
-	description = models.CharField(max_length = 500)
+	accession_number = models.CharField(max_length = 100, null = True, blank = True)
+	description = models.CharField(max_length = 500, null = True, blank = True)
 	sop_class_uid = models.CharField(max_length = 100)
 	#
 	created_at = models.DateTimeField(auto_now_add = True)
@@ -25,14 +25,14 @@ class Series(models.Model):
 
 	dcm_study = models.ForeignKey(Study)
 	UID = models.CharField(max_length = 100)
-	modality = models.CharField(max_length = 50)
-	institution_name = models.CharField(max_length = 50)
-	manufacturer = models.CharField(max_length = 50)
-	series_number = models.CharField(max_length = 100)
+	modality = models.CharField(max_length = 50, null = True, blank = True)
+	institution_name = models.CharField(max_length = 50, null = True, blank = True)
+	manufacturer = models.CharField(max_length = 50, null = True, blank = True)
+	series_number = models.CharField(max_length = 100, null = True, blank = True)
 	#
-	laterality = models.CharField(max_length = 100)
+	laterality = models.CharField(max_length = 100, null = True, blank = True)
 	#
-	date = models.DateField()
+	date = models.CharField(max_length = 100, null = True, blank = True)
 	#
 	created_at = models.DateTimeField(auto_now_add = True)
 	updated_at = models.DateTimeField(auto_now = True)
@@ -43,15 +43,15 @@ class Image(models.Model):
 	UID = models.CharField(max_length = 100)
 	filename = models.CharField(max_length = 100)
 	image_gen = models.BooleanField(default = False)
-	transfer_syntax_uid = models.CharField(max_length = 50)
+	transfer_syntax_uid = models.CharField(max_length = 50, null = True, blank = True)
 	#
-	image_number = models.IntegerField()
-	image_orientation_patient = models.CharField(max_length = 50)
-	image_position_patient = models.CharField(max_length = 50)
-	patient_position = models.CharField(max_length = 50)
+	image_number = models.CharField(max_length = 50, null = True, blank = True)
+	image_orientation_patient = models.CharField(max_length = 50, null = True, blank = True)
+	image_position_patient = models.CharField(max_length = 50, null = True, blank = True)
+	patient_position = models.CharField(max_length = 50, null = True, blank = True)
 	#
-	#content_date = models.DateField(auto_now = True)
-	#content_time = models.CharField(max_length = 50)
+	content_date = models.CharField(max_length = 50, null = True, blank = True)
+	content_time = models.CharField(max_length = 50, null = True, blank = True)
 	#
 	created_at = models.DateTimeField(auto_now_add = True)
 	updated_at = models.DateTimeField(auto_now = True)
