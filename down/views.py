@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie
 #you bastard!
 import dicom
-from dcmupload.models import Study, Series
+from dcmupload.models import Study, Series, Image
 import json
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -19,7 +19,7 @@ MEDIA_DIR = BASE_DIR + "/media"
 def zip_dcm(request, uid):
 
 	try:
-		dcm = Series.objects.get(sop_instance_uid = uid)
+		dcm = Image.objects.get(UID = uid)
 	except ObjectDoesNotExist:
 		print "object does not exist: " + uid
 
@@ -28,15 +28,19 @@ def zip_dcm(request, uid):
 @ensure_csrf_cookie
 def zip_series(request, uid):
 
-	series = Series.objects.filter(UID = uid)
+	try:
+	
+		series = Series.objects.get(UID = uid)
+		images = Image.objects.filter(dcm_series = series)
 
-	if not series:
+	except ObjectDoesNotExist:
+
 		print "object does not exist: " + uid
 
 	files = []
 
-	for items in series:
-		files.append(items.filename + ".dcm")
+	for image in images:
+		files.append(image.filename + ".dcm")
 
 	return mk_zip(files, uid)
 
@@ -44,15 +48,19 @@ def zip_series(request, uid):
 def zip_study(request, uid):
 
 	try:
+
 		study = Study.objects.get(UID = uid)
 		series = Series.objects.filter(dcm_study = study)
+		images = Image.objects.filter(dcm_series__in = series)
+
 	except ObjectDoesNotExist:
+
 		print "object does not exist: " + uid
 
 	files = []
 
-	for items in series:
-		files.append(items.filename + ".dcm")
+	for image in images:
+		files.append(image.filename + ".dcm")
 
 	return mk_zip(files, uid)
 

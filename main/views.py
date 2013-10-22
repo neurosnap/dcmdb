@@ -21,10 +21,10 @@ def under_construction(request):
 
 def explore(request):
 
-	series = Series.objects.distinct('UID')
+	image = Image.objects.distinct('dcm_series')
 
 	context = {
-		"series": series
+		"image": image
 	}
 	
 	return render_to_response('explore.html', context, context_instance = RequestContext(request))

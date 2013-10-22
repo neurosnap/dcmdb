@@ -69,11 +69,14 @@ def study(request, dcm_uid):
 
 		return render_to_response('study.html', context, context_instance = RequestContext(request))
 
-	series = Series.objects.filter(dcm_study = study).distinct("UID")
+	series = Series.objects.filter(dcm_study = study)
+
+	images = Image.objects.filter(dcm_series = series).distinct("dcm_series")
 
 	context = {
 		"study": study,
-		"series": series
+		"series": series,
+		"images": images
 	}
 
 	return render_to_response('study.html', context, context_instance = RequestContext(request))
@@ -83,7 +86,11 @@ def series(request, dcm_uid):
 
 	try:
 
-		series = Series.objects.filter(UID = dcm_uid)
+		series = Series.objects.get(UID = dcm_uid)
+
+		images = Image.objects.filter(dcm_series = series)
+
+		study = series.dcm_study
 
 	except ObjectDoesNotExist:
 
@@ -94,7 +101,9 @@ def series(request, dcm_uid):
 		return render_to_response('series.html', context, context_instance = RequestContext(request))
 
 	context = {
-		"series": series
+		"images": images,
+		"series": series,
+		"study": study
 	}
 
 	return render_to_response('series.html', context, context_instance = RequestContext(request))

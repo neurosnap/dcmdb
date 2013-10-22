@@ -55,7 +55,7 @@
 	<div class="col-md-12" id="dcm_header">
 		<h4>
 			{% if series %}
-			{{ series.UID }}
+			{{ image.UID }}
 			{% else %}
 			???
 			{% endif %}
@@ -150,7 +150,7 @@
   			<div class="tab-pane" style="margin: 20px;" id="export">
 
 				<a class="btn btn-info" href="/down/zip/dcm/{{ image.UID }}">Download DCM</a> <br /> <br />
-				<a class="btn btn-primary" href="/down/zip/series/{{ image.UID }}">Download Series</a> <br /> <br />
+				<a class="btn btn-primary" href="/down/zip/series/{{ series.UID }}">Download Series</a> <br /> <br />
 				<a class="btn btn-success" href="/down/zip/study/{{ study.UID }}">Download Study</a> <br /> <br />
 
 			</div>
