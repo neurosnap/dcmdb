@@ -14,9 +14,17 @@
 {% if study %}
 <div class ="row">
 	<div class="col-md-12" id="dcm_header">
-		<h4>{{ study.UID }}</h4>
+		<h5>Study UID: {{ study.UID }}</h5>
 	</div>
 </div>
+
+<div class="row">
+	<div class="col-md-12">
+		<small>SOP Class UID: {{ study.sop_class_uid }} <br />
+		Study Date: {{ study.study_date }}</small>
+	</div>
+</div>
+<br /><br />
 {% endif %}
 
 {% if images %}
@@ -29,7 +37,16 @@
 				{% else %}
 				<img src="holder.js/150x150" class="img-thumbnail dcmthumb" />
 				{% endif %}
-			</a>
+			</a> <br />
+			<small>
+				UID: {{ image.dcm_series.UID }} <br />
+				{% if image.dcm_series.modality %} Modality: {{ image.dcm_series.modality }} {% endif %} <br />
+				{% if image.dcm_series.institution_name %} Institution: {{ image.dcm_series.institution_name }} {% endif %} <br />
+				{% if image.dcm_series.manufacturer %} Manufacturer: {{ image.dcm_series.manufacturer }} {% endif %} <br />
+				{% if image.dcm_series.series_number %} Series Number: {{ image.dcm_series.series_number }} {% endif %} <br />
+				{% if image.dcm_series.date %} Series Date: {{ image.dcm_series.date }} {% endif %} <br />
+				{% if image.dcm_series.laterality %} Laterality: {{ image.dcm_series.laterality }} {% endif %}
+			</small>
 		{% endfor %}
 	</div>
 </div>

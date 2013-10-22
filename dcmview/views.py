@@ -88,7 +88,7 @@ def series(request, dcm_uid):
 
 		series = Series.objects.get(UID = dcm_uid)
 
-		images = Image.objects.filter(dcm_series = series)
+		images = Image.objects.filter(dcm_series = series).order_by("image_number")
 
 		study = series.dcm_study
 

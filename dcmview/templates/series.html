@@ -9,36 +9,65 @@
 
 {% block content %}
 
+{% if study %}
+<ol class="breadcrumb">
+	<li>
+		<a href="/main/explore">Search</a>
+	</li>
+	<li>
+		<a href="/dcmview/study/{{ study.UID }}">Study</a>
+	</li>
+	<li>Series</li>
+</ol>
+{% endif %}
+
+{% if series %}
+<div class ="row">
+	<div class="col-md-12" id="dcm_header">
+		<h5>Series UID: {{ series.UID }}</h5>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<small>
+			{% if series.modality %} Modality: {{ series.modality }} {% endif %} <br />
+			{% if series.institution_name %} Institution: {{ series.institution_name }} {% endif %} <br />
+			{% if series.manufacturer %} Manufacturer: {{ series.manufacturer }} {% endif %} <br />
+		</small>
+	</div>
+	<div class="col-md-6">
+		<small>
+			{% if series.series_number %} Series Number: {{ series.series_number }} {% endif %} <br />
+			{% if series.date %} Series Date: {{ series.date }} {% endif %} <br />
+			{% if series.laterality %} Laterality: {{ series.laterality }} {% endif %}
+		</small>
+	</div>
+</div>
+<br /><br />
+{% endif %}
+
 {% if images %}
-	<ol class="breadcrumb">
-		<li>
-			<a href="/main/explore">Search</a>
-		</li>
-		<li>
-			<a href="/dcmview/study/{{ study.UID }}">Study</a>
-		</li>
-		<li>Series</li>
-	</ol>
-
-	<div class ="row">
-		<div class="col-md-12" id="dcm_header">
-			<h4>{{ series.UID }}</h4>
-		</div>
+<div class="row">
+	<div class="col-md-12" id="dcm_study">
+		{% for image in images %}
+			<a href="/dcmview/viewer/{{ image.UID }}">
+				{% if image.image_gen %}
+				<img src="/media/{{ image.filename }}_thumb.png" class="img-thumbnail dcmthumb" />
+				{% else %}
+				<img src="holder.js/150x150" class="img-thumbnail dcmthumb" />
+				{% endif %}
+			</a> <br />
+			<small>
+				UID: {{ image.UID }} <br />
+				{% if image.transfer_syntax_uid %} Transfer Syntax UID: {{ image.transfer_syntax_uid }} <br /> {% endif %}
+				{% if image.image_number %} Image Number: {{ image.image_number }} <br /> {% endif %}
+				{% if image.content_date %} Content Date: {{ image.content_date }} <br /> {% endif %}
+				{% if image.content_time %} Content Time: {{ image.content_time }} <br /> {% endif %}
+			</small>
+		{% endfor %}
 	</div>
-
-	<div class="row">
-		<div class="col-md-12" id="dcm_study">
-			{% for image in images %}
-				<a href="/dcmview/viewer/{{ image.UID }}">
-					{% if image.image_gen %}
-					<img src="/media/{{ image.filename }}_thumb.png" class="img-thumbnail dcmthumb" />
-					{% else %}
-					<img src="holder.js/150x150" class="img-thumbnail dcmthumb" />
-					{% endif %}
-				</a>
-			{% endfor %}
-		</div>
-	</div>
+</div>
 {% else %}
 	{% if msg %}
 	<div class="alert alert-danger">{{ msg }}</div>
