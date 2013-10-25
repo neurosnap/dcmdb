@@ -16,7 +16,14 @@ class processdicom(object):
 		if dcm:
 			self.dicom = dcm
 		elif filename:
-			self.dicom = dicom.read_file(filename)
+
+			try:
+
+				self.dicom = dicom.read_file(filename)
+
+			except:
+
+				pass
 
 		self.img_process = None
 

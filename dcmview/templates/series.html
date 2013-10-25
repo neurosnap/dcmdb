@@ -31,15 +31,15 @@
 <div class="row">
 	<div class="col-md-6">
 		<small>
-			{% if series.modality %} Modality: {{ series.modality }} {% endif %} <br />
-			{% if series.institution_name %} Institution: {{ series.institution_name }} {% endif %} <br />
-			{% if series.manufacturer %} Manufacturer: {{ series.manufacturer }} {% endif %} <br />
+			{% if series.modality %} Modality: {{ series.modality }} <br /> {% endif %}
+			{% if series.institution_name %} Institution: {{ series.institution_name }} <br /> {% endif %}
+			{% if series.manufacturer %} Manufacturer: {{ series.manufacturer }} <br /> {% endif %}
 		</small>
 	</div>
 	<div class="col-md-6">
 		<small>
-			{% if series.series_number %} Series Number: {{ series.series_number }} {% endif %} <br />
-			{% if series.date %} Series Date: {{ series.date }} {% endif %} <br />
+			{% if series.series_number %} Series Number: {{ series.series_number }} <br /> {% endif %}
+			{% if series.date %} Series Date: {{ series.date }} <br /> {% endif %}
 			{% if series.laterality %} Laterality: {{ series.laterality }} {% endif %}
 		</small>
 	</div>
@@ -49,8 +49,8 @@
 
 {% if images %}
 <div class="row">
-	<div class="col-md-12" id="dcm_study">
-		{% for image in images %}
+	{% for image in images %}
+	<div class="col-md-3">
 			<a href="/dcmview/viewer/{{ image.UID }}">
 				{% if image.image_gen %}
 				<img src="/media/{{ image.filename }}_thumb.png" class="img-thumbnail dcmthumb" />
@@ -65,8 +65,13 @@
 				{% if image.content_date %} Content Date: {{ image.content_date }} <br /> {% endif %}
 				{% if image.content_time %} Content Time: {{ image.content_time }} <br /> {% endif %}
 			</small>
-		{% endfor %}
 	</div>
+{% if forloop.counter|divisibleby:4 %}
+</div>
+<hr />
+<div class="row">
+{% endif %}
+	{% endfor %}
 </div>
 {% else %}
 	{% if msg %}
