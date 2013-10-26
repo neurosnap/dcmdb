@@ -5,8 +5,45 @@ $(function() {
     if (dcm.image_gen) {
 
         dcm.invert = false;
+        dcm.greyscale = false;
+
+        dcm.cm_arr = [];
+
+        $(".sliders").slider({
+            "min": -100,
+            "max": 100,
+            "animate": "slow",
+            "stop": function(event, ui) {
+
+                Caman("#" + dcm.getActiveImg(), function() {
+
+                    dcm.applyFilters(this);
+
+                });
+
+            }
+        });
+
+        $(".sliders").each(function() {
+
+            if ($(this).attr("id") == "gamma") {
+                $(this).slider("value", 1);
+                $(this).slider("option", "min", 0);
+                $(this).slider("option", "max", 5);
+                $(this).slider("option", "step", 0.1);
+            } else {
+                $(this).slider("value", 0);
+            }
+
+            if ($(this).attr("id") == "hue") {
+                $(this).slider("option", "min", 0);
+                $(this).slider("option", "max", 100);
+            }
+
+        });
 
         Caman.Event.listen("processComplete", function(job) {
+            console.log(job.name);
             $("#dcmview_status").html(job.name);
         });
 
@@ -20,44 +57,36 @@ $(function() {
 
     		e.preventDefault();
 
-    		var switch_img = $(this).find("img").attr("src").replace("_thumb", "");
+    		var switch_img = $(this).find("img").attr("fname");
 
-            $("#dcmview_image").removeAttr("data-caman-id");
+            if ($("#dcmview_image").length > 0 && !$("#dcmview_image").is(":hidden"))
+                $("#dcmview_image").hide();
+            else
+                $(".preload_dcm").hide();
 
-            Caman("#dcmview_image", switch_img, function() {
+            $("#dcm_" + switch_img).show();
 
-                dcm.getFilters(this);
+            var found_img = false;
 
-                $("#dcmview_status").html("Applying filters ...");
+            for (var i = 0; i < dcm.cm_arr.length; i++)
+                if (dcm.cm_arr[i] == switch_img)
+                    found_img = true;
 
-                this.render();
+            if (!found_img) {
 
-            });
+                Caman("#dcm_" + switch_img, function() {
+                    
+                    dcm.applyFilters(this);
+
+                    $("#dcmview_status").html("Applying filters ...");
+
+                    dcm.cm_arr.push(switch_img);
+
+                });
+
+            }
 
     	});
-
-        $("#apply").on("click", function(e) {
-
-            Caman("#dcmview_image", function() {
-                
-                var that = this;
-
-                this.revert();
-
-                dcm.getFilters(that);
-
-                //this.contrast($("#contrast").val());
-                //this.brightness($("#brightness").val());
-                //this.exposure($("#exposure").val());
-                //this.gamma($("#gamma").val());
-                //this.hue($("#hue").val());
-                //this.saturation($("#saturation").val());
-
-                this.render();
-
-            });
-
-        });
 
         $("#invert").on("click", function() {
 
@@ -66,8 +95,20 @@ $(function() {
             else
                 dcm.invert = true;
 
-            Caman("#dcmview_image", function() {
+            Caman("#" + dcm.getActiveImg(), function() {
                 this.invert().render();
+            });
+        });
+
+        $("#greyscale").on("click", function() {
+
+            if (dcm.greyscale)
+                dcm.greyscale = false;
+            else
+                dcm.greyscale = true;
+
+            Caman("#" + dcm.getActiveImg(), function() {
+                this.greyscale().render();
             });
         });
 
@@ -79,41 +120,73 @@ $(function() {
 
 });
 
-dcm.getFilters = function(context) {
+dcm.getActiveImg = function() {
 
-    $(".filter").each(function() {
+    if (!$("#dcmview_image").is(":hidden")) {
 
-        var val = $(this).val();
+        return "dcmview_image";
 
-        if (val == "" || (isNaN(val) && val.indexOf("-") == -1)) {
-            val = 0;
-            $(this).val("0");
+    } else {
+
+        var tag = null;
+
+        $(".preload_dcm").each(function() {
+            if (!$(this).is(":hidden")) {
+                tag = $(this).attr("id");
+            }
+
+        });
+
+        return tag;
+
+    }
+
+};
+
+dcm.applyFilters = function(that) {
+
+    var sliders = [];
+
+    $(".sliders").each(function() {
+
+        var type = $(this).attr("id");
+        var val = $(this).slider("value");
+
+        if ((type != "gamma" && val != 0) || (type == "gamma" && val != 1)) {
+            console.log(type + " made it w " + val);
+            sliders.push({
+                "type": type,
+                "val": val
+            });
         }
-
-        context[$(this).attr("id")](val);
 
     });
 
-    if (dcm.invert)
-        context.invert();
+    that.revert();
 
+    for (var i = 0; i < sliders.length; i++) {
+        var filter = sliders[i];
+        that[filter.type](filter.val);
+    }
+
+    that.render();
 };
 
 dcm.resetFilters = function() {
 
-    $(".filter").each(function() {
+    $(".sliders").each(function() {
 
         if ($(this).attr("id") == "gamma")
-            $(this).val("1");
+            $(this).slider("value", 1);
         else
-            $(this).val("0");
+            $(this).slider("value", 0);
 
     });
 
     if (dcm.invert == true)
         dcm.invert = false;
 
-    Caman("#dcmview_image", function() {
+    Caman("#" + dcm.getActiveImg(), function() {
         this.revert();
         this.render();
     });

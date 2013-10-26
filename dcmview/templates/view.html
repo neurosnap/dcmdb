@@ -2,12 +2,17 @@
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/view.css" />
+
+{% if image.image_gen %}
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/jquery-ui-1.10.3.custom.min.css" />
+{% endif %}
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.dataTables.min.js"> </script>
 
 {% if image.image_gen %}
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery-ui-1.10.3.custom.min.js"> </script>
 <script type="text/javascript" src="{{STATIC_URL}}js/caman.full.min.js"> </script>
 {% endif %}
 
@@ -74,20 +79,24 @@
 				<hr />
 
 				Contrast
-				<input type="text" id="contrast" class="form-control filter" value="0" />
+				<div id="contrast" class="sliders"></div>
 				Brightness
-				<input type="text" id="brightness" class="form-control filter" value="0" />
+				<div id="brightness" class="sliders"></div>
 				Exposure
-				<input type="text" id="exposure" class="form-control filter" value="0" />
+				<div id="exposure" class="sliders"></div>
 				Gamma
-				<input type="text" id="gamma" class="form-control filter" value="1" />
-				Hueee
-				<input type="text" id="hue" class="form-control filter" value="0" />
+				<div id="gamma" class="sliders"></div>
+				Hue
+				<div id="hue" class="sliders"></div>
 				Saturation
-				<input type="text" id="saturation" class="form-control filter" value="0" />
+				<div id="saturation" class="sliders"></div>
+				Vibrance
+				<div id="vibrance" class="sliders"></div>
+				Sharpen
+				<div id="sharpen" class="sliders"></div>
 				<br />
-				<button id="invert" class="btn btn-warning">Invert</button> <br /><br />
-				<button id="apply" class="btn btn-success">Apply</button>
+				<button id="invert" class="btn btn-warning">Invert</button> <br />
+				<button id="greyscale" class="btn btn-default" style="margin-top: 5px;">Greyscale</button> <br />
 				<button id="reset" class="btn btn-link">Reset</button>
 				{% endif %}
 
@@ -96,8 +105,11 @@
 				<h4>Diagnostic Image</h4>
 				{% if image.image_gen %}
 				<img src="/media/{{ image.filename }}.png" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+					{% for item in all_images %}
+					<img src="/media/{{ item.filename }}.png" style="height: 500px; width 500px; display: none;" class="img-rounded preload_dcm" id="dcm_{{ item.filename }}" />
+					{% endfor %}
 				{% else %}
-				<img src="holder.js/500x500" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+				<img src="holder.js/500x500" style="height: 500px; width: 500px;" class="img-rounded" />
 				{% endif %}
 				<div id="dcmview_status" class="alert alert-warning" style="margin: 5px; width: 490px;">Image Rendered</div>
 			</div>
@@ -112,7 +124,7 @@
 
 						{% if item.image_gen %}
 						<a href="/dcmview/viewer/{{ item.UID }}" class="dcm_series">
-							<img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
+							<img src="/media/{{ item.filename }}_thumb.png" fname="{{ item.filename }}" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
 						</a>
 						{% else %}
 						<img src="holder.js/100x100" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
