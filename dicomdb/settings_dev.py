@@ -3,4 +3,4 @@ SETTINGS_DB = {
 	"NAME": os.path.join(BASE_DIR, "db.sqlite3")
 }
 
-SETTINGS_EMAIL_PASS = "milka123"
+SETTINGS_EMAIL_PASS = ""
