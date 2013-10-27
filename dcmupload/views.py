@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from dcmupload.models import Study, Series, Image
 from dcmupload.processdicom import processdicom
 
-import json, simplejson
+import json as simplejson
 import random
 import string
 import re
@@ -20,8 +20,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 MEDIA_DIR = BASE_DIR + "/media"
-
-dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 @ensure_csrf_cookie
 def dcmupload(request):
@@ -144,6 +142,9 @@ def handle_upload(request):
             try:
                 anonymize(filename, filename)
             except:
+                #delete the file
+                os.remove(filename)
+                #throw an error to client
                 return HttpResponse(simplejson.dumps([{ 
                     "success": False, 
                     "msg": "Missing required DICM marker, are you sure this is a DICOM file?", 

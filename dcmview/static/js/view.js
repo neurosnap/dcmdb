@@ -43,7 +43,6 @@ $(function() {
         });
 
         Caman.Event.listen("processComplete", function(job) {
-            console.log(job.name);
             $("#dcmview_status").html(job.name);
         });
 
@@ -108,7 +107,7 @@ $(function() {
                 dcm.greyscale = true;
 
             Caman("#" + dcm.getActiveImg(), function() {
-                this.greyscale().render();
+                dcm.applyFilters(this);
             });
         });
 
@@ -153,7 +152,6 @@ dcm.applyFilters = function(that) {
         var val = $(this).slider("value");
 
         if ((type != "gamma" && val != 0) || (type == "gamma" && val != 1)) {
-            console.log(type + " made it w " + val);
             sliders.push({
                 "type": type,
                 "val": val
@@ -169,6 +167,12 @@ dcm.applyFilters = function(that) {
         that[filter.type](filter.val);
     }
 
+    if (dcm.invert)
+        that.invert();
+
+    if (dcm.greyscale)
+        that.greyscale();
+
     that.render();
 };
 
@@ -183,8 +187,11 @@ dcm.resetFilters = function() {
 
     });
 
-    if (dcm.invert == true)
+    if (dcm.invert)
         dcm.invert = false;
+
+    if (dcm.greyscale)
+        dcm.greyscale = false;
 
     Caman("#" + dcm.getActiveImg(), function() {
         this.revert();

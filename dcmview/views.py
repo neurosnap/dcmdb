@@ -71,7 +71,7 @@ def study(request, dcm_uid):
 
 	series = Series.objects.filter(dcm_study = study)
 
-	images = Image.objects.filter(dcm_series = series).distinct("dcm_series")
+	images = Image.objects.filter(dcm_series__in = series).distinct("dcm_series")
 
 	context = {
 		"study": study,
