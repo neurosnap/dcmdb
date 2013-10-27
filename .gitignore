@@ -1,6 +1,8 @@
 dicomdb/settings.py
-conf/rootkey.csv
+conf/*
+media/*
 static/*
+
 .installed.cfg
 bin
 develop-eggs
@@ -18,6 +20,3 @@ lib64
 *.txt~
 *.js~
 *.swp
-media/*
-conf/cert-CZOS6JDDZZIVLR54ROWQXNHTY5ZPD6TU.pem
-conf/pk-CZOS6JDDZZIVLR54ROWQXNHTY5ZPD6TU.pem
