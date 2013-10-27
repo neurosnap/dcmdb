@@ -3,4 +3,5 @@ SETTINGS_DB = {
 	"NAME": os.path.join(BASE_DIR, "db.sqlite3")
 }
 
+SETTINGS_EMAIL_HOST_USER = "dcmdb.email@gmail.com"
 SETTINGS_EMAIL_PASS = ""
