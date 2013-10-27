@@ -1,4 +1,4 @@
-dicomdb/settings.py
+dicomdb/settings_prod.py
 conf/*
 media/*
 static/*
