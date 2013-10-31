@@ -1,4 +1,4 @@
-dcmdb.org
+jjdcmdb.org
 ==========
 
 DCMDB is a DICOM Search Engine and Educational Tool
