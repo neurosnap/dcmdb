@@ -13,7 +13,7 @@ from itertools import chain
 @ensure_csrf_cookie
 def explore(request):
 
-	image = Image.objects.distinct('dcm_series')
+	image = Image.objects.distinct().order_by("dcm_series")
 
 	context = {
 		"image": image

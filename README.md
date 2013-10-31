@@ -1,4 +1,4 @@
-jjdcmdb.org
+dcmdb.org
 ==========
 
 DCMDB is a DICOM Search Engine and Educational Tool
@@ -25,3 +25,241 @@ Learning
 
 We need to get people interested in medicine to learn about the reality of that career path earlier in their lives.  I think it is a shame that as a pre-medical student in Neuroscience, we barely learned about the actual day-to-day happenings of a career in medicine.  Why is it we have to wait until medical school to learn about and how to properly observe diagnostic tools such as DICOMs?
 
+Contributing
+==========
+
+Volunteers are welcome to help make the service run more efficiently, effectively.  
+
+#### HOW TO DEVELOP ON DEBIAN-DIST (UBUNTU)
+
+```
+$ apt-get update
+$ apt-get upgrade
+$ apt-get install python-pip
+$ pip install virtualenv
+$ mkdir ~/.virtualenvs
+$ pip install virtualenvwrapper
+$ vim ~/.bash_profile
+```
+
+in .bash_profile
+```
+export WORKON_HOME=~/.virtualenvs
+/usr/local/bin/virtualenvwrapper.sh
+```
+
+Make a virtualenv
+```
+$ mkvirtualenv dcmdb
+```
+
+Start working on a virtualevn
+```
+$ workon dcmdb
+```
+
+deactivate virtualenv (just an example, dont do this now)
+```
+$ deactivate
+```
+
+Now install python dependencies
+```
+$ pip install -r python_dependencies.txt
+```
+
+python_dependencies.txt
+```
+Django==1.5.4
+Pillow==2.2.1
+South==0.8.2
+argparse==1.2.1
+matplotlib==1.3.0
+nose==1.3.0
+numpy==1.7.1
+pydicom==0.9.8
+pyparsing==2.0.1
+python-dateutil==2.1
+setproctitle==1.1.8
+six==1.4.1
+tornado==3.1.1
+yolk==0.4.3
+```
+
+##### HOW TO INSTALL GDCM
+
+###### PRE-REQS
+
+```
+apt-get install cmake-curses-gui
+apt-get install libpcre3 libpcre3-dev
+```
+
+###### SWIG
+
+  * Download the latest version of SWIG
+  * Extract compressed file e.g. swig-2.0.11
+
+```
+$ cd swig-2.0.11
+$ ./configure
+$ make
+$ make install
+```
+
+###### GDCM
+
+  * Download the latest version of GDCM
+  * Extract compressed file e.g. gdcm.tar.bz2
+
+```
+$ mkdir gdcm-build
+$ cd gdcm
+$ rm CMakeCache.txt
+$ cd ../gdcm-build
+$ ccmake ../gdcm
+```
+
+  * Screen will come up,
+  * Press [T] to go to advanced mode
+  * SET CMAKE\_C\_FLAGS to -fPIC
+  * SET CMAKE\_CXX\_FLAGS to -fPIC [Could be optional]
+  * Press [C] to configure
+  * SET GDCM\_WRAP\_PYTHON to ON
+  * [G] to generate
+
+```
+$ make
+$ make install
+```
+
+###### Git
+
+```
+$ apt-get install git-core
+```
+
+##### Download DCMDB
+
+SSH: git@github.com:neurosnap/dcmdb.git
+HTTPS: https://github.com/neurosnap/dcmdb.git
+
+```
+$ git clone git@github.com:neurosnap/dcmdb.git
+$ cd dcmdb
+$ python manage.py syncdb
+$ python manage.py migrate
+$ python manage.py runserver
+```
+
+Then, in browser http://localhost:8000
+
+Done!
+
+#### HOW TO DEVELOP ON WINDOWS (Get ready for hell)
+
+##### Install python 2.7
+
+Add C:/Python27;C:/Python27/Scripts;C:/Python27/Lib;C:/Python27/DLLs; to environmental variables
+
+##### Install cygwin 32 bit -- ALERT! For pydicom to properly install, select "Install for Just Me"
+
+Install the following cygwin packages:
+
+ * wget
+
+Open cygwin
+This creates a shortcut to allow us to use Python in interactive mode without specifying -i
+```
+$ mkshortcut -D -n "Cygwin Console" -i /Cygwin.ico /bin/bash -a --login
+```
+
+##### setuptools
+```
+$ wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python
+$ python ez_setup.py
+```
+
+##### Install PIP + Virtualenv
+```
+$ easy_install pip
+$ easy_install virtualenv
+$ easy_install virtualenvwrapper
+$ vim ~/.bash_profile
+```
+
+in .bash_profile
+```
+export WORKON_HOME=~/.virtualenvs
+/usr/local/bin/virtualenvwrapper.sh
+```
+
+Make a virtualenv
+```
+$ mkvirtualenv dcmdb
+```
+
+Start working on a virtualevn
+```
+$ workon dcmdb
+```
+
+deactivate virtualenv (just an example, dont do this now)
+```
+$ deactivate
+```
+
+##### Install the rest of the dependencies that actually work through PIP
+```
+$ pip install -r python\_dependencies\_windows.txt
+```
+
+python\_dependencies\_windows.txt
+```
+Django==1.5.4
+South==0.8.2
+argparse==1.2.1
+numpy==1.7.1
+nose==1.3.0
+pydicom==0.9.8
+pyparsing==2.0.1
+python-dateutil==2.1
+six==1.4.1
+tornado==3.1.1
+yolk==0.4.3
+```
+
+##### Install matplotlib 32 bit v1.3.1+ via installer
+
+  * http://matplotlib.org/downloads.html
+
+##### Install numpy via installer
+
+##### Install pillow via installer
+
+##### Install gdcm v2.4.0+ via installer
+
+  * http://sourceforge.net/projects/gdcm/files/gdcm%202.x/GDCM%202.4.0/
+
+Add C:/Program Files (x86)/GDCM 2.4.0/bin to envrionmental variables
+
+Move C:/Program Files (x86)/GDCM 2.4.0/ to C:/Python27/Lib/site-packages
+  * _gdcmswig.pyd
+  * gdcm.py
+  * gdcmswig.py
+
+##### Install msysgit via installer
+Add to environmental variables
+
+##### Download DCMDB
+```
+$ git clone git@github.com:neurosnap/dcmdb.git
+$ cd dcmdb
+$ python manage.py syncdb
+$ python manage.py migrate
+$ python manage.py runserver
+```
+
+Then, in browser http://localhost:8000
+
+Done!

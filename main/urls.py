@@ -1,12 +1,45 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, include, url
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+#import settings
+from django.contrib import admin
+import socket
+from django.conf import settings
 
-from main import views
+admin.autodiscover()
 
-urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
-    url(r'^about', views.about, name='about'),
-    url(r'^explore', views.explore, name='explore'),
-    url(r'^dicom', views.dicom, name='dicom'),
-    url(r'^tos', views.tos, name='tos'),
-    url(r'^search', views.search, name='search'),
-)
+from main import views as main_views
+
+#host = socket.gethostname()
+host = "dev"
+#see if it's production
+# ubuntu
+# dcmdb.org
+if host == "dcmdb.org":
+
+    urlpatterns = patterns('',
+        url(r'^$', main_views.under_construction, name = "under_construction"),
+        url(r'^main/about/', main_views.about_construction, name = "about_construction"),
+    )
+
+else:
+
+    urlpatterns = patterns('',
+        # Examples:
+        # url(r'^$', 'dicomdb.views.home', name='home'),
+        # url(r'^blog/', include('blog.urls')),
+        #(r'^dicoms/(?P<path>.*)$', 'django.views.static.serve',
+    	#    {'document_root': settings.MEDIA_ROOT}),
+        #url(r'^$', main_views.under_construction, name = "under_construction",
+	    url(r'^$', include('main.urls')),
+        url(r'^main/', include('main.urls')),
+        url(r'^users/', include('users.urls')),
+        url(r'^admin/', include(admin.site.urls)),
+        url(r'^dcmview/', include('dcmview.urls')),
+        url(r'^dcmupload/', include('dcmupload.urls')),
+        url(r'^down/', include('down.urls')),
+        url(r'^media/(?P<path>.*)$',
+            'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT, }),
+    )
+
+urlpatterns += staticfiles_urlpatterns()
