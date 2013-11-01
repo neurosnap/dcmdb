@@ -10,6 +10,7 @@ admin.autodiscover()
 from main import views as main_views
 
 host = socket.gethostname()
+#host = "dev"
 #see if it's production
 if host == "dcmdb.org":
 
