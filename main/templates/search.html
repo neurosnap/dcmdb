@@ -61,11 +61,12 @@
 				{% if item.dcm_series.dcm_study.sop_class_uid %} SOP Class UID: {{ item.dcm_series.dcm_study.sop_class_uid }} <br /> {% endif %}
 				{% if item.dcm_series.dcm_study.study_date %} Study Date: {{ item.dcm_series.dcm_study.study_date }} <br /> {% endif %}
 				{% if item.dcm_series.modality %} Modality: {{ item.dcm_series.modality }} <br /> {% endif %}
+				{% if item.dcm_series.laterality %} Laterality: {{ item.dcm_series.laterality }} <br /> {% endif %} 
 				{% if item.dcm_series.institution_name %} Institution: {{ item.dcm_series.institution_name }} <br /> {% endif %}
 				{% if item.dcm_series.manufacturer %} Manufacturer: {{ item.dcm_series.manufacturer }} <br /> {% endif %}
-				{% if item.dcm_series.series_number %} Series Number: {{ item.dcm_series.series_number }} <br /> {% endif %}
+				{% if item.dcm_series.series_description %} Series Description: {{ item.dcm_series.series_description }} <br /> {% endif %}
 				{% if item.dcm_series.date %} Series Date: {{ item.dcm_series.date }} <br /> {% endif %}
-				{% if item.dcm_series.laterality %} Laterality: {{ item.dcm_series.laterality }} {% endif %} 
+				{% if item.dcm_series.series_number %} Series Number: {{ item.dcm_series.series_number }} <br /> {% endif %}
 			</small>
 		</div>
 	</div>

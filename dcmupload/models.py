@@ -25,11 +25,13 @@ class Series(models.Model):
 
 	dcm_study = models.ForeignKey(Study)
 	UID = models.CharField(max_length = 100)
+	series_description = models.TextField(null = True, blank = True)
 	modality = models.CharField(max_length = 50, null = True, blank = True)
 	institution_name = models.CharField(max_length = 50, null = True, blank = True)
 	manufacturer = models.CharField(max_length = 50, null = True, blank = True)
-	series_number = models.CharField(max_length = 100, null = True, blank = True)
+	series_number = models.IntegerField(default = 0, null = True, blank = True)
 	#
+	body_part_examined = models.CharField(max_length = 100, null = True, blank = True)
 	laterality = models.CharField(max_length = 100, null = True, blank = True)
 	#
 	date = models.CharField(max_length = 100, null = True, blank = True)
@@ -45,7 +47,7 @@ class Image(models.Model):
 	image_gen = models.BooleanField(default = False)
 	transfer_syntax_uid = models.CharField(max_length = 50, null = True, blank = True)
 	#
-	image_number = models.CharField(max_length = 50, null = True, blank = True)
+	image_number = models.IntegerField(default = 0, null = True, blank = True)
 	image_orientation_patient = models.CharField(max_length = 50, null = True, blank = True)
 	image_position_patient = models.CharField(max_length = 50, null = True, blank = True)
 	patient_position = models.CharField(max_length = 50, null = True, blank = True)

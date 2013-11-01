@@ -33,19 +33,13 @@ def search(request):
 
 	s_study = Study.objects.filter(UID__icontains = query)
 	s_series = Series.objects.filter(dcm_study__in = s_study) 
-	#s_image = Image.objects.filter(dcm_series__in = s_series).distinct("dcm_series")
 
 	ss_series = Series.objects.filter(UID__icontains = query)
-	#ss_image = Image.objects.filter(dcm_series__in = ss_series).distinct("dcm_series")
-
-	#i_image = Image.objects.filter(UID__icontains = query).distinct("dcm_series")
 
 	ii_series = Series.objects.filter(modality__icontains = query)
-	#ii_image = Image.objects.filter(dcm_series__in = ii_series).distinct("dcm_series")
 
 	sop_study = Study.objects.filter(sop_class_uid__icontains = query)
 	sop_series = Series.objects.filter(dcm_study__in = sop_study)
-	#sop_image = Image.objects.filter(dcm_series__in = sop_series).distinct("dcm_series")
 
 	try:
 		query.index(":")
@@ -74,7 +68,7 @@ def search(request):
 											 Q(dcm_series__in = ii_series) | 
 											 Q(dcm_series__in = sop_series) | 
 											 Q(dcm_series__in = q_series) | 
-											 Q(dcm_series__in = qq_series) ).distinct("dcm_series")
+											 Q(dcm_series__in = qq_series) ).distinct().order_by("dcm_series")
 
 	return render_to_response('search.html', context, context_instance = RequestContext(request))
 

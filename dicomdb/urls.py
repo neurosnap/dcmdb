@@ -9,11 +9,8 @@ admin.autodiscover()
 
 from main import views as main_views
 
-#host = socket.gethostname()
-host = "dev"
+host = socket.gethostname()
 #see if it's production
-# ubuntu
-# dcmdb.org
 if host == "dcmdb.org":
 
     urlpatterns = patterns('',
@@ -24,12 +21,6 @@ if host == "dcmdb.org":
 else:
 
     urlpatterns = patterns('',
-        # Examples:
-        # url(r'^$', 'dicomdb.views.home', name='home'),
-        # url(r'^blog/', include('blog.urls')),
-        #(r'^dicoms/(?P<path>.*)$', 'django.views.static.serve',
-    	#    {'document_root': settings.MEDIA_ROOT}),
-        #url(r'^$', main_views.under_construction, name = "under_construction",
 	    url(r'^$', include('main.urls')),
         url(r'^main/', include('main.urls')),
         url(r'^users/', include('users.urls')),

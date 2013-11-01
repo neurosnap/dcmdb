@@ -2,6 +2,7 @@ dicomdb/settings_prod.py
 conf/*
 media/*
 static/*
+db.sqlite3
 
 .installed.cfg
 bin

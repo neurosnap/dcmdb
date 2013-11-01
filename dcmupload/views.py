@@ -18,8 +18,8 @@ import re
 import dicom
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-MEDIA_DIR = BASE_DIR + "/media"
+BASE_DIR = settings.BASE_DIR
+MEDIA_DIR = settings.MEDIA_ROOT
 
 @ensure_csrf_cookie
 def dcmupload(request):
@@ -176,7 +176,7 @@ def handle_upload(request):
                 }]), mimetype="application/json")
 
             #save image and thumbnail
-            save_image = dcm.writeFiles(filename)
+            save_image = dcm.extractImage(filename)
             
             if save_image['success']:
                 # set image generated flag to true in series record
@@ -239,12 +239,14 @@ def add_dcm_record(**kwargs):
     sop_class_uid = None
     # Series
     series_instance_uid = None
+    series_description = None
     modality = None
     institution_name = None
     manufacturer = None
     series_number = None
     laterality = None
     series_date = None
+    body_part_examined = None
     # Image
     sop_instance_uid = None
     image_number = None
@@ -284,21 +286,19 @@ def add_dcm_record(**kwargs):
         elif tag == "SOPClassUID":
             sop_class_uid = dcm.SOPClassUID
         elif tag == "InstanceNumber":
-            image_number = dcm.InstanceNumber
+            image_number = int(dcm.InstanceNumber)
         elif tag == "AccessionNumber":
             accession_number = dcm.AccessionNumber
         elif tag == "SeriesInstanceUID":
             # unique identifier for the series
             series_instance_uid = dcm.SeriesInstanceUID.encode('utf-8')
         elif tag == "SeriesNumber":
-            series_number = dcm.SeriesNumber
+            series_number = int(dcm.SeriesNumber)
         elif tag == "SeriesDate":
             series_date = dcm.SeriesDate
             series_date = convert_date(series_date, "-").encode('utf-8')
         elif tag == "Laterality":
             laterality = dcm.Laterality
-        elif tag == "TransferSyntaxUID":
-            transfer_syntax_uid = dcm.file_meta.TransferSyntaxUID
         elif tag == "PatientOrientation":
             patient_position = dcm.PatientOrientation
         elif tag == "ContentDate":
@@ -306,6 +306,15 @@ def add_dcm_record(**kwargs):
             content_date = convert_date(content_date, "-").encode('utf-8')
         elif tag == "ContentTime":
             content_time = dcm.ContentTime
+        elif tag == "BodyPartExamined":
+            body_part_examined = dcm.BodyPartExamined
+        elif tag == "SeriesDescription":
+            series_description = dcm.SeriesDescription
+
+    try:
+        transfer_syntax_uid = dcm.file_meta.TransferSyntaxUID
+    except:
+        pass
 
     if series_date == None:
         series_date = "1990-01-01"
@@ -342,11 +351,13 @@ def add_dcm_record(**kwargs):
         series = Series.objects.create(
             dcm_study = study,
             UID = series_instance_uid,
+            series_description = series_description,
             modality = modality,
             institution_name = institution_name,
             manufacturer = manufacturer,
             series_number = series_number,
             laterality = laterality,
+            body_part_examined = body_part_examined,
             date = series_date
         )
 

@@ -1,35 +1,43 @@
 import dicom
-import os
-import gdcm
-import numpy
-import matplotlib as mpl
-mpl.use('Agg')
-from pylab import cm 
-import matplotlib.pyplot as plt
-from PIL import Image
+
+try:
+
+	import gdcm
+	import numpy
+	from pylab import cm 
+	from PIL import Image
+
+except:
+
+	pass
 
 class processdicom(object):
 	""" A class of processing DICOM image files"""
 	
-	def __init__(self, dcm = False, filename = False):
-		#self.dicom = dicom.read_file(filepath)
-		if dcm:
-			self.dicom = dcm
-		elif filename:
+	def __init__(self, filename = False):
 
-			try:
+		try:
 
-				self.dicom = dicom.read_file(filename)
+			self.dicom = dicom.read_file(filename)
 
-			except:
+		except:
 
-				pass
+			pass
 
 		self.img_process = None
 
-	def writeFiles(self, filename):
+	def extractImage(self, filename):
 
-		png_filename = filename.replace(' ', '')[:-4]
+		if not self.module_exists("gdcm"):
+			return { "success": False, "msg": "Image extraction failed: missing GDCM module." }
+		elif not self.module_exists("numpy"):
+			return { "success": False, "msg": "Image extraction failed: missing numpy module." }
+		elif not self.module_exists("pylab"):
+			return { "success": False, "msg": "Image extraction failed, missing matplotlib: pylab module." }
+		elif not self.module_exists("PIL"):
+			return { "success": False, "msg": "Image extraction failed, missing PIL module." }
+
+		png_filename = filename.replace(' ', '')[:-4] + ".png"
 
 		self.img_process = gdcm.ImageReader()
 		self.img_process.SetFileName(filename.encode('utf-8'))
@@ -46,11 +54,11 @@ class processdicom(object):
 
 		try:
 			# save normal resolution image
-			self.imsave(fname = png_filename + ".png", arr = self.pxl_arr, cmap = cm.bone)
+			self.imsave(fname = png_filename, arr = self.pxl_arr, cmap = cm.bone)
 			
 			# save thumbnail via PIL
 			try:
-				pil = Image.open(png_filename + ".png")
+				pil = Image.open(png_filename)
 			except:
 				return { "success": False, "msg": "Image could not be loaded into PIL." }
 
@@ -61,7 +69,7 @@ class processdicom(object):
 				return { "success": False, "msg": "Image could not be resized using PIL." }
 			
 			try:
-				pil.save(png_filename + "_thumb.png", "PNG")
+				pil.save(png_filename[:-4] + "_thumb.png", "PNG")
 			except:
 				return { "success": False, "msg": "Thumbnail could not be saved." }
 
@@ -160,3 +168,12 @@ class processdicom(object):
 		canvas = FigureCanvas(fig)
 		fig.figimage(arr, cmap=cmap, vmin=vmin, vmax=vmax, origin=origin)
 		fig.savefig(fname, dpi=1, format=format)
+
+	def module_exists(self, module_name):
+
+		try:
+			__import__(module_name)
+		except ImportError:
+			return False
+		else:
+			return True
