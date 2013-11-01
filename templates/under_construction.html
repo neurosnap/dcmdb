@@ -9,7 +9,6 @@
 		<meta name=”description” content=”DCMDB is an open-source, open-access search engine for medical diagnostic images (DICOMS)”>
 
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap-theme.min.css" />
 		<!-- <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/flat-ui.css" /> -->
 		{% block css %}{% endblock %}
 		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
@@ -47,9 +46,11 @@
 
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 
-				<ul class="nav navbar-na dcm_nav">
+				<ul class="nav navbar-nav dcm_nav">
 
 					<li><a href="/main/about">About</a></li>
+					<li><a href="/main/dicom/">What is a DICOM file?</a></li>
+					<li><a href="/main/tos">Terms of Service</a></li>
 
 				</ul>
 
