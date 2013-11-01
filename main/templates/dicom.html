@@ -1,4 +1,4 @@
-{% extends 'template.html' %}
+{% extends template %}
 
 {% block js %}
 {% endblock %}
@@ -18,8 +18,68 @@
 
 	<div class="col-md-12">
 
-		DICOM files are the means by which the medical community communicates medical imaging data.
+		DICOM files are the means by which the medical community communicates medical imaging data.  It creates a standard to transmit medical images in a complex and dynamic environment of cutting-edge, innovative technologies.  The standard is maintained by the <a href="http://www.medicalimaging.org/">Medical Imaging and Technology Alliance (MITA)</a>,
+		which is a division of the <a href="http://www.nema.org/">National Electrical Manufacturers Association (NEMA)</a>.  The DICOM standard is freely available <a href="http://medical.nema.org/standard.html">here</a>.
 
+		<br />
+		<hr />
+		<h3><small>A Brief History</small></h3>
+		<a href="http://www.cancer.gov/cancertopics/factsheet/detection/CT">Computed Tomography (CT)</a> emerged as a medical diagnostic utility in the 1970s and with it other influential modalities.  
+		The <a href="http://www.acr.org/">American College of Radiology (ACR)</a> and 
+		NEMA formed a jount committee in 1983 to create a standard that adhered to certain principles that are necessary for succint transmission of medical images.
+
+		<br />
+
+		<blockquote>
+			<p>
+				<ul>
+				<li> Promote communication of digital image information, regardless of device manufacturer </li>
+				<li> Facilitate the development and expansion of picture archiving and communication systems (PACS) that can also interface with other systems of hospital information </li>
+				<li> Allow the creation of diagnostic information data bases that can be interrogated by a wide variety of devices distributed geographically. </li>
+				</ul>
+			</p>
+			<small><a href="http://medical.nema.org/Dicom/2011/11_01pu.pdf">2011 DICOM Standard</a></small>
+		</blockquote>
+
+		<h3><small>A Functional Overview</small></h3>
+		The DICOM standard was designed to set minimum software commands, consistent data organization, and interfacing with medical imaging hardware.  
+		The principles that were necessary for a medical imaging standard are the following: <br /><br />
+			<ul>
+				<li>Ability to interface with computer networks</li>
+				<li>Ability to be functional offline</li>
+				<li>Specifies how data should be communicated between devices, computers, and personel</li>
+				<li>Specifies a multipart document: header (patient, study, series) data and image data</li>
+				<li>Specifies explicit Information Objects for images, waveforms, and printing</li>
+				<li>Specifies strict definitions and relational organization of Information Objects</li>
+			</ul>
+
+		A DICOM file is broken up into objects that are perfectly relational.  A <strong>patient</strong> can have many medical scans conducted throughout their lifetime, 
+		therefore he or she can have multiple <strong>studies</strong> performed on them.  Within any single study, the patient could be asked to change positions,
+		which correspond to <strong>series</strong>.  Within any single series, there are multiple <strong>images</strong> being captured by the medical imaging hardware.
+
+		<h3><small>A Technical Overview</small></h3>
+		As was mentioned above, a DICOM file contains multiple objects that relate to patient, study, series, and image information.  These are defined by the following Unique Identifiers (UID):
+		<br /><br />
+
+		<ul>
+			<li><strong>Patient</strong>: Patient ID</li>
+			<li><strong>Study</strong>: Study Instance UID</li>
+			<li><strong>Series</strong>: Series Instance UID</li>
+			<li><strong>Image</strong>: SOP Instance UID</li>
+		</ul>
+
+		A patient can have multiple studies; a study can have multiple series; a series can have multiple images, linked together relationally by the keys mentioned above.  This is how I have organized the 
+		relational database (postgresql) for this website -- excluding patient data.  Before any file is uploaded to our servers, the patient data is anonymized.  
+		I have also created a RESTful API to download a study, series, or image as a ZIP from our servers:
+		<br /><br />
+
+		<ul>
+			<li><strong>Download Single Image</strong>:  http://dcmdb.org/down/zip/dcm/{SOP_Instance_UID}</li>
+			<li><strong>Download Series</strong>:  http://dcmdb.org/down/zip/series/{Series_Instance_UID}</li>
+			<li><strong>Download Study</strong>: http://dcmdb.org/down/zip/study/{Study_Instance_UID}</li>
+		</ul>
+
+		<hr />
 	</div>
 
 </div>

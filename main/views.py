@@ -9,7 +9,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Q
 from itertools import chain
 
-# Create your views here.
+#uc is under construction
+
 @ensure_csrf_cookie
 def explore(request):
 
@@ -80,11 +81,47 @@ def index(request):
 	return render_to_response('index.html', context, context_instance = RequestContext(request))
 
 @ensure_csrf_cookie
-def under_construction(request):
+def uc(request):
 
 	context = {}
 	
 	return render_to_response('uc_index.html', context, context_instance = RequestContext(request))
+
+@ensure_csrf_cookie
+def dicom(request):
+
+	context = {
+		"template": "template.html"
+	}
+
+	return render_to_response('dicom.html', context, context_instance = RequestContext(request))
+
+@ensure_csrf_cookie
+def dicom_uc(request):
+
+	context = {
+		"template": "under_construction.html"
+	}
+
+	return render_to_response('dicom.html', context, context_instance = RequestContext(request))
+
+@ensure_csrf_cookie
+def tos(request):
+
+	context = {
+		"template": "template.html"
+	}
+
+	return render_to_response('tos.html', context, context_instance = RequestContext(request))
+
+@ensure_csrf_cookie
+def tos_uc(request):
+
+	context = {
+		"template": "under_construction.html"
+	}
+
+	return render_to_response('tos.html', context, context_instance = RequestContext(request))
 
 @ensure_csrf_cookie
 def about(request):
@@ -96,28 +133,12 @@ def about(request):
 	return render_to_response('about.html', context, context_instance = RequestContext(request))
 
 @ensure_csrf_cookie
-def dicom(request):
-
-	context = {
-
-	}
-
-	return render_to_response('dicom.html', context, context_instance = RequestContext(request))
-
-@ensure_csrf_cookie
-def tos(request):
-
-	context = {
-
-	}
-
-	return render_to_response('tos.html', context, context_instance = RequestContext(request))
-
-@ensure_csrf_cookie
-def about_construction(request):
+def about_uc(request):
 
 	context = {
 		"template": "under_construction.html"
 	}
 
 	return render_to_response('about.html', context, context_instance = RequestContext(request))
+
+

@@ -8,17 +8,17 @@ This website was developed by Eric Bower.  The mission of this service is to cre
 Repository
 ==========
 
-As a pre-medical student, I found it rather difficult to find a concise location for Digital Imaging and Communications in Medicine (DICOM) files.  There was no way to just search through a maryiad of diagnostic files with some pertinent information about the patient when referencing prognosis, diagnosis, and the rationality behind a diagnosis.  I feel as though there is a market for an educational tool to assist in the teaching and learning process of diagnostic imaging and the tools required to make judgements on those images.  One of my goals with this project is to create a platform that at its base is a repository to store, retrieve anonymous diagnostic data easily and efficiently.
+As a pre-medical student, I found it rather difficult to find a concise location for Digital Imaging and Communications in Medicine (DICOM) files.  There was no way to simply search through a maryiad of diagnostic files with some pertinent information about the patient when referencing prognosis, diagnosis, and the rationality behind a diagnosis.  I feel as though there is a market for an educational tool to assist in the teaching and learning process of diagnostic imaging and the tools required to make judgements on those images.  One of my goals with this project is to create a platform that at its base is a repository to store, retrieve anonymous diagnostic data easily and efficiently.
 
 Discussion
 ==========
 
-I am a strong proponent of crowd-sourcing, or the act of collaborating with a multiplicity of voluntarily interested people seeking to accomplish some common goal.  Why can we not apply this principle to medicine as well?  As a matter of fact, it happens all the time in medicine.  However, there doesn't seem to be an efficient way to receive feedback from an aggregate of physicians.  Typically, in my experience, physicians will send their DICOM files to a specific set of people to receive second opinions.  While this is an effective approach for most purposes, I am betting that if crowd-sourcing is done properly, we can create an environment where hundreds or thousands of knowledgable people discuss patient DICOM files.
+I am a strong proponent of crowd-sourcing, or the act of collaborating with a multiplicity of voluntarily interested people seeking to accomplish some common goal.  Why can we not apply this principle to medicine as well?  However, there doesn't seem to be an efficient way to receive feedback from an aggregate of physicians.  Typically, in my experience, physicians will send their DICOM files to a specific set of people to receive second opinions.  While this is an effective approach for most purposes, I am betting that if crowd-sourcing is done properly, we can create an environment where hundreds or thousands of knowledgable people discuss patient DICOM files.
 
 Teaching
 ==========
 
-Once we have created a platform for discussion, we can use that discussion as an educational tool for aspiring physicians or even hobbyists.  In my opinion, understanding the rationale and critiqueing of any analysis lends itself to wisdom, reason, and progress.  When intelligence criticizes intelligence, we reach a level of understanding that is greater than the sum of its parts, because that logic or wisdom can then be applied to other fields of interest.
+Once we have created a platform for discussion, we can use that discussion as an educational tool for aspiring physicians or even hobbyists.  In my opinion, understanding the rationale and critiqueing of any analysis lends itself to wisdom, reason, and progress.  When intelligence criticizes intelligence, we reach a level of understanding that is greater than the sum of its parts, because that wisdom can then be applied to other spheres of interest.
 
 Learning
 ==========
@@ -219,7 +219,6 @@ python\_dependencies\_windows.txt
 Django==1.5.4
 South==0.8.2
 argparse==1.2.1
-numpy==1.7.1
 nose==1.3.0
 pydicom==0.9.8
 pyparsing==2.0.1

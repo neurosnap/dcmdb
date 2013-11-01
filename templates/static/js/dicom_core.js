@@ -18,14 +18,15 @@ $(function() {
 
     var first = url.indexOf("/");
     var uri = url.substring(first, url.length);
-
+    console.log(uri);
     $(".dcm_nav").find("li").each(function() {
 
         if ($(this).hasClass("active"))
             $(this).removeClass("active");
 
-        if ($(this).find("a").attr("href") == uri)
-            $(this).addClass("active");
+        if ($(this).find("a").attr("href") == uri 
+            || $(this).find("a").attr("href") == uri.slice(0, -1))
+                $(this).addClass("active");
 
     });
     /* END NAVBAR FUNCTIONALITY */
