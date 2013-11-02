@@ -3,6 +3,7 @@ conf/*
 media/*
 static/*
 db.sqlite3
+*.orig
 
 .installed.cfg
 bin
