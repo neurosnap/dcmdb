@@ -91,7 +91,7 @@ def uc(request):
 def dicom(request):
 
 	context = {
-		"template": "template.html"
+
 	}
 
 	return render_to_response('dicom.html', context, context_instance = RequestContext(request))
@@ -125,6 +125,15 @@ def tos_uc(request):
 
 @ensure_csrf_cookie
 def about(request):
+
+	context = {
+		"template": "template.html"
+	}
+	
+	return render_to_response('about.html', context, context_instance = RequestContext(request))
+
+@ensure_csrf_cookie
+def about_uc(request):
 
 	context = {
 		"template": "template.html"
