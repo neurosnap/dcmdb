@@ -107,12 +107,12 @@
 			<div class="col-md-8">
 				<h4>Diagnostic Image</h4>
 				{% if image.image_gen %}
-				<img src="/media/{{ image.filename }}.png" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+				<img src="/media/{{ image.filename }}.png" style="height: 100%; width: 100%;" class="img-rounded" id="dcmview_image" />
 					{% for item in all_images %}
-					<img src="/media/{{ item.filename }}.png" style="height: 500px; width 500px; display: none;" class="img-rounded preload_dcm" id="dcm_{{ item.filename }}" />
+					<img src="/media/{{ item.filename }}.png" style="height: 100%; width 100%; display: none;" class="img-rounded preload_dcm" id="dcm_{{ item.filename }}" />
 					{% endfor %}
 				{% else %}
-				<img src="holder.js/500x500" style="height: 500px; width: 500px;" class="img-rounded" />
+				<img src="holder.js/500x500" style="height: 100%; width: 100%;" class="img-rounded" />
 				{% endif %}
 				<div id="dcmview_status" class="alert alert-warning" style="margin: 5px; width: 490px;">Image Rendered</div>
 			</div>

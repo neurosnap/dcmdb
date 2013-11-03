@@ -1,5 +1,16 @@
 $(function() {
 
+    $("#send_files").prop("disabled", true);
+
+    $("#accept_tos").on("click", function() {
+
+        if ($(this).is(":checked"))
+            $("#send_files").prop("disabled", false);
+        else
+            $("#send_files").prop("disabled", true);
+
+    });
+
     $('#fileupload').fileupload({
         "url": "/dcmupload/handle_upload",
         "dataType": 'json',
@@ -10,9 +21,13 @@ $(function() {
 
                 var file = data.files[i];
 
+                console.log(file);
+
+                var bytes_ts = bytesToSize(file.size);
+
                 content += '<div class="queued" dcm_name="' + file.name + '">' + 
                            '    <div><span class="dcm_done" style="display: none;"></span>' + 
-                           '        ' + file.name + ' - ' + file.type + ' - ' + file.size + 
+                           '        ' + file.name + ' <strong>' + bytes_ts + '</strong>' + 
                            '    </div>' +
                            '    <div class="progress"><div class="progress-bar"></div></div>' + 
                            '    <div class="dcm_preview"></div>' + 
@@ -77,7 +92,22 @@ $(function() {
 
             });
 
+            $("#send_files").prop("disabled", true);
+
         }
     });
 
 });
+
+function bytesToSize(bytes) {
+
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+    if (bytes == 0) 
+        return '0 Bytes';
+
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+
+    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+
+};

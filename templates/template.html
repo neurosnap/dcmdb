@@ -41,7 +41,7 @@
 					<span class="icon-bar"></span>
 				</button>
 
-				<a class="navbar-brand" href="/">dcmdb</a>
+                <a class="navbar-brand" href="/">dcmdb</a>
 
 			</div>
 
@@ -49,34 +49,35 @@
 
 				<ul class="nav navbar-nav dcm_nav">
 
-					<li><a href="/main/explore">Explore</a></li>
-					<li><a href="/dcmupload/">Upload</a></li>
+                    <li><a href="/main/explore"><span class="glyphicon glyphicon-th-large"></span> Explore</a></li>
+                    <li><a href="/dcmupload/"><span class="glyphicon glyphicon-export"></span> Upload</a></li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> About <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="/main/about">This Site</a></li>
-							<li><a href="/main/dicom">What is a DICOM file?</a></li>
-							<li><a href="/main/tos">Terms of Service</a></li>
-						</ul>
+                            <li><a href="/main/about"><span class="glyphicon glyphicon-headphones"></span> dcmdb</a></li>
+                            <li><a href="/main/dicom"><span class="glyphicon glyphicon-file"></span> What is a DICOM file?</a></li>
+                            <li><a href="/main/tos"><span class="glyphicon glyphicon-asterisk"></span> Terms of Service</a></li>
+                            <li><a href="/main/privacy"><span class="glyphicon glyphicon-send"></span> Privacy Agreement</a></li>
+                        </ul>
 					</li>
-					<!-- <li class="dropdown">
+			   <!-- <li class="dropdown">
 
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Account <b class="caret"></b></a>
 
-						{% if user.is_authenticated %}
+					    {% if user.is_authenticated %}
 							<ul class="dropdown-menu">
-								<li><a href="/users">Profile</a></li>
-								<li><a href="#">Settings</a></li>
-								<li><a href="/users/logout">Logout</a></li>
+                                <li><a href="/users"><span class="glyphicon glyphicon-signal"></span> Profile</a></li>
+                                <li><a href="#"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                                <li><a href="/users/logout"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
 							</ul>
 						{% else %}
 							<ul class="dropdown-menu">
-								<li><a href="/users/login">Login</a></li>
-								<li><a href="/users/register">Register</a></li>
+                                <li><a href="/users/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                                <li><a href="/users/register"><span class="glyphicon glyphicon-pencil"></span> Register</a></li>
 							</ul>
 						{% endif %}
 
-					</li> -->
+                    </li> -->
 
 				</ul>
 
@@ -87,7 +88,7 @@
 						<input type="text" class="form-control" name="dcm_query" id="dcm_query" placeholder="Search">
 					</div>
 
-					<button type="submit" class="btn btn-default" id="dcm_search">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="dcm_search"><span class="glyphicon glyphicon-search"></span> Search</button>
 
 				</form>
 				{% endif %}

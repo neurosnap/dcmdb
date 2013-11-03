@@ -21,6 +21,7 @@ if host == "dcmdb.org":
         url(r'^main/about/', main_views.about_uc, name = "about_uc"),
         url(r'^main/dicom/', main_views.dicom_uc, name="dicom_uc"),
         url(r'^main/tos/', main_views.tos_uc, name="tos_uc"),
+        url(r'^main/privacy/', main_views.privacy_uc, name="privacy_uc"),
     )
 
 else:

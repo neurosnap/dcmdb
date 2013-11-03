@@ -4,13 +4,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="page-header">
 
-	<div class="col-md-12">
-
-		<h4>Digital Imaging and Communications in Medicine (DICOM)</h4>
-
-	</div>
+	<h4>Digital Imaging and Communications in Medicine (DICOM)</h4>
 
 </div>
 
@@ -69,15 +65,7 @@
 		</ul>
 
 		A patient can have multiple studies; a study can have multiple series; a series can have multiple images, linked together relationally by the keys mentioned above.  This is how I have organized the 
-		relational database (postgresql) for this website -- excluding patient data.  Before any file is uploaded to our servers, the patient data is anonymized.  
-		I have also created a RESTful API to download the anonymous study, series, or image as a ZIP from our servers:
-		<br /><br />
-
-		<ul>
-			<li><strong>Download Single Image</strong>:  http://dcmdb.org/down/zip/dcm/{SOP_Instance_UID}</li>
-			<li><strong>Download Series</strong>:  http://dcmdb.org/down/zip/series/{Series_Instance_UID}</li>
-			<li><strong>Download Study</strong>: http://dcmdb.org/down/zip/study/{Study_Instance_UID}</li>
-		</ul>
+		relational database (postgresql) for this website -- excluding patient data.  Before any file is uploaded to our servers, the patient data is anonymized.
 
 		<hr />
 	</div>

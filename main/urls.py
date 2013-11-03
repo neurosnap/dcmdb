@@ -8,5 +8,7 @@ urlpatterns = patterns('',
     url(r'^explore', views.explore, name='explore'),
     url(r'^dicom', views.dicom, name='dicom'),
     url(r'^tos', views.tos, name='tos'),
+     url(r'^transfer_syntax', views.transfer_syntax, name='transfer_syntax'),
+    url(r'^privacy', views.privacy, name='privacy'),
     url(r'^search', views.search, name='search'),
 )

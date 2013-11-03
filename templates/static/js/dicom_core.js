@@ -9,6 +9,14 @@ $.expr[':'].external = function(obj) {
 
 $(function() {
 	
+    $("a:external").each(function() {
+
+        var link_text = $(this).html() + ' <span class="glyphicon glyphicon-new-window"></span>';
+
+        $(this).html(link_text);
+
+    });
+
     $('a:external').attr('target', '_blank');
 
 	var csrftoken = getCookie('csrftoken');
