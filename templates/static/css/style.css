@@ -1,9 +1,5 @@
-.hero-unit {
-	margin-top: 100px;
-}
-
-small {
-	font-size: 10px;
+HTML, BODY {
+	word-wrap: break-word;
 }
 
 .tab_content {
@@ -14,16 +10,7 @@ small {
 	margin-bottom: 15px;
 }
 
-.dcm_search {
-}
-
 .dcmthumb {
 	width: 150px;
 	height: 150px;
 }
-
-/*MISC CLASSES*/
-.clear {clear:both;}
-.date {font-size:8pt;font-weight:normal;text-transform:lowercase;}
-.hidden { display: none; }
-.unhidden { display: block; }
