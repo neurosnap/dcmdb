@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Study(models.Model):
 
-	UID = models.CharField(max_length = 100)
+	UID = models.CharField(max_length = 100, unique = True)
 	#user_ID = models.ForeignKey(User)
 	study_id = models.CharField(max_length = 50, null = True, blank = True)
 	#
