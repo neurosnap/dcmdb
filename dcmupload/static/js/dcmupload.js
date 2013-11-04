@@ -39,7 +39,10 @@ $(function() {
 
                 var file = data.files[i];
 
-                var bytes_ts = bytesToSize(file.size);
+                var bytes_ts = '';
+
+                if (file.hasOwnProperty("size"))
+                    bytes_ts = bytesToSize(parseInt(file.size));
 
                 content += '<div class="queued" dcm_name="' + file.name + '">' + 
                            '    <div><span class="dcm_done" style="display: none;"></span>' + 

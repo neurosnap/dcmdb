@@ -72,6 +72,22 @@ def handle_upload(request):
         # file is being uploaded
         if not ("f" in request.GET.keys()): # upload file
 
+            # QUIRK HERE
+            # in jQuey uploader, when it falls back to uploading using iFrames
+            # the response content type has to be text/html
+            # if json will be send, error will occur
+            # if iframe is sending the request, it's headers are a little different compared
+            # to the jQuery ajax request
+            # they have different set of HTTP_ACCEPT values
+            # so if the text/html is present, file was uploaded using jFrame because
+            # that value is not in the set when uploaded by XHR
+            if "text/html" in request.META['HTTP_ACCEPT']:
+                response_type = "text/html"
+            else:
+                response_type = "application/json"
+
+            print response_type
+
             # make sure some files have been uploaded
             if not request.FILES:
                 return HttpResponseBadRequest('Must upload a file')
@@ -110,7 +126,7 @@ def handle_upload(request):
                 response_data = simplejson.dumps([response_data])
                 # return response to uploader with error
                 # so it can display error message
-                return HttpResponse(response_data, mimetype='application/json')
+                return HttpResponse(response_data, mimetype=response_type)
 
 
             # make temporary dir if not exists already
@@ -149,7 +165,7 @@ def handle_upload(request):
                     "success": False, 
                     "msg": "Missing required DICM marker, are you sure this is a DICOM file?", 
                     "name": file.name
-                }]), mimetype="application/json")
+                }]), mimetype=response_type)
 
             dcm = processdicom(filename = filename)
 
@@ -173,7 +189,7 @@ def handle_upload(request):
                     "image_uid": new_series['image'].UID,
                     "series_uid": new_series['series'].UID, 
                     "study_uid": new_series['study'].UID 
-                }]), mimetype="application/json")
+                }]), mimetype=response_type)
 
             #save image and thumbnail
             save_image = dcm.extractImage(filename)
@@ -192,7 +208,7 @@ def handle_upload(request):
                 save_image['msg'] += " <a href='/dcmview/series/" + new_series['series'].UID + "'>View DCM</a>" 
                 save_image['name'] = file.name
                 
-                return HttpResponse(simplejson.dumps([save_image]), mimetype="application/json")
+                return HttpResponse(simplejson.dumps([save_image]), mimetype=response_type)
 
             response_data['file_name'] = "/media/" + file_name[:-4]
             
@@ -205,20 +221,6 @@ def handle_upload(request):
 
             # generate the json data
             response_data = simplejson.dumps([response_data])
-            # response type
-            response_type = "application/json"
-
-            # QUIRK HERE
-            # in jQuey uploader, when it falls back to uploading using iFrames
-            # the response content type has to be text/html
-            # if json will be send, error will occur
-            # if iframe is sending the request, it's headers are a little different compared
-            # to the jQuery ajax request
-            # they have different set of HTTP_ACCEPT values
-            # so if the text/html is present, file was uploaded using jFrame because
-            # that value is not in the set when uploaded by XHR
-            if "text/html" in request.META["HTTP_ACCEPT"]:
-                response_type = "text/html"
 
             # return the data to the uploading plugin
             return HttpResponse(response_data, mimetype=response_type)
