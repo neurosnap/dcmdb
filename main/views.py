@@ -14,7 +14,9 @@ from itertools import chain
 @ensure_csrf_cookie
 def explore(request):
 
-	image = Image.objects.distinct().order_by("dcm_series")
+	image = Image.objects.all().distinct("dcm_series")
+
+	print image
 
 	context = {
 		"image": image
@@ -69,7 +71,7 @@ def search(request):
 											 Q(dcm_series__in = ii_series) | 
 											 Q(dcm_series__in = sop_series) | 
 											 Q(dcm_series__in = q_series) | 
-											 Q(dcm_series__in = qq_series) ).distinct().order_by("dcm_series")
+											 Q(dcm_series__in = qq_series) ).distinct("dcm_series")
 
 	return render_to_response('search.html', context, context_instance = RequestContext(request))
 
