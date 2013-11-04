@@ -25,7 +25,7 @@ def view(request, dcm_uid):
 
 		study = series.dcm_study
 
-		images = Image.objects.filter(dcm_series = series).order_by("UID")
+		images = Image.objects.filter(dcm_series = series).order_by("image_number")
 
 	except ObjectDoesNotExist:
 
