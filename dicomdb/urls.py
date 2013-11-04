@@ -1,19 +1,18 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-#import settings
 from django.contrib import admin
-import socket
 from django.conf import settings
 
 admin.autodiscover()
 
 from main import views as main_views
 
-host = socket.gethostname()
+#import socket
+#host = socket.gethostname()
 #host = "dev"
 #host = "dcmdb.org"
-#see if it's production
-if host == "dcmdb.org":
+
+if settings.SITE_STATE == "dev":
 
     #uc = under construction
     urlpatterns = patterns('',

@@ -13,6 +13,10 @@ WSGI_APPLICATION = 'dicomdb.wsgi.application'
 import socket
 HOST = socket.gethostname()
 
+# EASY FLAG TO REMOVE URLS AND PUSH SITE INTO DEVELOPMENT
+#SITE_STATE = "dev"
+SITE_STATE = "live"
+
 #production
 if HOST == "dcmdb.org":
 

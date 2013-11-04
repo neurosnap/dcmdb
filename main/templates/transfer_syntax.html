@@ -6,17 +6,145 @@
 {% block content %}
 <div class="page-header">
 
-	<h4>Transfer Syntax</h4>
+	<h3>Transfer Syntax <small>last updated: 11/01/2013</small></h3>
 
 </div>
+
+<div class="row">
+	<div class="col-md-12">
+		<blockquote>
+			<p>
+				A transfer syntax is a set of encoding rules that allow Application Entities to unambiguously negotiate the encoding techniques (e.g., Data Element structure, byte ordering, compression) they are able to support, thereby allowing these Application Entities to communicate. 
+			</p>
+			<small><a href="http://www.dabsoft.ch/dicom/5/3.10/">DICOM Standard 3.10</a></small>
+		</blockquote> 
+
+		The Transfer Syntax UID is the unique identifier used as a tag in the DICOM standard to determine the type of encoding principles used for any given DICOM file.  The Transfer Syntax UID is in the file DICOM Tag field (0002,0010).  <span class="text-success">The transfer syntaxes highlighted in green</span> are currently supported by dcmdb, <span class="text-danger">the ones in red</span> are not supported.
+	</div>
+</div>
+
+<hr />
 
 <div class="row">
 
 	<div class="col-md-12">
 
-		This will be the transfer syntax page.
+		<table class="table table-hover">
+			<thead>
+				<th>Transfer Syntax UID</th>
+				<th>Description</th>
+			</thead>
+			<tbody>
+				<tr class="success">
+					<td>1.2.840.10008.1.2</td>
+					<td>Implicit VR - Little Endian</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.1</td>
+					<td>Explicit VR - Little Endian</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.1.99</td>
+					<td>Deflated Explicit VR - Little Endian</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.2</td>
+					<td>Explicit VR - Big Endian</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.113619.5.2</td>
+					<td>Implicit VR - Big Endian (G.E Private)</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.5</td>
+					<td>Run Length Encoding, Lossless</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.4.50</td>
+					<td>JPEG Baseline (Process 1)</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.4.51</td>
+					<td>JPEG Extended (Process 2 & 4)</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.4.57</td>
+					<td>JPEG Lossless, Non-Hierarchical (Process 14)</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.4.70</td>
+					<td>JPEG Lossless, Hierarchical, First-Order Prediction (Process 14, [Selection Value 1])</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.4.90</td>
+					<td>JPEG 2000 Image Compression (Lossless Only)</td>
+				</tr>
+				<tr class="success">
+					<td>1.2.840.10008.1.2.4.91</td>
+					<td>JPEG 2000 Image Compression</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.52</td>
+					<td>JPEG Extended (Process 3 & 5)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.53</td>
+					<td>JPEG Spectral Selection, Non-Hierarchical (Process 6 & 8)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.54</td>
+					<td>JPEG Spectral Selection, Non-Hierarchical (Process 7 & 9)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.55</td>
+					<td>JPEG Full Progression, Non-Hierarchical (Process 10 & 12)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.56</td>
+					<td>JPEG Full Progression, Non-Hierarchical (Process 11 & 13)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.59</td>
+					<td>JPEG Extended, Hierarchical (Process 16 & 18)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.60</td>
+					<td>JPEG Extended, Hierarchical (Process 17 & 19)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.61</td>
+					<td>JPEG Spectral Selection, Hierarchical (Process 20 & 22)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.62</td>
+					<td>JPEG Spectral Selection, Hierarchical (Process 21 & 23)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.63</td>
+					<td>JPEG Full Progression, Hierarchical (Process 24 & 26)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.64</td>
+					<td>JPEG Full Progression, Hierarchical (Process 25 & 27)</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.80 (partial)</td>
+					<td>JPEG-LS Lossless Image Compression</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.81 (partial)</td>
+					<td>JPEG-LS Lossy (Near-Lossless) Image Compression</td>
+				</tr>
+				<tr class="danger">
+					<td>1.2.840.10008.1.2.4.100 (partial)</td>
+					<td>MPEG2 Main Profile @ Main Level</td>
+				</tr>
+			</tbody>
+		</table>
 
 	</div>
 
 </div>
+
+<hr />
 {% endblock %}
