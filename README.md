@@ -1,7 +1,7 @@
 dcmdb.org
 ==========
 
-DCMDB is a DICOM Search Engine and Educational Tool
+DCMDB is a DICOM Search Engine and Educational Tool.  
 
 This website was developed by Eric Bower . The mission of this service is to create a repository of easy to access, publicly available, anonymous medical diagnotic images. With this repository we also wish to create a social platform for discussion, teaching, and learning. 
 
@@ -27,6 +27,23 @@ We need to get people interested in medicine to learn about the reality of that 
 
 Contributing
 ==========
+
+```
+Copyright 2013 Nysus Solutions, LLC.
+
+dcmdb is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+dcmdb is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with dcmdb.  If not, see <http://www.gnu.org/licenses/>.
+```
 
 Volunteers are welcome to help make the service run more efficiently, effectively.  This project was developed in Python, the Django framework, and Postgresql.  The production server is hosted by Amazon on an Ubuntu EC2 virtualized server.  It uses gunicorn as the WSGI HTTP Server and nginx as the Proxy HTTP Server.
 
