@@ -10,7 +10,8 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'Study'
         db.create_table(u'dcmupload_study', (
-            ('UID', self.gf('django.db.models.fields.CharField')(max_length=100, primary_key=True)),
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('UID', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('study_id', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
             ('study_date', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
             ('study_time', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
@@ -24,8 +25,9 @@ class Migration(SchemaMigration):
 
         # Adding model 'Series'
         db.create_table(u'dcmupload_series', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('dcm_study', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dcmupload.Study'])),
-            ('UID', self.gf('django.db.models.fields.CharField')(max_length=100, primary_key=True)),
+            ('UID', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('series_description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('modality', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
             ('institution_name', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
@@ -41,8 +43,9 @@ class Migration(SchemaMigration):
 
         # Adding model 'Image'
         db.create_table(u'dcmupload_image', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('dcm_series', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dcmupload.Series'])),
-            ('UID', self.gf('django.db.models.fields.CharField')(max_length=100, primary_key=True)),
+            ('UID', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('filename', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('image_gen', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('transfer_syntax_uid', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
@@ -72,12 +75,13 @@ class Migration(SchemaMigration):
     models = {
         u'dcmupload.image': {
             'Meta': {'object_name': 'Image'},
-            'UID': ('django.db.models.fields.CharField', [], {'max_length': '100', 'primary_key': 'True'}),
+            'UID': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'content_date': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'content_time': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'dcm_series': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dcmupload.Series']"}),
             'filename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image_gen': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'image_number': ('django.db.models.fields.IntegerField', [], {'default': '0', 'null': 'True', 'blank': 'True'}),
             'image_orientation_patient': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
@@ -88,11 +92,12 @@ class Migration(SchemaMigration):
         },
         u'dcmupload.series': {
             'Meta': {'object_name': 'Series'},
-            'UID': ('django.db.models.fields.CharField', [], {'max_length': '100', 'primary_key': 'True'}),
+            'UID': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'body_part_examined': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'dcm_study': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dcmupload.Study']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'institution_name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'laterality': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'manufacturer': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
@@ -103,10 +108,11 @@ class Migration(SchemaMigration):
         },
         u'dcmupload.study': {
             'Meta': {'object_name': 'Study'},
-            'UID': ('django.db.models.fields.CharField', [], {'max_length': '100', 'primary_key': 'True'}),
+            'UID': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'accession_number': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'sop_class_uid': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'study_date': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'study_id': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
