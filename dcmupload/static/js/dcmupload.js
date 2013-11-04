@@ -11,17 +11,33 @@ $(function() {
 
     });
 
+    var maxFiles = 20;
+
     $('#fileupload').fileupload({
         "url": "/dcmupload/handle_upload",
         "dataType": 'json',
+        "maxNumberOfFiles": maxFiles,
+        "submit": function(event, files) {
+
+            var fileCount = files.originalFiles.length;
+
+            if (fileCount > maxFiles) {
+
+                alert("The maximum number of files is " + maxFiles);
+
+                throw 'This is not an error. This is just to abort javascript';
+
+                return false;
+
+            }
+
+        },
         "add": function(e, data) {
 
             var content = '';
             for (var i = 0; i < data.files.length; i++) {
 
                 var file = data.files[i];
-
-                console.log(file);
 
                 var bytes_ts = bytesToSize(file.size);
 

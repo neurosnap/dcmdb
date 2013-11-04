@@ -330,17 +330,22 @@ def add_dcm_record(**kwargs):
 
     except (Study.DoesNotExist):
 
-        study = Study.objects.create(
-                UID = study_instance_uid,
-                study_id = study_id,
-                study_date = study_date,
-                study_time = study_time,
-                accession_number = accession_number,
-                description = study_description,
-                sop_class_uid = sop_class_uid
-            )
+        try:
+            study = Study.objects.get(UID = study_instance_uid)
 
-        study.save()
+        except:
+
+            study = Study.objects.create(
+                    UID = study_instance_uid,
+                    study_id = study_id,
+                    study_date = study_date,
+                    study_time = study_time,
+                    accession_number = accession_number,
+                    description = study_description,
+                    sop_class_uid = sop_class_uid
+                )
+
+            study.save()
 
     try:
 

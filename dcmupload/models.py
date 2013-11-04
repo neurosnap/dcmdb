@@ -24,7 +24,7 @@ class Study(models.Model):
 class Series(models.Model):
 
 	dcm_study = models.ForeignKey(Study)
-	UID = models.CharField(max_length = 100)
+	UID = models.CharField(max_length = 100, unique = True)
 	series_description = models.TextField(null = True, blank = True)
 	modality = models.CharField(max_length = 50, null = True, blank = True)
 	institution_name = models.CharField(max_length = 50, null = True, blank = True)
@@ -42,7 +42,7 @@ class Series(models.Model):
 class Image(models.Model):
 
 	dcm_series = models.ForeignKey(Series)
-	UID = models.CharField(max_length = 100)
+	UID = models.CharField(max_length = 100, unique = True)
 	filename = models.CharField(max_length = 100)
 	image_gen = models.BooleanField(default = False)
 	transfer_syntax_uid = models.CharField(max_length = 50, null = True, blank = True)
