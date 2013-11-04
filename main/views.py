@@ -16,8 +16,6 @@ def explore(request):
 
 	image = Image.objects.all().distinct("dcm_series")
 
-	print image
-
 	context = {
 		"image": image
 	}
