@@ -109,7 +109,7 @@
 				{% if image.image_gen %}
 				<img src="/media/{{ image.filename }}.png" style="height: 100%; width: 100%;" class="img-rounded" id="dcmview_image" />
 					{% for item in all_images %}
-					<img src="/media/{{ item.filename }}.png" style="height: 100%; width 100%; display: none;" class="img-rounded preload_dcm" id="dcm_{{ item.filename }}" />
+					<img src="/media/{{ item.filename }}.png" style="height: 500px; width 500px; display: none;" class="img-rounded preload_dcm" id="dcm_{{ item.filename }}" />
 					{% endfor %}
 				{% else %}
 				<img src="holder.js/500x500" style="height: 100%; width: 100%;" class="img-rounded" />
