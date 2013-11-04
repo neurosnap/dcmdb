@@ -29,7 +29,7 @@ Contributing
 ==========
 
 ```
-Copyright 2013 Nysus Solutions, LLC.
+Copyright 2013 Eric Bower
 
 dcmdb is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
