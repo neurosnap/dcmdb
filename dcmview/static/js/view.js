@@ -48,7 +48,8 @@ $(function() {
 							this.render();
 					});
 
-					$("#" + dcm.getActiveImg()).css("min-height", "500px");
+					$("#" + dcm.getActiveImg()).css("width", "500px");
+					$("#" + dcm.getActiveImg()).css("height", "500px");
 				}
 
 				Caman.Event.listen("processComplete", function(job) {
