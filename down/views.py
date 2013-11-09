@@ -94,8 +94,6 @@ def mk_zip(file_list, uid):
 		except:
 			print "write exception"
 
-		print "bad" + zf.test()
-
 	zf.close()
 
 	resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
