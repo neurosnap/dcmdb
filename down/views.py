@@ -80,9 +80,21 @@ def mk_zip(file_list, uid):
 	for fpath in file_list:
 
 		fdir, fname = os.path.split(fpath)
+
+		print "fdir: " + fdir
+		print "fname: " + fname
+
 		zip_path = os.path.join(zip_subdir, fname)
 
-		zf.write(MEDIA_DIR + '/' + fpath, zip_path)
+		print "zip_path: " + zip_path
+		print "media: " + MEDIA_DIR
+
+		try:
+			zf.write(MEDIA_DIR + '/' + fpath, zip_path)
+		except:
+			print "write exception"
+
+		print "bad" + zf.test()
 
 	zf.close()
 
