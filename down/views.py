@@ -81,13 +81,7 @@ def mk_zip(file_list, uid):
 
 		fdir, fname = os.path.split(fpath)
 
-		print "fdir: " + fdir
-		print "fname: " + fname
-
 		zip_path = os.path.join(zip_subdir, fname)
-
-		print "zip_path: " + zip_path
-		print "media: " + MEDIA_DIR
 
 		try:
 			zf.write(MEDIA_DIR + '/' + fpath, zip_path)
