@@ -108,7 +108,7 @@
 				<h4>Diagnostic Image <span id="zoom" class="glyphicon glyphicon-zoom-in"></span> </h4>
 				{% if image.image_gen %}
 				<div id="dcm_cont">
-				<img src="/media/{{ image.filename }}.png" class="img-rounded img-responsive" id="dcmview_image" />
+				<img src="/media/{{ image.filename }}.png" style="height: 100%;" class="img-rounded img-responsive" id="dcmview_image" />
 					{% for item in all_images %}
 					<img src="/media/{{ item.filename }}.png" style="display: none;" class="img-rounded img-responsive preload_dcm" id="dcm_{{ item.filename }}" />
 					{% endfor %}

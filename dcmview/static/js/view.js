@@ -42,6 +42,15 @@ $(function() {
 
 				});
 
+				if (window.navigator.appName == "Microsoft Internet Explorer") {
+					Caman("#" + dcm.getActiveImg(), function() {
+							//this.revert();
+							this.render();
+					});
+
+					$("#" + dcm.getActiveImg()).css("min-height", "500px");
+				}
+
 				Caman.Event.listen("processComplete", function(job) {
 						$("#dcmview_status").html(job.name);
 				});
@@ -52,38 +61,48 @@ $(function() {
 
 			$(".dcm_series").on("click", function(e) {
 
-						$("#dcmview_status").html("Loading ...");
+				if (window.navigator.appName == "Microsoft Internet Explorer") {
 
-				e.preventDefault();
+					window.location = $(this).attr("src");
 
-				var switch_img = $(this).find("img").attr("fname");
+				} else {
 
-						if ($("#dcmview_image").length > 0 && !$("#dcmview_image").is(":hidden"))
-								$("#dcmview_image").hide();
-						else
-								$(".preload_dcm").hide();
+					$("#dcmview_status").html("Loading ...");
 
-						$("#dcm_" + switch_img).show();
+					e.preventDefault();
 
-						var found_img = false;
+					var switch_img = $(this).find("img").attr("fname");
 
-						for (var i = 0; i < dcm.cm_arr.length; i++)
-								if (dcm.cm_arr[i] == switch_img)
-										found_img = true;
+					if ($("#dcmview_image").length > 0 && !$("#dcmview_image").is(":hidden"))
+							$("#dcmview_image").hide();
+					else
+							$(".preload_dcm").hide();
 
-						if (!found_img) {
+					$("#dcm_" + switch_img).show();
 
-								Caman("#dcm_" + switch_img, function() {
-										
-										dcm.applyFilters(this);
+					var found_img = false;
 
-										$("#dcmview_status").html("Applying filters ...");
+					for (var i = 0; i < dcm.cm_arr.length; i++)
+							if (dcm.cm_arr[i] == switch_img)
+									found_img = true;
 
-										dcm.cm_arr.push(switch_img);
+					if (!found_img) {
 
-								});
+							Caman("#dcm_" + switch_img, function() {
 
-						}
+									dcm.applyFilters(this);
+
+									$("#dcmview_status").html("Applying filters ...");
+
+									dcm.cm_arr.push(switch_img);
+
+									$("#dcm_" + switch_img).addClass("img-rounded");;
+
+							});
+
+					}
+
+				}
 
 			});
 
