@@ -229,7 +229,7 @@ dcm.reloadTags = function(first) {
 		if (typeof first === "undefined")
 				first = false;
 
-	var tag_content = '<thead>' +
+	var tag_content = '<table id="dcm" class="table table-striped"><thead>' +
 												'<tr>' + 
 														'<th>Element</th>' + 
 														'<th>Value</th>' + 
@@ -239,26 +239,33 @@ dcm.reloadTags = function(first) {
 
 	for (key in dcm.dicom) {
 
-		if (dcm.dicom[key] !== "" || dcm.dicom[key] !== " ") {
+		var value = dcm.sanitizeTags(dcm.dicom[key]);
+
+		if (value != "" || value != " ") {
 
 			tag_content += '<tr>' + 
 						'	<td>' + key + '</td>' + 
-						'	<td>' + dcm.dicom[key].replace(/["']/g, "") + '</td>' + 
+						'	<td>' + value + '</td>' + 
 						'</tr>';
 
 		}
 
 	}
 
-		tag_content += '</tbody>';
+		tag_content += '</tbody></table>';
 
 		var options = {
 				"bDestroy": true
 		};
 
 		//dataTables initialization
-		$("#dcm").html(tag_content);
+		$("#data").html(tag_content);
 		dcm.datatable = $("#dcm").dataTable(options);
 
 };
 
+dcm.sanitizeTags = function(value) {
+
+	return value.replace(/["']/g, "").replace(/[^\w\s]/gi, '');
+
+}
