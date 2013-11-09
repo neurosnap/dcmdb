@@ -1,240 +1,264 @@
 $(function() {
 
-    dcm.reloadTags(true);
+		dcm.reloadTags(true);
 
-    if (dcm.image_gen) {
+		if (dcm.image_gen) {
 
-        dcm.invert = false;
-        dcm.greyscale = false;
+				dcm.invert = false;
+				dcm.greyscale = false;
 
-        dcm.cm_arr = [];
+				dcm.cm_arr = [];
 
-        $(".sliders").slider({
-            "min": -100,
-            "max": 100,
-            "animate": "slow",
-            "stop": function(event, ui) {
+				$(".sliders").slider({
+						"min": -100,
+						"max": 100,
+						"animate": "slow",
+						"stop": function(event, ui) {
 
-                Caman("#" + dcm.getActiveImg(), function() {
+								Caman("#" + dcm.getActiveImg(), function() {
 
-                    dcm.applyFilters(this);
+										dcm.applyFilters(this);
 
-                });
+								});
 
-            }
-        });
+						}
+				});
 
-        $(".sliders").each(function() {
+				$(".sliders").each(function() {
 
-            if ($(this).attr("id") == "gamma") {
-                $(this).slider("value", 1);
-                $(this).slider("option", "min", 0);
-                $(this).slider("option", "max", 5);
-                $(this).slider("option", "step", 0.1);
-            } else {
-                $(this).slider("value", 0);
-            }
+						if ($(this).attr("id") == "gamma") {
+								$(this).slider("value", 1);
+								$(this).slider("option", "min", 0);
+								$(this).slider("option", "max", 5);
+								$(this).slider("option", "step", 0.1);
+						} else {
+								$(this).slider("value", 0);
+						}
 
-            if ($(this).attr("id") == "hue") {
-                $(this).slider("option", "min", 0);
-                $(this).slider("option", "max", 100);
-            }
+						if ($(this).attr("id") == "hue") {
+								$(this).slider("option", "min", 0);
+								$(this).slider("option", "max", 100);
+						}
 
-        });
+				});
 
-        Caman.Event.listen("processComplete", function(job) {
-            $("#dcmview_status").html(job.name);
-        });
+				Caman.Event.listen("processComplete", function(job) {
+						$("#dcmview_status").html(job.name);
+				});
 
-        Caman.Event.listen("renderFinished", function() {
-            $("#dcmview_status").html("Render finished!");
-        });
+				Caman.Event.listen("renderFinished", function() {
+						$("#dcmview_status").html("Render finished!");
+				});
 
-    	$(".dcm_series").on("click", function(e) {
+			$(".dcm_series").on("click", function(e) {
 
-            $("#dcmview_status").html("Loading ...");
+						$("#dcmview_status").html("Loading ...");
 
-    		e.preventDefault();
+				e.preventDefault();
 
-    		var switch_img = $(this).find("img").attr("fname");
+				var switch_img = $(this).find("img").attr("fname");
 
-            if ($("#dcmview_image").length > 0 && !$("#dcmview_image").is(":hidden"))
-                $("#dcmview_image").hide();
-            else
-                $(".preload_dcm").hide();
+						if ($("#dcmview_image").length > 0 && !$("#dcmview_image").is(":hidden"))
+								$("#dcmview_image").hide();
+						else
+								$(".preload_dcm").hide();
 
-            $("#dcm_" + switch_img).show();
+						$("#dcm_" + switch_img).show();
 
-            var found_img = false;
+						var found_img = false;
 
-            for (var i = 0; i < dcm.cm_arr.length; i++)
-                if (dcm.cm_arr[i] == switch_img)
-                    found_img = true;
+						for (var i = 0; i < dcm.cm_arr.length; i++)
+								if (dcm.cm_arr[i] == switch_img)
+										found_img = true;
 
-            if (!found_img) {
+						if (!found_img) {
 
-                Caman("#dcm_" + switch_img, function() {
-                    
-                    dcm.applyFilters(this);
+								Caman("#dcm_" + switch_img, function() {
+										
+										dcm.applyFilters(this);
 
-                    $("#dcmview_status").html("Applying filters ...");
+										$("#dcmview_status").html("Applying filters ...");
 
-                    dcm.cm_arr.push(switch_img);
+										dcm.cm_arr.push(switch_img);
 
-                });
+								});
 
-            }
+						}
 
-    	});
+			});
 
-        $("#invert").on("click", function() {
+				$("#invert").on("click", function() {
 
-            if (dcm.invert)
-                dcm.invert = false;
-            else
-                dcm.invert = true;
+						if (dcm.invert)
+								dcm.invert = false;
+						else
+								dcm.invert = true;
 
-            Caman("#" + dcm.getActiveImg(), function() {
-                this.invert().render();
-            });
-        });
+						Caman("#" + dcm.getActiveImg(), function() {
+								this.invert().render();
+						});
+				});
 
-        $("#greyscale").on("click", function() {
+				$("#greyscale").on("click", function() {
 
-            if (dcm.greyscale)
-                dcm.greyscale = false;
-            else
-                dcm.greyscale = true;
+						if (dcm.greyscale)
+								dcm.greyscale = false;
+						else
+								dcm.greyscale = true;
 
-            Caman("#" + dcm.getActiveImg(), function() {
-                dcm.applyFilters(this);
-            });
-        });
+						Caman("#" + dcm.getActiveImg(), function() {
+								dcm.applyFilters(this);
+						});
+				});
 
-        $("#reset").on("click", function() {
-            dcm.resetFilters();
-        });
+				$("#reset").on("click", function() {
+						dcm.resetFilters();
+				});
 
-    }
+				dcm.zoomd = false;
+
+				$("#zoom").on("click", function() {
+
+						var cont = $("#dcm_cont");
+
+						if (!dcm.zoomd) {
+
+								dcm.zoomd = true;
+								$(this).removeClass("glyphicon-zoom-in").addClass("glyphicon-zoom-out");
+								cont.find("img").css("width", "100%");
+								cont.find("canvas").css("width", "100%");
+
+						} else {
+
+								dcm.zoomd = false;
+								$(this).removeClass("glyphicon-zoom-out").addClass("glyphicon-zoom-in");
+								cont.find("img").css("width", "auto");
+								cont.find("canvas").css("width", "auto");
+
+						}
+
+				});
+
+		}
 
 });
 
 dcm.getActiveImg = function() {
 
-    if (!$("#dcmview_image").is(":hidden")) {
+		if (!$("#dcmview_image").is(":hidden")) {
 
-        return "dcmview_image";
+				return "dcmview_image";
 
-    } else {
+		} else {
 
-        var tag = null;
+				var tag = null;
 
-        $(".preload_dcm").each(function() {
-            if (!$(this).is(":hidden")) {
-                tag = $(this).attr("id");
-            }
+				$(".preload_dcm").each(function() {
+						if (!$(this).is(":hidden")) {
+								tag = $(this).attr("id");
+						}
 
-        });
+				});
 
-        return tag;
+				return tag;
 
-    }
+		}
 
 };
 
 dcm.applyFilters = function(that) {
 
-    var sliders = [];
+		var sliders = [];
 
-    $(".sliders").each(function() {
+		$(".sliders").each(function() {
 
-        var type = $(this).attr("id");
-        var val = $(this).slider("value");
+				var type = $(this).attr("id");
+				var val = $(this).slider("value");
 
-        if ((type != "gamma" && val != 0) || (type == "gamma" && val != 1)) {
-            sliders.push({
-                "type": type,
-                "val": val
-            });
-        }
+				if ((type != "gamma" && val != 0) || (type == "gamma" && val != 1)) {
+						sliders.push({
+								"type": type,
+								"val": val
+						});
+				}
 
-    });
+		});
 
-    that.revert();
+		that.revert();
 
-    for (var i = 0; i < sliders.length; i++) {
-        var filter = sliders[i];
-        that[filter.type](filter.val);
-    }
+		for (var i = 0; i < sliders.length; i++) {
+				var filter = sliders[i];
+				that[filter.type](filter.val);
+		}
 
-    if (dcm.invert)
-        that.invert();
+		if (dcm.invert)
+				that.invert();
 
-    if (dcm.greyscale)
-        that.greyscale();
+		if (dcm.greyscale)
+				that.greyscale();
 
-    that.render();
+		that.render();
 };
 
 dcm.resetFilters = function() {
 
-    $(".sliders").each(function() {
+		$(".sliders").each(function() {
 
-        if ($(this).attr("id") == "gamma")
-            $(this).slider("value", 1);
-        else
-            $(this).slider("value", 0);
+				if ($(this).attr("id") == "gamma")
+						$(this).slider("value", 1);
+				else
+						$(this).slider("value", 0);
 
-    });
+		});
 
-    if (dcm.invert)
-        dcm.invert = false;
+		if (dcm.invert)
+				dcm.invert = false;
 
-    if (dcm.greyscale)
-        dcm.greyscale = false;
+		if (dcm.greyscale)
+				dcm.greyscale = false;
 
-    Caman("#" + dcm.getActiveImg(), function() {
-        this.revert();
-        this.render();
-    });
+		Caman("#" + dcm.getActiveImg(), function() {
+				this.revert();
+				this.render();
+		});
 
 }
 
 dcm.reloadTags = function(first) {
 
-    if (typeof first === "undefined")
-        first = false;
+		if (typeof first === "undefined")
+				first = false;
 
 	var tag_content = '<thead>' +
-                        '<tr>' + 
-                            '<th>Element</th>' + 
-                            '<th>Value</th>' + 
-                            '</tr>' + 
-                      '</thead>' + 
-                      '<tbody>';
+												'<tr>' + 
+														'<th>Element</th>' + 
+														'<th>Value</th>' + 
+														'</tr>' + 
+											'</thead>' + 
+											'<tbody>';
 
 	for (key in dcm.dicom) {
 
 		if (dcm.dicom[key] !== "" || dcm.dicom[key] !== " ") {
 
 			tag_content += '<tr>' + 
-					  '	<td>' + key + '</td>' + 
-					  '	<td>' + dcm.dicom[key].replace(/["']/g, "") + '</td>' + 
-					  '</tr>';
+						'	<td>' + key + '</td>' + 
+						'	<td>' + dcm.dicom[key].replace(/["']/g, "") + '</td>' + 
+						'</tr>';
 
 		}
 
 	}
 
-    tag_content += '</tbody>';
+		tag_content += '</tbody>';
 
-    var options = {
-        "bDestroy": true
-    };
+		var options = {
+				"bDestroy": true
+		};
 
-    //dataTables initialization
-    $("#dcm").html(tag_content);
-    dcm.datatable = $("#dcm").dataTable(options);
+		//dataTables initialization
+		$("#dcm").html(tag_content);
+		dcm.datatable = $("#dcm").dataTable(options);
 
 };
 
