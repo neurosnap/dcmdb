@@ -136,7 +136,7 @@ def handle_upload(request):
             # get the absolute path of where the uploaded file will be saved
             # all add some random data to the filename in order to avoid conflicts
             # when user tries to upload two files with same filename
-            file_name = str(uuid.uuid4()) + file.name
+            file_name = str(uuid.uuid4())
 
             if not file_name.endswith(".dcm"):
                 file_name = file_name + '.dcm'

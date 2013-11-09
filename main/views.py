@@ -14,7 +14,8 @@ from itertools import chain
 @ensure_csrf_cookie
 def explore(request):
 
-	image = Image.objects.all().distinct("dcm_series")
+	series = Series.objects.all().distinct("dcm_study")
+	image = Image.objects.filter(dcm_series__in = series, image_gen = True).distinct("dcm_series")
 
 	context = {
 		"image": image

@@ -17,24 +17,6 @@ HOST = socket.gethostname()
 #SITE_STATE = "dev"
 SITE_STATE = "live"
 
-#production
-if HOST == "dcmdb.org":
-
-    try:
-        from settings_prod import *
-    except ImportError:
-        pass
-
-    ALLOWED_HOSTS = ['54.200.118.134']
-
-#development
-else:
-
-    try:
-        from settings_dev import *
-    except ImportError:
-        pass
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -82,17 +64,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-DATABASES = {
-    'default': SETTINGS_DB
-}
-
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = SETTINGS_EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = SETTINGS_EMAIL_PASS
 EMAIL_PORT = 587
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
 
 LANGUAGE_CODE = 'en-us'
 
@@ -103,3 +81,22 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+#override default settings in these files
+#production
+if HOST == "dcmdb.org":
+
+    try:
+        from settings_prod import *
+    except ImportError:
+        pass
+
+    ALLOWED_HOSTS = ['54.200.118.134']
+
+#development
+else:
+
+    try:
+        from settings_dev import *
+    except ImportError:
+        pass
