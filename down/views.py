@@ -12,8 +12,11 @@ from django.core import serializers
 import zipfile
 import StringIO
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-MEDIA_DIR = BASE_DIR + "/media"
+
+from django.conf import settings
+
+BASE_DIR = settings.BASE_DIR
+MEDIA_DIR = settings.MEDIA_ROOT
 
 @ensure_csrf_cookie
 def zip_dcm(request, uid):
