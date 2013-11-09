@@ -59,16 +59,14 @@
 	<li>DCM</li>
 </ol>
 
-<div class ="row">
-	<div class="col-md-12" id="dcm_header">
-		<h4>
-			{% if series %}
-			{{ image.UID }}
-			{% else %}
-			???
-			{% endif %}
-		</h4>
-	</div>
+<div class ="page-header">
+	<h4>
+		{% if series %}
+		{{ image.UID }}
+		{% else %}
+		???
+		{% endif %}
+	</h4>
 </div>
 
 {% if image %}
@@ -104,17 +102,15 @@
 				{% endif %}
 
 			</div>
-			<div class="col-md-8">
+			<div class="col-md-10">
 				<h4>Diagnostic Image</h4>
 				{% if image.image_gen %}
-				<img src="/media/{{ image.filename }}.png" style="height: 500px; width: 500px;" class="img-rounded" id="dcmview_image" />
+				<img src="/media/{{ image.filename }}.png" class="img-rounded img-responsive" id="dcmview_image" />
 					{% for item in all_images %}
-					<img src="/media/{{ item.filename }}.png" style="height: 500px; width 500px; display: none;" class="img-rounded preload_dcm" id="dcm_{{ item.filename }}" />
+					<img src="/media/{{ item.filename }}.png" style="display: none;" class="img-rounded img-responsive preload_dcm" id="dcm_{{ item.filename }}" />
 					{% endfor %}
-				{% else %}
-				<img src="holder.js/500x500" style="height: 100%; width: 100%;" class="img-rounded" />
+				<div id="dcmview_status" class="alert alert-warning" style="margin: 5px;">Image Rendered</div>
 				{% endif %}
-				<div id="dcmview_status" class="alert alert-warning" style="margin: 5px; width: 490px;">Image Rendered</div>
 			</div>
 		</div>
 	</div>
