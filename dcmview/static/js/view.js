@@ -266,6 +266,6 @@ dcm.reloadTags = function(first) {
 
 dcm.sanitizeTags = function(value) {
 
-	return value.replace(/["']/g, "").replace(/[^\w\s]/gi, '');
+	return value.toString().replace(/["']/g, '').replace(/[^\w\s]/gi, '').replace(/x00/g, '');
 
 }
