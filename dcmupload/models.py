@@ -20,6 +20,9 @@ class Study(models.Model):
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in Study._meta.fields]
 
+	def __unicode__(self):
+		return self.UID
+
 # Create your models here.
 class Series(models.Model):
 
@@ -39,6 +42,9 @@ class Series(models.Model):
 	created_at = models.DateTimeField(auto_now_add = True)
 	updated_at = models.DateTimeField(auto_now = True)
 
+	def __unicode__(self):
+		return self.UID
+
 class Image(models.Model):
 
 	dcm_series = models.ForeignKey(Series)
@@ -57,3 +63,6 @@ class Image(models.Model):
 	#
 	created_at = models.DateTimeField(auto_now_add = True)
 	updated_at = models.DateTimeField(auto_now = True)
+
+	def __unicode__(self):
+		return self.UID
