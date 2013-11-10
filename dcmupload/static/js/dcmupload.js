@@ -1,139 +1,163 @@
 $(function() {
 
-    $("#send_files").prop("disabled", true);
+		var maxFiles = 20;
+		var maxFileSize = 3145728;
 
-    $("#accept_tos").on("click", function() {
+		$("#send_files").prop("disabled", true);
 
-        if ($(this).is(":checked"))
-            $("#send_files").prop("disabled", false);
-        else
-            $("#send_files").prop("disabled", true);
+		$("#accept_tos").on("click", function() {
 
-    });
+				if ($(this).is(":checked")) {
+						$("#send_files").prop("disabled", false);
+						$(".file_upload").prop("disabled", false);
+				} else {
+						$("#send_files").prop("disabled", true);
+						$(".file_upload").prop("disabled", true);
+				}
 
-    var maxFiles = 20;
+		});
 
-    $('#fileupload').fileupload({
-        "url": "/dcmupload/handle_upload",
-        "dataType": 'json',
-        "maxNumberOfFiles": maxFiles,
-        "submit": function(event, files) {
+		$("#send_files").on("click", function() {
+			$(".file_upload").click();
+		});
 
-            var fileCount = files.originalFiles.length;
+		$("#clear_files").on("click", function() {
+			if ($(".file_cancel").length > 0)
+				$(".file_cancel").click();
+		});
 
-            if (fileCount > maxFiles) {
+		$('#fileupload').fileupload({
+				"url": "/dcmupload/handle_upload",
+				"dataType": 'json',
+				"maxNumberOfFiles": maxFiles,
+				"limitConcurrentUploads": 3,
+				"submit": function(event, files) {
 
-                alert("The maximum number of files is " + maxFiles);
+						var fileCount = files.originalFiles.length;
 
-                throw 'This is not an error. This is just to abort javascript';
+						if (fileCount > maxFiles) {
 
-                return false;
+								alert("The maximum number of files is " + maxFiles);
 
-            }
+								throw 'This is not an error. This is just to abort javascript';
 
-        },
-        "add": function(e, data) {
+								return false;
 
-            var content = '';
-            for (var i = 0; i < data.files.length; i++) {
+						}
 
-                var file = data.files[i];
+				},
+				"add": function(e, data) {
 
-                var bytes_ts = '';
+						var content = '';
+						for (var i = 0; i < data.files.length; i++) {
 
-                if (file.hasOwnProperty("size"))
-                    bytes_ts = bytesToSize(parseInt(file.size));
+								var file = data.files[i];
 
-                content += '<div class="queued" dcm_name="' + file.name + '">' + 
-                           '    <div><span class="dcm_done" style="display: none;"></span>' + 
-                           '        ' + file.name + ' <strong>' + bytes_ts + '</strong>' + 
-                           '    </div>' +
-                           '    <div class="progress"><div class="progress-bar"></div></div>' + 
-                           '    <div class="dcm_preview"></div>' + 
-                           '</div>';
+								var bytes_ts = '';
 
-            } 
+								if (file.hasOwnProperty("size"))
+										bytes_ts = bytesToSize(parseInt(file.size));
 
-            $("#display_uploads").append(content);
+									content += '<div class="queued" dcm_name="' + file.name + '">' + 
+														 '    <div><span class="dcm_done" style="display: none;"></span>' + 
+														 '        ' + file.name + ' <strong>' + bytes_ts + '</strong>' + 
+														 '    		<button type="button" style="margin-bottom: 5px;" class="btn btn-primary file_upload"><span class="glyphicon glyphicon-upload"></span> Upload</button>' +
+														 '    		<button type="button" style="margin-bottom: 5px;" class="btn btn-danger file_cancel"><span class="glyphicon glyphicon-ban-circle"></span> Remove</button>' +
+														 '    </div> ' + 
+														 '    <div class="progress"><div class="progress-bar"></div></div>' + 
+														 '    <div class="dcm_preview"></div>' + 
+														 '<hr />' + 
+														 '</div>';
+						} 
 
-            //$("#send_files").unbind();
-            $("#send_files").on("click", function() {
+						$("#display_uploads").append(content);
 
-                data.submit();
+						$(".file_cancel").eq(-1).on("click", function() {
 
-            });
+								$(this).parent().parent().remove();
 
-        },
-        "progress": function (e, data) {
+						});
 
-            var progress = parseInt(data.loaded / data.total * 100, 10);
+						if (!$("#accept_tos").is(":checked"))
+							$(".file_upload").prop("disabled", true);
 
-            $(".queued").each(function() {
+						$(".file_upload").eq(-1).on("click", function() {
 
-                for (var i = 0; i < data.files.length; i++) {
-                    if (data.files[i].name == $(this).attr("dcm_name")) {
-                        $(this).find(".progress-bar").css("width", progress + "%");
-                    }
-                }
+								data.submit();
 
-            });
+						});
 
-        },
-        "progressall": function(e, data) {
+				},
+				"progress": function (e, data) {
 
-            var progress = parseInt(data.loaded / data.total * 100, 10);
+						var progress = parseInt(data.loaded / data.total * 100, 10);
 
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
+						$(".queued").each(function() {
 
-        },
-        "done": function(e, data) {
+								for (var i = 0; i < data.files.length; i++) {
+										if (data.files[i].name == $(this).attr("dcm_name")) {
+												$(this).find(".progress-bar").css("width", progress + "%");
+										}
+								}
 
-            $.each(data.result, function (index, file) {
+						});
 
-                $(".queued").each(function() {
+				},
+				"progressall": function(e, data) {
 
-                    if (file.name == $(this).attr("dcm_name")) {
+						var progress = parseInt(data.loaded / data.total * 100, 10);
 
-                        $(this).find(".dcm_done").show();
+						$('#progress .progress-bar').css(
+								'width',
+								progress + '%'
+						);
 
-                        if (file.hasOwnProperty("success") && !file.success) {
-                            $(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.msg + '</div>');
-                        } else if (file.hasOwnProperty("error")) {
+				},
+				"done": function(e, data) {
 
-                            if (file.error == "maxFileSize")
-                                $(this).find(".dcm_preview").html('<div class="alert alert-danger">Exceeded maximum file size, upload failed.</div>');
-                            else
-                                $(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.error + '</div>');
-                        
-                        } else {
-                            $(this).find(".dcm_preview").html('<a href="/dcmview/viewer/' + file.image_uid + '">View DCM</a><img src="' + file.file_name + '_thumb.png" style="margin-left: 15px;" />');
-                        }
+						$.each(data.result, function (index, file) {
 
-                    }
+								$(".queued").each(function() {
 
-                });
+										if (file.name == $(this).attr("dcm_name")) {
 
-            });
+												$(this).find(".dcm_done").show();
 
-            $("#send_files").prop("disabled", true);
+												if (file.hasOwnProperty("success") && !file.success) {
+														$(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.msg + '</div>');
+												} else if (file.hasOwnProperty("error")) {
 
-        }
-    });
+														if (file.error == "maxFileSize")
+																$(this).find(".dcm_preview").html('<div class="alert alert-danger">Exceeded maximum file size, upload failed.</div>');
+														else
+																$(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.error + '</div>');
+												
+												} else {
+														$(this).find(".dcm_preview").html('<a href="/dcmview/viewer/' + file.image_uid + '">View DCM</a><img src="' + file.file_name + '_thumb.png" style="margin-left: 15px;" />');
+												}
+
+										}
+
+								});
+
+						});
+
+						//$("#send_files").prop("disabled", true);
+
+				}
+		});
 
 });
 
 function bytesToSize(bytes) {
 
-    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+		var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
 
-    if (bytes == 0) 
-        return '0 Bytes';
+		if (bytes == 0) 
+				return '0 Bytes';
 
-    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+		var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
 
-    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+		return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
 
 };

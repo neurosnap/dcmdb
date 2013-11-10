@@ -18,68 +18,73 @@
 {% block content %}
 <div class="page-header">
 
-    <h4>DICOM Uploader</h4>
+		<h4>DICOM Uploader</h4>
 
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        <p>
-        This utility allows people to anonymously upload DICOM files.  
-        No patient information will be saved on our servers.  
-        Before uploading any file, please read the <a href="/main/tos">Terms of Service</a> and <a href="/main/privacy">Privacy Policy</a>.  
-        This utility will also attempt to extract an image from the DICOM file using <a href="http://sourceforge.net/projects/gdcm/">Grassroots DICOM</a>,
-        but not all transfer syntaxes are supported by this service at present.  <a href="/main/transfer_syntax">Here</a> is a list of currently supported
-        and unsupported transfer syntaxes.
-        </p>
-    </div>
+		<div class="col-md-12">
+				<p>
+				This utility allows people to anonymously upload DICOM files.  
+				No patient information will be saved on our servers.  
+				Before uploading any file, please read the <a href="/main/tos">Terms of Service</a> and <a href="/main/privacy">Privacy Policy</a>.  
+				This utility will also attempt to extract an image from the DICOM file using <a href="http://sourceforge.net/projects/gdcm/">Grassroots DICOM</a>,
+				but not all transfer syntaxes are supported by this service at present.  <a href="/main/transfer_syntax">Here</a> is a list of currently supported
+				and unsupported transfer syntaxes.
+				</p>
+		</div>
 </div>
 
 <hr />
 
 <form id="fileupload" action="/dcmupload/handle_upload" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+		{% csrf_token %}
 
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" id="accept_tos" /> I accept the <a href="/main/tos">Terms of Service</a> and <a href="/main/privacy">Privacy Policy</a>
-        </label>
-    </div>
+		<div class="checkbox">
+				<label>
+						<input type="checkbox" id="accept_tos" /> I accept the <a href="/main/tos">Terms of Service</a> and <a href="/main/privacy">Privacy Policy</a>
+				</label>
+		</div>
 
 	<div class="row fileupload-buttonbar">
 
 		<div class="col-md-12">
 
 			<!-- The fileinput-button span is used to style the file input field as button -->
-            <span class="btn btn-success fileinput-button">
-                <span class="glyphicon glyphicon-plus"></span>
-                <span>Add DICOM files</span>
-                <input type="file" name="files[]" multiple>
-            </span>
+						<span class="btn btn-success fileinput-button">
+								<span class="glyphicon glyphicon-plus"></span>
+								<span>Add DICOM files</span>
+								<input type="file" name="files[]" multiple>
+						</span>
 
-            <button type="submit" id="send_files" class="btn btn-info start">
-                <span class="glyphicon glyphicon-save"></span>
-                <span>Start Upload</span>
-            </button>
+						<button type="submit" id="send_files" class="btn btn-info start">
+								<span class="glyphicon glyphicon-upload"></span>
+								<span>Start Upload</span>
+						</button>
 
-            <!-- The loading indicator is shown during file processing -->
-            <span class="fileupload-loading"></span>
-       
-        </div>
+						<button type="button" id="clear_files" class="btn btn-warning">
+								<span class="glyphicon glyphicon-ban-circle"></span>
+								<span>Clear Uploads</span>
+						</button>
 
-    </div>
-    <div class="row">
+						<!-- The loading indicator is shown during file processing -->
+						<span class="fileupload-loading"></span>
+			 
+				</div>
+
+		</div>
+		<div class="row">
 
 		<div class="col-md-12 fileupload-progress">
 
-            <!-- The global progress bar -->
-            <div id="progress" class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" style="width: 0%;"></div>
-            </div>
-            <!-- The extended global progress information -->
-            <div class="progress-extended">&nbsp;</div>
+						<!-- The global progress bar -->
+						<div id="progress" class="progress">
+								<div class="progress-bar progress-bar-success" role="progressbar" style="width: 0%;"></div>
+						</div>
+						<!-- The extended global progress information -->
+						<div class="progress-extended">&nbsp;</div>
 
-        </div>
+				</div>
 
 	</div>
 
@@ -88,7 +93,7 @@
 		<div class="col-md-12">
 
 			<div id="display_uploads"></div>
-       		<!-- <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table> -->
+					<!-- <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table> -->
 
 		</div>
 
@@ -102,9 +107,9 @@
 
 	<div class="col-md-12">
 
-        <div class="alert alert-warning">3 MB is the max file size per file.</div>
-        <div class="alert alert-danger">20 files is the maximum number of files per upload session.</div>
-        <div class="alert alert-warning">ZIP/RAR formats are currently unsupported.</div>
+				<div class="alert alert-warning">3 MB is the maximum file size per file.</div>
+				<div class="alert alert-danger">20 files is the maximum number of files per upload session.</div>
+				<div class="alert alert-warning">ZIP/RAR formats are currently not supported.</div>
 		<div class="alert alert-info">All DICOM files will be uploaded to our server while ensuring anonymity.</div>
 
 	</div>
