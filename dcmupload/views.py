@@ -46,7 +46,7 @@ def handle_upload(request):
     #   and check validity late in the code
     options = {
         # the maximum file size (must be in bytes)
-        "maxfilesize": 3 * 2 ** 20, # 15 Mb
+        "maxfilesize": 5 * 2 ** 20, # 15 Mb
         # the minimum file size (must be in bytes)
         "minfilesize": 1 * 2 ** 10, # 1 Kb
         # the file types which are going to be allowed for upload
@@ -357,7 +357,7 @@ def add_dcm_record(**kwargs):
 
         try:
             series = Series.objects.get(UID = series_instance_uid)
-            
+
         except:
 
             series = Series.objects.create(

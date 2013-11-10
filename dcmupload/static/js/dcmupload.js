@@ -1,7 +1,8 @@
 $(function() {
 
 		var maxFiles = 20;
-		var maxFileSize = 3145728;
+		// 5 MB
+		var maxFileSize = 5 * Math.pow(2, 20);
 
 		$("#send_files").prop("disabled", true);
 
