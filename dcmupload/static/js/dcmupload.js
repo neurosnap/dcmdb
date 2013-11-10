@@ -101,6 +101,13 @@ $(function() {
 
                         if (file.hasOwnProperty("success") && !file.success) {
                             $(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.msg + '</div>');
+                        } else if (file.hasOwnProperty("error")) {
+
+                            if (file.error == "maxFileSize")
+                                $(this).find(".dcm_preview").html('<div class="alert alert-danger">Exceeded maximum file size, upload failed.</div>');
+                            else
+                                $(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.error + '</div>');
+                        
                         } else {
                             $(this).find(".dcm_preview").html('<a href="/dcmview/viewer/' + file.image_uid + '">View DCM</a><img src="' + file.file_name + '_thumb.png" style="margin-left: 15px;" />');
                         }
