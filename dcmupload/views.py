@@ -355,20 +355,25 @@ def add_dcm_record(**kwargs):
 
     except (Series.DoesNotExist):
 
-        series = Series.objects.create(
-            dcm_study = study,
-            UID = series_instance_uid,
-            series_description = series_description,
-            modality = modality,
-            institution_name = institution_name,
-            manufacturer = manufacturer,
-            series_number = series_number,
-            laterality = laterality,
-            body_part_examined = body_part_examined,
-            date = series_date
-        )
+        try:
+            series = Series.objects.get(UID = series_instance_uid)
+            
+        except:
 
-        series.save()
+            series = Series.objects.create(
+                dcm_study = study,
+                UID = series_instance_uid,
+                series_description = series_description,
+                modality = modality,
+                institution_name = institution_name,
+                manufacturer = manufacturer,
+                series_number = series_number,
+                laterality = laterality,
+                body_part_examined = body_part_examined,
+                date = series_date
+            )
+
+            series.save()
 
     try:
 

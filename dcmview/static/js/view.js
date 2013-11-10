@@ -12,10 +12,27 @@ $(function() {
 				$("#filters_menu").hide();
 
 				$("#filters_on").on("click", function() {
-					if ($(this).is(":checked"))
+
+					if ($(this).is(":checked")) {
+
 						$("#filters_menu").show();
-					else 
+						
+						if (window.navigator.appName == "Microsoft Internet Explorer") {
+
+							Caman("#" + dcm.getActiveImg(), function() {
+									//this.revert();
+									this.render();
+							});
+
+							$("#" + dcm.getActiveImg()).css("width", "500px");
+							$("#" + dcm.getActiveImg()).css("height", "500px");
+
+						}
+
+					} else {
 						$("#filters_menu").hide();
+					}
+
 				});
 
 				$(".sliders").slider({
@@ -51,16 +68,6 @@ $(function() {
 
 				});
 
-				if (window.navigator.appName == "Microsoft Internet Explorer") {
-					Caman("#" + dcm.getActiveImg(), function() {
-							//this.revert();
-							this.render();
-					});
-
-					$("#" + dcm.getActiveImg()).css("width", "500px");
-					$("#" + dcm.getActiveImg()).css("height", "500px");
-				}
-
 				Caman.Event.listen("processComplete", function(job) {
 						$("#dcmview_status").html(job.name);
 				});
@@ -71,11 +78,11 @@ $(function() {
 
 			$(".dcm_series").on("click", function(e) {
 
-				if (window.navigator.appName == "Microsoft Internet Explorer") {
+				/*if (window.navigator.appName == "Microsoft Internet Explorer") {
 
 					window.location = $(this).attr("src");
 
-				} else {
+				} else {*/
 
 					e.preventDefault();
 
@@ -97,7 +104,7 @@ $(function() {
 					if (!found_img && $("#filters_on").is(":checked")) {
 
 						$("#dcmview_status").html("Loading ...");
-						
+
 						Caman("#dcm_" + switch_img, function() {
 
 								dcm.applyFilters(this);
@@ -110,7 +117,7 @@ $(function() {
 
 					}
 
-				}
+				//}
 
 			});
 
