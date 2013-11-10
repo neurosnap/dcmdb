@@ -9,6 +9,15 @@ $(function() {
 
 				dcm.cm_arr = [];
 
+				$("#filters_menu").hide();
+
+				$("#filters_on").on("click", function() {
+					if ($(this).is(":checked"))
+						$("#filters_menu").show();
+					else 
+						$("#filters_menu").hide();
+				});
+
 				$(".sliders").slider({
 						"min": -100,
 						"max": 100,
@@ -68,8 +77,6 @@ $(function() {
 
 				} else {
 
-					$("#dcmview_status").html("Loading ...");
-
 					e.preventDefault();
 
 					var switch_img = $(this).find("img").attr("fname");
@@ -87,19 +94,19 @@ $(function() {
 							if (dcm.cm_arr[i] == switch_img)
 									found_img = true;
 
-					if (!found_img) {
+					if (!found_img && $("#filters_on").is(":checked")) {
 
-							Caman("#dcm_" + switch_img, function() {
+						$("#dcmview_status").html("Loading ...");
+						
+						Caman("#dcm_" + switch_img, function() {
 
-									dcm.applyFilters(this);
+								dcm.applyFilters(this);
 
-									$("#dcmview_status").html("Applying filters ...");
+								$("#dcmview_status").html("Applying filters ...");
 
-									dcm.cm_arr.push(switch_img);
+								dcm.cm_arr.push(switch_img);
 
-									$("#dcm_" + switch_img).addClass("img-rounded");;
-
-							});
+						});
 
 					}
 

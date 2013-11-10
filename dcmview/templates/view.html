@@ -78,29 +78,33 @@
 			<div class="col-md-2">
 				
 				{% if image.image_gen %}
-				<h6>Filters</h6>
+				<h6><input type="checkbox" id="filters_on" /> Filters <small>BETA</small></h6>
 				<hr />
 
-				Contrast
-				<div id="contrast" class="sliders"></div>
-				Brightness
-				<div id="brightness" class="sliders"></div>
-				Exposure
-				<div id="exposure" class="sliders"></div>
-				Saturation
-				<div id="saturation" class="sliders"></div>
-				Vibrance
-				<div id="vibrance" class="sliders"></div>
-				Sharpen
-				<div id="sharpen" class="sliders"></div>
-				Hue
-				<div id="hue" class="sliders"></div>
-				Gamma
-				<div id="gamma" class="sliders"></div>
-				<br />
-				<button id="invert" class="btn btn-warning">Invert</button> <br />
-				<button id="greyscale" class="btn btn-default" style="margin-top: 5px;">Greyscale</button> <br />
-				<button id="reset" class="btn btn-link">Reset</button>
+				<div id="filters_menu">
+					Contrast
+					<div id="contrast" class="sliders"></div>
+					Brightness
+					<div id="brightness" class="sliders"></div>
+					Exposure
+					<div id="exposure" class="sliders"></div>
+					Saturation
+					<div id="saturation" class="sliders"></div>
+					Vibrance
+					<div id="vibrance" class="sliders"></div>
+					Sharpen
+					<div id="sharpen" class="sliders"></div>
+					Hue
+					<div id="hue" class="sliders"></div>
+					Gamma
+					<div id="gamma" class="sliders"></div>
+					<br />
+					<button id="invert" class="btn btn-warning">Invert</button> <br />
+					<button id="greyscale" class="btn btn-default" style="margin-top: 5px;">Greyscale</button> <br />
+					<button id="reset" class="btn btn-link">Reset</button>
+				</div>
+
+
 				{% endif %}
 
 			</div>
