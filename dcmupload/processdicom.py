@@ -1,3 +1,4 @@
+from __future__ import division
 import dicom
 
 try:
@@ -164,10 +165,11 @@ class processdicom(object):
 		from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 		from matplotlib.figure import Figure
 
-		fig = Figure(figsize=arr.shape[::-1], dpi=1, frameon=False)
+		fig = Figure(figsize=arr.shape[::-1], dpi=100, frameon=False)
+		fig.set_size_inches(5.12, 5.12)
 		canvas = FigureCanvas(fig)
 		fig.figimage(arr, cmap=cmap, vmin=vmin, vmax=vmax, origin=origin)
-		fig.savefig(fname, dpi=1, format=format)
+		fig.savefig(fname, dpi=100, format=format)
 
 	def module_exists(self, module_name):
 
