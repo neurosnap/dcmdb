@@ -192,6 +192,7 @@ def handle_upload(request):
                 }]), mimetype=response_type)
 
             #save image and thumbnail
+            
             save_image = dcm.extractImage(filename)
             
             if save_image['success']:
