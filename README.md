@@ -247,6 +247,10 @@ Open pgAdmin III
 Connect to PostgreSQL
 Create database "dcmdb" set owner to "postgres"
 
+###### Install psycopg2
+
+TODO FINISH THIS PART
+
 ##### Download DCMDB
 ```
 $ git clone git@github.com:neurosnap/dcmdb.git
