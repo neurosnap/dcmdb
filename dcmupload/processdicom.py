@@ -113,15 +113,6 @@ class processdicom(object):
 	def getDCM(self):
 		return self.dicom
 
-	def getdict(self):
-
-		ddict = {}
-
-		for key in self.dicom.dir():
-			ddict[key] = self.dicom.get(key) 
-
-		return ddict
-
 	def get_gdcm_to_numpy_typemap(self):
 		"""Returns the GDCM Pixel Format to numpy array type mapping."""
 		_gdcm_np = {gdcm.PixelFormat.UINT8  :numpy.int8,
