@@ -177,55 +177,27 @@ Done!
 
 #### HOW TO DEVELOP ON WINDOWS (Get ready for hell)
 
+##### Install msysgit 32bit (must be 32bit)
+
+I chose msysgit because nothing that is preinstalled with cygwin worked 
+for me very well.  It was a living nightmare getting everything syncd using cygwin.
+
 ##### Install python 2.7
 
 Add C:/Python27;C:/Python27/Scripts;C:/Python27/Lib;C:/Python27/DLLs; to environmental variables
 
-##### Install cygwin 32 bit -- ALERT! For pydicom to properly install, select "Install for Just Me"
-
-Install the following cygwin packages:
-
- * wget
-
-Open cygwin
-This creates a shortcut to allow us to use Python in interactive mode without specifying -i
-```
-$ mkshortcut -D -n "Cygwin Console" -i /Cygwin.ico /bin/bash -a --login
-```
+Download: https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+Install setuptools
 
 ##### setuptools
 ```
-$ wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python
-$ python ez_setup.py
+$ cd /path/to/ez_setup.py
+$ python ez_setup.py install
 ```
 
-##### Install PIP + Virtualenv
+##### Install PIP
 ```
 $ easy_install pip
-$ easy_install virtualenv
-$ easy_install virtualenvwrapper
-$ vim ~/.bash_profile
-```
-
-in .bash_profile
-```
-export WORKON_HOME=~/.virtualenvs
-/usr/local/bin/virtualenvwrapper.sh
-```
-
-Make a virtualenv
-```
-$ mkvirtualenv dcmdb
-```
-
-Start working on a virtualevn
-```
-$ workon dcmdb
-```
-
-deactivate virtualenv (just an example, dont do this now)
-```
-$ deactivate
 ```
 
 ##### Install the rest of the dependencies that actually work through PIP
@@ -266,13 +238,40 @@ Move C:/Program Files (x86)/GDCM 2.4.0/ to C:/Python27/Lib/site-packages
   * gdcm.py
   * gdcmswig.py
 
-##### Install msysgit via installer
-Add to environmental variables
+##### Install Postgresql
+
+http://www.postgresql.org/download/windows/
+
+Set password for "postgres" user
+Open pgAdmin III
+Connect to PostgreSQL
+Create database "dcmdb" set owner to "postgres"
 
 ##### Download DCMDB
 ```
 $ git clone git@github.com:neurosnap/dcmdb.git
 $ cd dcmdb
+```
+
+Create settings_dev.py file
+```
+DATABASES = {
+	"default": {
+		"ENGINE": "django.db.backends.postgresql_psycopg2",
+		"NAME": "dcmdb",
+		"USER": "postgres",
+		"PASSWORD": ""
+	}
+}
+
+#generate secret key
+SECRET_KEY = ''
+
+EMAIL_HOST_USER = ''
+EMAIL_PASS = ''
+```
+
+```
 $ python manage.py syncdb
 $ python manage.py migrate
 $ python manage.py runserver
