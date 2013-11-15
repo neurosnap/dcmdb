@@ -1,6 +1,5 @@
 dicomdb/settings_prod.py
 dicomdb/settings_dev.py
-conf/*
 media/*
 static/*
 db.sqlite3
