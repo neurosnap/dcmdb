@@ -1,0 +1,38 @@
+{% extends 'template.html' %}
+
+{% block js %}
+{% endblock %}
+
+{% block content %}
+<ol class="breadcrumb">
+	<li><a href="/users">Portal</a></li>
+	<li class="active">Remove User</li>
+</ol>
+
+<div class="page-header">
+	<h3>Remove User Account <small> for {{ user.username|capfirst }}</small></h3>
+</div>
+
+{% if success %}
+<div class="row">
+
+	<div class="col-md-12">
+
+		<div id="response" class="alert alert-success">{{ msg }}</div>
+
+	</div>
+
+</div>
+{% else %}
+<div class="row">
+
+	<div class="col-md-12">
+
+		Are you sure you want to remove your account? <a href="/users/removeUser" class="btn btn-danger">Remove Account</a>
+
+	</div>
+
+</div>
+{% endif %}
+
+{% endblock %}

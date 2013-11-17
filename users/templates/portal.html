@@ -5,9 +5,13 @@
 {% endblock %}
 
 {% block content %}
+<div class="page-header">
+	<h3>Portal <small>for {{ user.username|capfirst }}</small></h3>
+</div>
+
 <div class="row">
 	
-	<div class="span3">
+	<div class="col-md-2">
 	
 		<a href="/users/logout" class="btn btn-info">Logout</a> <br /> <br />
 
@@ -20,7 +24,7 @@
 
 		<br />
 		{% if validated %}
-			<div class="alert alert-success"><small>Email Validated!</small></div>
+			<p class="text-success"><small>Email Validated!</small></p>
 		{% else %}
 			<button id="email_validate" class="btn btn-success">Validate Email</button><br /><br />
 			<div id="email_validate_info" class="alert">
@@ -30,115 +34,39 @@
 		{% endif %}
 
 		<br />
-		<a href="/users/removeUser" class="btn btn-danger">Remove Account</a> <br />
+		<a href="/users/rm" class="btn btn-danger">Remove Account</a> <br />
 
 	</div>
 
-	<div class="span9">
-
-		<h4 style="margin-top: 0px;">{{ user.username }}'s Repository</h4>
+	<div class="col-md-10">
 
 		<ul class="nav nav-tabs" id="dcm_tabs">
-  			<li class="active"><a href="#public" data-toggle="tab">Public</a></li>
-  			<li><a href="#private" data-toggle="tab">Private</a></li>
-  			<li><a href="#favorites" data-toggle="tab">Favorites</a></li>
+  			<li class="active"><a href="#favorites" data-toggle="tab">Favorites</a></li>
   			<li><a href="#comments" data-toggle="tab">Comments</a></li>
   		</ul>
 
   		<div class="tab-content">
-  			<div class="tab-pane active tab_content" id="public">
+  		
+  			<div class="tab-pane active tab_content" id="favorites">
+  				<div class="row">
+  					<div class="col-md-12" style="padding: 15px;">
+  						
+						<div class="alert alert-info">Favorites section is a work in progress.</div>
 
-  				{% if public %}
-					{% for dcm in public %}
-						<div class="dcm_loop row-fluid">
-							<div class="span3">
-								<!-- <img data-src="holder.js/100x100" class="img-polaroid" /> -->
-								{% for series in study_imgs|slice:":1" %}
-									{% if dcm == series.dcm_study %}
-										<img src="/media/{{ user.first_name|lower }}/public/{{ series.filename }}.png" class="img-polaroid" style="width: 100px; height: 100px;" /> 
-									{% endif %}
-								{% endfor %}
-
-							</div>
-							<div class="span8">
-								<h4 style="margin: 0px 0px 5px 0px;"><a href="/dcmview/{{ dcm.id }}">{{ dcm.title }}</a></h4>
-								<small>
-									UID: {{ dcm.UID }} <br />
-									Modality: {{ dcm.modality }} <br />
-									Institution: {{ dcm.institution_name }} <br />
-									Manufacturer: {{ dcm.manufacturer }} <br />
-									Uploaded: {{ dcm.created_at }} <br />
-									File Count: {{ dcm.related_count }}
-								</small>
-							</div>
-						</div>
-					{% endfor %}
-				{% else %}
-					<div class="row-fluid">
-						<div class="span8">
-							<div id="dcm_pub_response" class="alert">No public studies found.</div>
-						</div>
-					</div>
-				{% endif %}
-
-  			</div>
-  			<div class="tab-pane tab_content" id="private">
-
-  				{% if private %}
-					{% for dcm in private %}
-						<div class="dcm_loop row-fluid">
-							<div class="span3">
-								{% for series in study_imgs %}
-									{% if dcm == series.dcm_study %}
-											<img src="/media/{{ user.first_name|lower }}/private/{{ series.filename }}.png" class="img-polaroid" style="width: 100px; height: 100px;" /> 
-									{% endif %}
-									<!-- <img data-src="holder.js/100x100" class="img-polaroid" /> -->
-								{% endfor %}
-							</div>
-							<div class="span8">
-								<h4 style="margin: 0px 0px 5px 0px;"><a href="#">{{ dcm.title }}</a></h4>
-								<small>
-									UID: {{ dcm.UID }} <br />
-									Modality: {{ dcm.modality }} <br />
-									Institution: {{ dcm.institution_name }} <br />
-									Manufacturer: {{ dcm.manufacturer }} <br />
-									Uploaded: {{ dcm.created_at }} <br />
-									File Count: {{ dcm.related_count }}
-								</small>
-							</div>
-						</div>
-					{% endfor %}
-				{% else %}
-					<div class="row-fluid">
-						<div class="span8">
-							<div id="dcm_priv_response" class="alert">No private studies found.</div>
-						</div>
-					</div>
-				{% endif %}
-
-  			</div>
-  			<div class="tab-pane tab_content" id="favorites">
-  				<div class="row-fluid">
-  					<div class="span12">
-  						<div class="row-fluid">
-							<div class="span8">
-								<div class="alert">Favorites section is a work in progress.</div>
-							</div>
-						</div>
   					</div>
   				</div>
   			</div>
+
   			<div class="tab-pane tab_content" id="comments">
-  				<div class="row-fluid">
-  					<div class="span12">
-  						<div class="row-fluid">
-							<div class="span8">
-								<div class="alert">Comments section is a work in progress.</div>
-							</div>
-						</div>
+  				<div class="row">
+  					<div class="col-md-12" style="padding: 15px;">
+  						
+						<div class="alert alert-info">Comments section is a work in progress.</div>
+
   					</div>
   				</div>
   			</div>
+
   		</div>
 
 	</div>

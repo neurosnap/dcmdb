@@ -5,81 +5,82 @@
 {% endblock %}
 
 {% block content %}
+<ol class="breadcrumb">
+	{% if active or req_pass %}
+	<li><a href="/users">Portal</a></li>
+	{% else %}
+	<li><a href="/users/login">Login</a></li>
+	{% endif %}
+	<li class="active">Change Password</li>
+</ol>
 
-	<div class="row-fluid">
+<div class="page-header">
+	<h3>Change User Password <small>for {{ email }}</small></h3>
+</div>
 
-		<div class="span12">
+<form class="form-horizontal">
+{% if active or req_pass %}
 
-			<h4>Change User Password</h4>
-			<hr />
-
-			<div class="form-horizontal">
-			{% if active or req_pass %}
-
-				{% if req_pass %}
-					<input type="hidden" id="req_email" value="{{email}}" />
-				{% else %}
-  				<div class="control-group">
-					<label class="control-label" for="cur_pass">Current Password</label>
-					<div class="controls">
-						<input type="password" id="cur_pass" name="cur_pass">
-						<span class="help-inline"></span>
-					</div>
-				</div>
-				{% endif %}
-
-				<div class="control-group">
-					<label class="control-label" for="new_pass">New Password</label>
-					<div class="controls">
-						<input type="password" id="new_pass" name="new_pass">
-						<span class="help-inline"></span>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="new_pass_conf">Verify New Password</label>
-					<div class="controls">
-						<input type="password" id="new_pass_conf" name="new_pass_conf">
-						<span class="help-inline"></span>
-					</div>
-				</div>
-
-				<div class="control-group">
-    				<div class="controls">
-    					<button id="btn_pass_change" class="btn btn-primary">Update!</button>
-    				</div>
-    			</div>
-
-			{% else %}
-
-				<div class="control-group">
-					<label class="control-label" for="user_email">Enter username or email</label>
-					<div class="controls">
-						<input type="text" id="user_email" name="user_email" class="input-xlarge">
-					</div>
-				</div>
-
-				<div class="control-group">
-    				<div class="controls">
-    					<button id="btn_send_pass" class="btn btn-primary">Request New Password!</button>
-    				</div>
-    			</div>
-
-			{% endif %}
-
-			</div>
+	{% if req_pass %}
+	<input type="hidden" id="req_email" value="{{email}}" />
+	{% else %}
+	<div class="form-group">
+		<label for="cur_pass" class="col-sm-2 control-label">Current Password</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="cur_pass" name="cur_pass">
+			<span class="help-block"></span>
 		</div>
+	</div>
+	{% endif %}
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="new_pass">New Password</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="new_pass" name="new_pass">
+			<span class="help-block"></span>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="new_pass_conf">Verify New Password</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="new_pass_conf" name="new_pass_conf">
+			<span class="help-block"></span>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button id="btn_pass_change" class="btn btn-primary">Update!</button>
+		</div>
+	</div>
+
+{% else %}
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="user_email">Enter username or email</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="user_email" name="user_email" class="input-xlarge">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button id="btn_send_pass" class="btn btn-primary">Request New Password!</button>
+		</div>
+	</div>
+
+{% endif %}
+</form>
+
+<div class="row">
+
+	<div class="col-md-12">
+
+		<div id="change_pass_response" class="alert alert-info">Please enter required credentials to change your password.</div>
 
 	</div>
 
-	<div class="row-fluid">
-
-		<div class="span8">
-
-			<div id="change_pass_response" class="alert">Please enter required credentials to change your password.</div>
-
-		</div>
-
-	</div>
+</div>
 
 {% endblock %}

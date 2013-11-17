@@ -19,9 +19,9 @@ $(function() {
 			"success": function(res) {
 
 				if (res.success) {
-					$("#info_response").addClass("alert-success").html(res.msg);
+					$("#info_response").removeClass("alert-info").addClass("alert-success").html(res.msg);
 				} else {
-					$("#info_response").addClass("alert-error").html(res.msg);
+					$("#info_response").removeClass("alert-info").addClass("alert-danger").html(res.msg);
 				}
 
 			}

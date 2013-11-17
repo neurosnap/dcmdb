@@ -5,76 +5,69 @@
 {% endblock %}
 
 {% block content %}
+<ol class="breadcrumb">
+	<li><a href="/users">Portal</a></li>
+	<li class="active">Update Info</li>
+</ol>
+
+<div class="page-header">
+	<h3>Update User Information <small> for {{ user.username|capfirst }}</small></h3>
+</div>
 
 {% if user %}
-	<form class="form-horizontal">
+<form class="form-horizontal" role="form">
 
-		<div class="row">
+	<div class="form-group">
 
-			<div class="span12">
+		<label for="first_name" class="col-sm-2 control-label">First Name</label>
 
-				<h3>Update User Information</h3>
-
-				<hr />
-
-				<div class="control-group">
-
-					<label for="first_name" class="control-label">First Name</label>
-
-					<div class="controls">
-						<input type="text" name="first_name" id="first_name" value="{{user.first_name}}" placeholder="Enter first name" />
-						<span class="help-inline"></span>
-					</div>
-
-				</div>
-
-				<div class="control-group">
-
-					<label for="last_name" class="control-label">Last Name</label>
-
-					<div class="controls">
-						<input type="text" name="last_name" id="last_name" value="{{user.last_name}}" placeholder="Enter last name" />
-						<span class="help-inline"></span>
-					</div>
-
-				</div>
-
-				<div class="control-group">
-
-					<label for="email" class="control-label">Email</label>
-
-					<div class="controls">
-						<input type="text" name="email" id="email" value="{{user.email}}" placeholder="Enter email" />
-						<!-- <span class="help-inline">email validation will be reset if changed</span> -->
-						<span class="help-inline">email update is a work in progress</span>
-					</div>
-
-				</div>
-			
-			</div>
-
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="first_name" id="first_name" value="{{user.first_name}}" placeholder="Enter first name" />
+			<span class="help-block"></span>
 		</div>
 
-		<div class="row">
+	</div>
 
-			<div class="span1"></div>
+	<div class="form-group">
 
-			<div class="span11">
+		<label for="last_name" class="col-sm-2 control-label">Last Name</label>
 
-				<button class="btn btn-primary" id="save_info">Save!</button>
-
-			</div>
-
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="last_name" id="last_name" value="{{user.last_name}}" placeholder="Enter last name" />
+			<span class="help-block"></span>
 		</div>
 
-	</form>
+	</div>
+
+	<div class="form-group">
+
+		<label for="email" class="col-sm-2 control-label">Email</label>
+
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="email" id="email" value="{{user.email}}" placeholder="Enter email" />
+			<!-- <span class="help-block">email validation will be reset if changed</span> -->
+			<span class="help-block">email update is a work in progress</span>
+		</div>
+
+	</div>
+
+
+	<div class="form-group">
+
+		<div class="col-sm-offset-2 col-sm-10">
+			<button class="btn btn-primary" id="save_info">Save!</button>
+		</div>
+
+	</div>
+
+</form>
 {% endif %}
 
 <div class="row">
 
-	<div class="span8">
+	<div class="col-md-12">
 
-		<div id="info_response" class="alert">Update information as needed and then save it!</div>
+		<div id="info_response" class="alert alert-info">Update information as needed and then save it!</div>
 
 	</div>
 

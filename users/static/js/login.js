@@ -27,15 +27,19 @@ login.auth = function(user, pass) {
 			if (res.success) {
 				
 				$("#login_response")
-					.removeClass("alert-error")
+					.removeClass("alert-info")
+					.removeClass("alert-danger")
 					.addClass("alert-success")
-					.html(res.msg + '  <a href="/users/">View your profile</a>');
+					.html(res.msg + '  <a href="/users/" class="alert-link">View your profile</a>');
+
+				window.location = '/users';
 
 			} else {
 				
 				$("#login_response")
+					.removeClass("alert-info")
 					.removeClass("alert-success")
-					.addClass("alert-error")
+					.addClass("alert-danger")
 					.html(res.msg);
 
 				login.loginState("enabled");

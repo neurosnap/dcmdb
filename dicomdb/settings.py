@@ -20,9 +20,6 @@ HOST = socket.gethostname()
 #SITE_STATE = "dev"
 SITE_STATE = "live"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 TEMPLATE_DEBUG = True
 
 TEMPLATE_DIRS = (
@@ -85,6 +82,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+def generate_secret_key(filename):
+
+	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+	key = get_random_string(50, chars)
+	key_contents = "SECRET_KEY = '" + key + "'"
+
+	f = open(filename,'w')
+	print(key_contents, file = f)
+
 #override default settings in these files
 #production
 if HOST == "dcmdb.org":
@@ -94,6 +100,11 @@ if HOST == "dcmdb.org":
 	except ImportError:
 		pass
 
+	DEBUG = False
+
+	#user for email primarily
+	DOMAIN = HOST
+
 #development
 else:
 
@@ -102,14 +113,10 @@ else:
 	except ImportError:
 		pass
 
-def generate_secret_key(filename):
+	DEBUG = True
 
-	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-	key = get_random_string(50, chars)
-	key_contents = "SECRET_KEY = '" + key + "'"
-
-	f = open(filename,'w')
-	print(key_contents, file = f)
+	#user for emails primarily
+	DOMAIN = "127.0.0.1:8000"
 
 #On fresh clone, no secret_key.py exists so automate the generation
 #user executing django will need write access for this to work

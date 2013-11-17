@@ -47,6 +47,8 @@ $(function() {
 		
 		e.preventDefault();
 
+		$("#btn_send_pass").attr("disabled", "enabled");
+
 		$.ajax({
 			"url": "/users/sendPass",
 			"type": "POST",
@@ -58,13 +60,13 @@ $(function() {
 
 				if (res.success) {
 
-					$("#change_pass_response").removeClass("alert-error").addClass("alert-success").html(res.msg);
+					$("#change_pass_response").removeClass("alert-info").removeClass("alert-error").addClass("alert-success").html(res.msg);
 
 					$("#btn_send_pass").attr("disabled", "enabled");
 
 				} else {
 
-					$("#change_pass_response").removeClass("alert-success").addClass("alert-error").html(res.msg);
+					$("#change_pass_response").removeClass("alert-info").removeClass("alert-success").addClass("alert-error").html(res.msg);
 
 				}
 
@@ -96,13 +98,13 @@ $(function() {
 
 				if (res.success) {
 
-					$("#change_pass_response").removeClass("alert-error").addClass("alert-success").html(res.msg);
+					$("#change_pass_response").removeClass("alert-info").removeClass("alert-error").addClass("alert-success").html(res.msg);
 
 					$("#btn_pass_change").attr("disabled", "enabled");
 
 				} else {
 
-					$("#change_pass_response").removeClass("alert-success").addClass("alert-error").html(res.msg);
+					$("#change_pass_response").removeClass("alert-info").removeClass("alert-success").addClass("alert-error").html(res.msg);
 
 				}
 

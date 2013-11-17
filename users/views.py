@@ -19,7 +19,10 @@ from django.core.mail import EmailMessage
 #from smtplib import SMTPException
 # JSON encode/decode
 import json
-from django.db.models import Count
+#from django.db.models import Count
+from django.conf import settings
+
+domain = settings.DOMAIN
 
 # Create your views here.
 @ensure_csrf_cookie
@@ -28,21 +31,9 @@ def portal(request):
 	#email validation check
 	validated = False
 
-	#A django group, "email_validated" is used to flag whether a user is validated or not
-	users_in_group = Group.objects.get(name = "email_validated").user_set.all()
-	for user in users_in_group:
-		if request.user == user:
-			validated = True
-
-	# public and private DICOMS
-	public_dcms = Study.objects.annotate(related_count = Count('series')).filter(user_ID = request.user, public = True)
-	private_dcms = Study.objects.annotate(related_count = Count('series')).filter(user_ID = request.user, public = False)
-
-	study_imgs = Series.objects.filter(dcm_study__user_ID = request.user)
-
-	context = { "user": request.user, "validated": validated, "public": public_dcms, "private": private_dcms, "study_imgs": study_imgs }
+	context = { "user": request.user, "validated": is_email_validated(request.user) }
 	
-	if request.user.is_authenticated():
+	if request.user.is_authenticated() and request.user.is_active:
 		return render_to_response('portal.html', context, context_instance = RequestContext(request))
 	else:
 		return redirect('/users/login')
@@ -52,7 +43,7 @@ def login(request):
 
 	context = {}
 	
-	if request.user.is_authenticated():
+	if request.user.is_authenticated() and request.user.is_active:
 		return redirect('/users/')
 	else:	
 		return render_to_response('login.html', context, context_instance = RequestContext(request))
@@ -70,6 +61,16 @@ def register(request):
 	context = {}
 	
 	return render_to_response('register.html', context, context_instance = RequestContext(request))
+
+@ensure_csrf_cookie
+def rm(request):
+
+	context = { "user": request.user }
+	
+	if request.user.is_authenticated():
+		return render_to_response('remove.html', context, context_instance = RequestContext(request))
+	else:
+		return redirect('/users/login')
 
 def checkUniqueUser(request):
 
@@ -103,6 +104,7 @@ def checkLogin(request):
 	if user is not None:
 		if user.is_active:
 			auth_login(request, user)
+			# redirect('/users')
 			# Redirect to a success page.
 			return HttpResponse('{"success": true, "msg": "Login Successful"}', content_type="application/json")
 		else:
@@ -132,27 +134,41 @@ def validateEmail(request):
 
 	user = User.objects.get(email__exact=req_email)
 
-	group = Group.objects.get(name="email_validated")
+	if is_email_validated(user):
 
-	group.user_set.add(user)
+		context = { "success": False, "msg": "Account has already been validated" }
 
-	group.save()
+	else:
 
-	context = { "success": True, "msg": "Account has been validated" }
+		group = Group.objects.get(name="email_validated")
+
+		group.user_set.add(user)
+
+		group.save()
+
+		context = { "success": True, "msg": "Account has been validated" }
 
 	return render_to_response('validated.html', context, context_instance = RequestContext(request))
 
 def removeUser(request):
 
-	request.user.is_active = False
+	if request.user.is_authenticated:
 
-	request.user.save()
+		user = User.objects.get(email__exact=request.user.email)	
 
-	auth_logout(request)
+		user.is_active = False
+
+		user.save()
+
+		auth_logout(request)
 	
-	context = { "success": True, "msg": "Account has been removed" }
+		context = { "success": True, "msg": "Account has been removed" }
 	
-	return render_to_response('removed.html', context, context_instance = RequestContext(request))
+		return render_to_response('remove.html', context, context_instance = RequestContext(request))
+
+	else:
+
+		redirect('/users/login')
 
 def sendValidation(request):
 
@@ -163,7 +179,7 @@ def sendValidation(request):
 def sendValidateEmail(**kargs):
 
 	#send email
-	email_link = "http://dcmdb.org/users/validateEmail?email=" + kargs["email"]
+	email_link = "http://" + domain + "/users/validateEmail?email=" + kargs["email"]
 	
 	subject = "Welcome to dcmdb!"
 	
@@ -181,9 +197,11 @@ def sendValidateEmail(**kargs):
 def changePass(request):
 
 	if request.user.is_active:
-		context = { "active": True }
+		context = { "active": True, "email": request.user.email }
 	else:
-		context = { "active": False }
+		context = { "active": False, "email": "currently anonymous user" }
+
+	print context
 	
 	return render_to_response('change_pass.html', context, context_instance = RequestContext(request))
 
@@ -234,7 +252,7 @@ def sendPass(request):
 		user = User.objects.get(username__exact = user_email)
 
 		#send email
-		email_link = "http://dcmdb.org/users/reqPass?email=" + user.email
+		email_link = "http://" + domain + "/users/reqPass?email=" + user.email
 		
 		subject = "dcmdb Password Change Request"
 		
@@ -259,7 +277,7 @@ def sendPass(request):
 			user = User.objects.get(email__exact = user_email)
 
 			#send email
-			email_link = "http://dcmdb.org/users/reqPass?email=" + user.email
+			email_link = "http://" + domain + "/users/reqPass?email=" + user.email
 			
 			subject = "dcmdb Password Change Request"
 			
@@ -326,5 +344,13 @@ def saveInfo(request):
 
 		return redirect("users/login")	
 
+def is_email_validated(current_user):
 
+	#A django group, "email_validated" is used to flag whether a user is validated or not
+	users_in_group = Group.objects.get(name = "email_validated").user_set.all()
 
+	for user in users_in_group:
+		if current_user == user:
+			return True
+
+	return False

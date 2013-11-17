@@ -9,7 +9,7 @@ $(function() {
 		e.preventDefault();
 
 		//element that have an "error" class when input is invalid
-		$(".control-group").each(function() {
+		$(".form-group").each(function() {
 
 			if ($(this).hasClass("error"))
 				errors++;
@@ -74,7 +74,7 @@ $(function() {
 					if (res.success) {
 				
 						$("#register_response")
-							.removeClass("alert-error")
+							.removeClass("alert-danger")
 							.addClass("alert-success")
 							.html(res.msg + '.  <a href="/users/login">Login!</a>');
 
@@ -161,7 +161,7 @@ register.validate = function(data, el) {
 		if (data.success) {
 
 			if (data.hasOwnProperty("msg"))
-				$(el).parent().find(".help-inline").html(data.msg);
+				$(el).parent().find(".help-block").html(data.msg);
 
 			$(el)
 				.parent()
@@ -172,7 +172,7 @@ register.validate = function(data, el) {
 		} else {
 
 			if (data.hasOwnProperty("msg"))
-				$(el).parent().find(".help-inline").html(data.msg);
+				$(el).parent().find(".help-block").html(data.msg);
 
 			$(el)
 				.parent()

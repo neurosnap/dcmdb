@@ -5,87 +5,98 @@
 {% endblock %}
 
 {% block content %}
+<ol class="breadcrumb">
+	<li><a href="/users/login">Login</a></li>
+	<li class="active">Register</li>
+</ol>
+
+<div class="page-header">
+	<h3>User Registration</h3>
+</div>
+
+<div class="row">
+	<div class="col-md-12"
+		<p>
+			This allows people to comment and favorite DICOM files as well as set other preferences.
+		</p>
+	</div>
+</div>
+
+<hr />
+
 <form class="form-horizontal">
 
-	<div class="row">
+	<div class="form-group">
 
-		<div class="span12">
+		<label for="user" class="col-sm-2 control-label">Username</label>
 
-			<h3>User Registration</h3>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="user" name="user" placeholder="Enter username" />
+			<span class="help-block"></span>
+		</div>
 
-			<hr />
+	</div>
 
-			<div class="control-group">
+	<div class="form-group">
 
-				<label for="user" class="control-label">Username</label>
+		<label for="email" class="col-sm-2 control-label">Email</label>
 
-				<div class="controls">
-					<input type="text" id="user" name="user" placeholder="Enter username" />
-					<span class="help-inline"></span>
-				</div>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="email" name="email" placeholder="Enter email" />
+			<span class="help-block"></span>
+		</div>
 
-			</div>
+	</div>
 
-			<div class="control-group">
+	<div class="form-group">
 
-				<label for="email" class="control-label">Email</label>
+		<label for="pass" class="col-sm-2 control-label">Password</label>
 
-				<div class="controls">
-					<input type="text" id="email" name="email" placeholder="Enter email" />
-					<span class="help-inline"></span>
-				</div>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="pass" name="pass" placeholder="Enter password" />
+			<span class="help-block"></span>
+		</div>
 
-			</div>
+	</div>
 
-			<div class="control-group">
+	<div class="form-group">
 
-				<label for="pass" class="control-label">Password</label>
+		<label for="pass_check" class="col-sm-2 control-label">Confirm Password</label>
 
-				<div class="controls">
-					<input type="text" id="pass" name="pass" placeholder="Enter password" />
-					<span class="help-inline"></span>
-				</div>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="pass_check" name="pass_check" placeholder="Enter password again" />
+			<span class="help-block"></span>
+		</div>
 
-			</div>
+	</div>
 
-			<div class="control-group">
+	<div class="form-group">
 
-				<label for="pass_check" class="control-label">Confirm Password</label>
+		<div class="col-sm-offset-2 col-sm-10">
 
-				<div class="controls">
-					<input type="text" id="pass_check" name="pass_check" placeholder="Enter password again" />
-					<span class="help-inline"></span>
-				</div>
-
-			</div>
-
-			<div class="control-group">
-
-				<div class="controls">
-
-					<label class="checkbox">
-						I have read and accept the <a href="#">Terms of Service (TOS)</a>
-						<input type="checkbox" id="tos" name="tos" />
-					</label>
-					<!-- <span class="help-inline"></span> -->
-
-					<button id="register" class="btn btn-primary">Register!</button>
-
-				</div>
-
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" id="tos" name="tos" /> I have read and accept the <a href="/main/tos">Terms of Service</a> and <a href="/main/privacy">Privacy Policy</a>
+				</label>
 			</div>
 
 		</div>
 
 	</div>
 
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button id="register" class="btn btn-primary">Register!</button>
+		</div>
+	</div>
+
 </form>
 
-<div class="row-fluid">
+<div class="row">
 
-	<div class="span8">
+	<div class="col-md-12">
 
-		<div id="register_response" class="alert">Please enter required credentials to register an account</div>
+		<div id="register_response" class="alert alert-info">Please enter required credentials to register an account</div>
 
 	</div>
 

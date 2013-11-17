@@ -15,7 +15,7 @@ $(function() {
 				if (res.success) {
 					$("#email_validate_info").addClass("alert-success").find("span").html(res.msg);
 				} else {
-					$("#email_validate_info").addClass("alert-error").find("span").html(res.msg);
+					$("#email_validate_info").addClass("alert-danger").find("span").html(res.msg);
 				}
 
 			}
