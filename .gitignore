@@ -1,5 +1,6 @@
 dicomdb/settings_prod.py
 dicomdb/settings_dev.py
+dicomdb/secret_key.py
 media/*
 static/*
 db.sqlite3
