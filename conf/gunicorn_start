@@ -1,14 +1,14 @@
 #!/bin/bash
  
 NAME="dcmdb"                                  # Name of the application
-DJANGODIR=/srv/www/dcmdb            # Django project directory
-SOCKFILE=/srv/www/dcmdb/run/gunicorn.sock  # we will communicte using this unix socket
-USER=ubuntu                                       # the user to run as
-GROUP=ubuntu                                   # the group to run as
-NUM_WORKERS=3                                     # how many worker processes should Gunicorn spawn
-DJANGO_SETTINGS_MODULE=dicomdb.settings             # which settings file should Django use
-DJANGO_WSGI_MODULE=dicomdb.wsgi                     # WSGI module name
-VIRTENV=/srv/www/dcmdb_virt
+DJANGODIR=/srv/www/dcmdb            		  # Django project directory
+SOCKFILE=/srv/www/dcmdb/run/gunicorn.sock  	  # we will communicte using this unix socket
+USER=ubuntu                                   # the user to run as
+GROUP=ubuntu                                  # the group to run as
+NUM_WORKERS=3                                 # how many worker processes should Gunicorn spawn
+DJANGO_SETTINGS_MODULE=dicomdb.settings       # which settings file should Django use
+DJANGO_WSGI_MODULE=dicomdb.wsgi               # WSGI module name
+VIRTENV=/srv/www/dcmdb_virt					  # Virtual environment dir
  
 echo "Starting $NAME"
  

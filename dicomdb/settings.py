@@ -1,4 +1,8 @@
+from __future__ import print_function
 import os
+from django.utils.crypto import get_random_string
+import socket
+
 # current directory
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # where media files get downloaded to
@@ -10,7 +14,6 @@ STATIC_URL = '/static/'
 ROOT_URLCONF = 'dicomdb.urls'
 WSGI_APPLICATION = 'dicomdb.wsgi.application'
 
-import socket
 HOST = socket.gethostname()
 
 # EASY FLAG TO REMOVE URLS AND PUSH SITE INTO DEVELOPMENT
@@ -23,45 +26,45 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 TEMPLATE_DIRS = (
-    BASE_DIR + "/templates/",
-    BASE_DIR + "/main/templates/",
-    BASE_DIR + "/users/templates/",
-    BASE_DIR + "/dcmview/templates",
-    BASE_DIR + "/dcmupload/templates",
+	BASE_DIR + "/templates/",
+	BASE_DIR + "/main/templates/",
+	BASE_DIR + "/users/templates/",
+	BASE_DIR + "/dcmview/templates",
+	BASE_DIR + "/dcmupload/templates",
 )
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    BASE_DIR + '/templates/static/',
-    BASE_DIR + '/main/static/',
-    BASE_DIR + '/users/static/',
-    BASE_DIR + "/dcmview/static/",
-    BASE_DIR + "/dcmupload/static/",
+	BASE_DIR + '/templates/static/',
+	BASE_DIR + '/main/static/',
+	BASE_DIR + '/users/static/',
+	BASE_DIR + "/dcmview/static/",
+	BASE_DIR + "/dcmupload/static/",
 )
 
 # Application definition
 INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'south',
-    'main',
-    'users',
-    'dcmview',
-    'dcmupload',
-    'down',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'south',
+	'main',
+	'users',
+	'dcmview',
+	'dcmupload',
+	'down',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 # EMAIL SETTINGS
@@ -86,17 +89,40 @@ USE_TZ = True
 #production
 if HOST == "dcmdb.org":
 
-    try:
-        from settings_prod import *
-    except ImportError:
-        pass
-
-    ALLOWED_HOSTS = ['54.200.118.134']
+	try:
+		from settings_prod import *
+	except ImportError:
+		pass
 
 #development
 else:
 
-    try:
-        from settings_dev import *
-    except ImportError:
-        pass
+	try:
+		from settings_dev import *
+	except ImportError:
+		pass
+
+def generate_secret_key(filename):
+
+	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+	key = get_random_string(50, chars)
+	key_contents = "SECRET_KEY = '" + key + "'"
+
+	f = open(filename,'w')
+	print(key_contents, file = f)
+
+#On fresh clone, no secret_key.py exists so automate the generation
+#user executing django will need write access for this to work
+#properly, or one can simply generate a one-time key using the same script
+try:
+
+	from secret_key import *
+
+except ImportError:
+
+	#get path of settings directory
+	SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
+	#generate a new django secret key
+	generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
+
+	from secret_key import *
