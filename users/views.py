@@ -31,10 +31,13 @@ def portal(request):
 	#email validation check
 	validated = False
 
-	context = { "user": request.user, "validated": is_email_validated(request.user) }
+	if request.user:
+		context = { "user": request.user, "validated": is_email_validated(request.user) }
 	
-	if request.user.is_authenticated() and request.user.is_active:
-		return render_to_response('portal.html', context, context_instance = RequestContext(request))
+		if request.user.is_authenticated() and request.user.is_active:
+			return render_to_response('portal.html', context, context_instance = RequestContext(request))
+		else:
+			return redirect('/users/login')
 	else:
 		return redirect('/users/login')
 
@@ -311,7 +314,7 @@ def reqPass(request):
 
 def updateInfo(request):
 
-	if request.user.is_authenticated():
+	if request.user and request.user.is_active and request.user.is_authenticated():
 
 		context = {
 			"user": request.user
@@ -321,7 +324,7 @@ def updateInfo(request):
 
 	else:
 
-		return redirect("users/login")
+		return redirect("/users/login")
 
 def saveInfo(request):
 
