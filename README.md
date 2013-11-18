@@ -72,7 +72,7 @@ Make a virtualenv
 $ mkvirtualenv dcmdb
 ```
 
-Start working on a virtualevn
+Start working on a virtualenv (after mkvirtualenv it usually loads right into the virt)
 ```
 $ workon dcmdb
 ```
@@ -102,6 +102,9 @@ python-dateutil==2.1
 setproctitle==1.1.8
 six==1.4.1
 tornado==3.1.1
+bleach==1.2.2
+html5lib==0.95
+psycopg2==2.5.1
 yolk==0.4.3
 ```
 
@@ -166,12 +169,39 @@ HTTPS: https://github.com/neurosnap/dcmdb.git
 ```
 $ git clone git@github.com:neurosnap/dcmdb.git
 $ cd dcmdb
+```
+
+Create dicomdb/settings_dev.py file
+```
+DATABASES = {
+	"default": {
+		"ENGINE": "django.db.backends.postgresql_psycopg2",
+		"NAME": "dcmdb",
+		"USER": "postgres",
+		"PASSWORD": ""
+	}
+}
+
+EMAIL_HOST_USER = ''
+EMAIL_PASS = ''
+```
+
+```
 $ python manage.py syncdb
 $ python manage.py migrate
 $ python manage.py runserver
 ```
 
 Then, in browser http://localhost:8000
+
+There is one django group that is used as a flag for email validation
+
+If you get an error like "GROUP not found" when going to /users:
+
+  * Go to: http://localhost:8000/admin
+  * Login and select "Groups"
+  * Add Group "email_validated"
+  * Save
 
 Done!
 
@@ -216,6 +246,8 @@ pyparsing==2.0.1
 python-dateutil==2.1
 six==1.4.1
 tornado==3.1.1
+bleach==1.2.2
+html5lib==0.95
 yolk==0.4.3
 ```
 
@@ -249,7 +281,33 @@ Create database "dcmdb" set owner to "postgres"
 
 ###### Install psycopg2
 
-TODO FINISH THIS PART
+I had to download MINGW to install psycopg2.
+
+####### Install MINGW with gcc and g++
+
+  * http://sourceforge.net/projects/mingw/files/ 
+
+####### Configure MINGW
+
+  * Add C:\MinGW\bin to PATH environment variable
+  * Create distutils.cfg in C:\Python27\Lib\distutils
+
+distutils.cfg
+```
+[build]
+
+compiler=mingw32
+```
+
+  * Open cygwinccompiler.py in the same directory
+  * FIND/REPLACE all "-mno-cygwin" with blank ""
+  * SAVE
+
+Open msysgit 
+
+```
+$ pip install psycopg2
+```
 
 ##### Download DCMDB
 ```
@@ -257,7 +315,7 @@ $ git clone git@github.com:neurosnap/dcmdb.git
 $ cd dcmdb
 ```
 
-Create settings_dev.py file
+Create dicomdb/settings_dev.py file
 ```
 DATABASES = {
 	"default": {
@@ -267,9 +325,6 @@ DATABASES = {
 		"PASSWORD": ""
 	}
 }
-
-#generate secret key
-SECRET_KEY = ''
 
 EMAIL_HOST_USER = ''
 EMAIL_PASS = ''
@@ -282,5 +337,14 @@ $ python manage.py runserver
 ```
 
 Then, in browser http://localhost:8000
+
+There is one django group that is used as a flag for email validation
+
+If you get an error like "GROUP not found" when going to /users:
+
+  * Go to: http://localhost:8000/admin
+  * Login and select "Groups"
+  * Add Group "email_validated"
+  * Save
 
 Done!
