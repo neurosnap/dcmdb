@@ -283,11 +283,11 @@ Create database "dcmdb" set owner to "postgres"
 
 I had to download MINGW to install psycopg2.
 
-####### Install MINGW with gcc and g++
+###### Install MINGW with gcc and g++
 
   * http://sourceforge.net/projects/mingw/files/ 
 
-####### Configure MINGW
+###### Configure MINGW
 
   * Add C:\MinGW\bin to PATH environment variable
   * Create distutils.cfg in C:\Python27\Lib\distutils
