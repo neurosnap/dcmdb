@@ -60,7 +60,7 @@
 							<li><a href="/main/privacy"><span class="glyphicon glyphicon-send"></span> Privacy Policy</a></li>
 						</ul>
 					</li>
-					{% if user %}
+					{% if user and user.is_staff %}
 					<li class="dropdown">
 
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Account <b class="caret"></b></a>
