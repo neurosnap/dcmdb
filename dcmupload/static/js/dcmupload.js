@@ -137,7 +137,7 @@ $(function() {
 
 														if (file.hasOwnProperty("validate_only")) {
 
-															$(this).find(".dcm_preview").html('<div>' + file.msg + '</div>');
+															$(this).find(".dcm_preview").html('<div><small>' + file.msg.replace(new RegExp('\r?\n','g'), '<br />') + '</small></div>');
 
 														} else {
 

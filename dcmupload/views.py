@@ -168,7 +168,7 @@ def handle_upload(request):
 
 			dcm = processdicom(filename = filename)
 
-			if request.POST['validate_only']:
+			if "validate_only" in request.POST and request.POST['validate_only']:
 
 				validate = dcm.validate(dump = True)
 
