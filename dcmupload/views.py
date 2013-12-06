@@ -51,7 +51,7 @@ def handle_upload(request):
 		# the minimum file size (must be in bytes)
 		"minfilesize": 1 * 2 ** 10, # 1 Kb
 		# the file types which are going to be allowed for upload
-		#   must be a mimetype
+		#   must be a content_type
 		"acceptedformats": (
 			"application/dicom",
 			"image/dicom",
@@ -123,7 +123,7 @@ def handle_upload(request):
 				response_data = simplejson.dumps([response_data])
 				# return response to uploader with error
 				# so it can display error message
-				return HttpResponse(response_data, mimetype=response_type)
+				return HttpResponse(response_data, content_type=response_type)
 
 
 			# make temporary dir if not exists already
@@ -152,17 +152,19 @@ def handle_upload(request):
 			destination.close()
 
 			# strip patient data
-			try:
-				anonymize(filename, filename)
-			except:
-				#delete the file
-				os.remove(filename)
-				#throw an error to client
-				return HttpResponse(simplejson.dumps([{ 
-					"success": False, 
-					"msg": "Missing required DICM marker, are you sure this is a DICOM file?", 
-					"name": file.name
-				}]), mimetype=response_type)
+			if not "validate_only" in request.POST:
+
+				try:
+					anonymize(filename, filename)
+				except:
+					#delete the file
+					os.remove(filename)
+					#throw an error to client
+					return HttpResponse(simplejson.dumps([{ 
+						"success": False, 
+						"msg": "Missing required DICM marker, are you sure this is a DICOM file?", 
+						"name": file.name
+					}]), content_type=response_type)
 
 			dcm = processdicom(filename = filename)
 
@@ -177,7 +179,7 @@ def handle_upload(request):
 					"validate_only": True, 
 					"msg": validate,
 					"name": file.name
-				}]), mimetype=response_type)
+				}]), content_type=response_type)
 
 			#Save 
 			args = {
@@ -199,7 +201,7 @@ def handle_upload(request):
 					"image_uid": new_series['image'].UID,
 					"series_uid": new_series['series'].UID, 
 					"study_uid": new_series['study'].UID 
-				}]), mimetype=response_type)
+				}]), content_type=response_type)
 
 			#save image and thumbnail
 			
@@ -219,7 +221,7 @@ def handle_upload(request):
 				save_image['msg'] += " <a href='/dcmview/series/" + new_series['series'].UID + "'>View DCM</a>" 
 				save_image['name'] = file.name
 				
-				return HttpResponse(simplejson.dumps([save_image]), mimetype=response_type)
+				return HttpResponse(simplejson.dumps([save_image]), content_type=response_type)
 
 			response_data['file_name'] = "/media/" + file_name[:-4]
 			
@@ -234,7 +236,7 @@ def handle_upload(request):
 			response_data = simplejson.dumps([response_data])
 
 			# return the data to the uploading plugin
-			return HttpResponse(response_data, mimetype=response_type)
+			return HttpResponse(response_data, content_type=response_type)
 
 #Creates a new record in our database for the DICOM file
 #Right now we hard-coded a list of keys we are interested in
