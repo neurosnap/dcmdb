@@ -170,9 +170,12 @@ def handle_upload(request):
 
 			if "validate_only" in request.POST and request.POST['validate_only']:
 
-				validate = dcm.validate(dump = True)
-
-				os.remove(filename)
+				(val_out, val_err) = dcm.validate(dump = True)
+				validate = str(val_out) + ' ' + str(val_err)
+				try:
+					os.remove(filename)
+				except:
+					print "file could not be removed"
 
 				return HttpResponse(simplejson.dumps([{ 
 					"success": True,

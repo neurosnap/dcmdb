@@ -85,12 +85,14 @@ class processdicom(object):
 
 		if dump:
 			
-			try:
-				some_out = subprocess.check_output(["dciodvfy", self.filename], stderr = subprocess.STDOUT)
-			except subprocess.CalledProcessError as e:
-				some_out = str(e)
+			#try:
+			cmd = ["dciodvfy", self.filename]
+				#some_out = subprocess.check_output(cmd, stderr = subprocess.STDOUT)
+			return subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr = subprocess.PIPE).communicate()
+			#except subprocess.CalledProcessError as e:
+			#	some_out = str(e)
 
-			return some_out
+			#return some_out
 
 	def transferSyntax(self, transferSyntaxUID):
 
