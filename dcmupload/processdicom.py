@@ -1,5 +1,6 @@
 from __future__ import division
 import dicom
+import subprocess
 
 try:
 
@@ -26,6 +27,7 @@ class processdicom(object):
 			pass
 
 		self.img_process = None
+		self.filename = filename
 
 	def extractImage(self, filename):
 
@@ -78,6 +80,25 @@ class processdicom(object):
 			return { "success": False, "msg": "Could not save image." }
 
 		return { "success": True, "dicom": self.dicom }
+
+	def validate(self, dump = False):
+
+		if dump:
+			
+			try:
+				out = str(subprocess.check_output(["dciodvfy", self.filename]))
+			except subprocess.CalledProcessError as e:
+				out = str(e)
+
+			return out
+
+			# (stdout, stderr) = Popen(["cat","foo.txt"], stdout=PIPE).communicate()
+			#p = subprocess.Popen(["dciodvfy", self.filename], stdout=subprocess.PIPE)
+			#out, err = p.communicate()
+			#(stdout, stderr) = subprocess.Popen(["dciodvfy", self.filename], stdout=subprocess.PIPE).communicate()
+
+			#return stdout
+
 
 	def transferSyntax(self, transferSyntaxUID):
 

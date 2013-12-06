@@ -134,7 +134,17 @@ $(function() {
 																$(this).find(".dcm_preview").html('<div class="alert alert-danger">' + file.error + '</div>');
 												
 												} else {
-														$(this).find(".dcm_preview").html('<a href="/dcmview/viewer/' + file.image_uid + '">View DCM</a><img src="' + file.file_name + '_thumb.png" style="margin-left: 15px;" />');
+
+														if (file.hasOwnProperty("validate_only")) {
+
+															$(this).find(".dcm_preview").html('<div>' + file.msg + '</div>');
+
+														} else {
+
+															$(this).find(".dcm_preview").html('<a href="/dcmview/viewer/' + file.image_uid + '">View DCM</a><img src="' + file.file_name + '_thumb.png" style="margin-left: 15px;" />');
+														
+														}
+												
 												}
 
 										}

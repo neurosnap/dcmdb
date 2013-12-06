@@ -18,7 +18,7 @@
 {% block content %}
 <div class="page-header">
 
-		<h3>DICOM Uploader</h3>
+		<h3>DICOM Uploader and Validator</h3>
 
 </div>
 
@@ -28,9 +28,11 @@
 				This utility allows people to anonymously upload DICOM files.  
 				No patient information will be saved on our servers.  
 				Before uploading any file, please read the <a href="/main/tos">Terms of Service</a> and <a href="/main/privacy">Privacy Policy</a>.  
-				This utility will also attempt to extract an image from the DICOM file using <a href="http://sourceforge.net/projects/gdcm/">Grassroots DICOM</a>,
+				This utility will validate the DICOM file using <a href="http://www.dclunie.com/dicom3tools/dciodvfy.html">dciodvfy</a> and also attempt to extract an image from the DICOM file using <a href="http://sourceforge.net/projects/gdcm/">Grassroots DICOM</a>,
 				but not all transfer syntaxes are supported by this service at present.  <a href="/main/transfer_syntax">Here</a> is a list of currently supported
-				and unsupported transfer syntaxes.
+				and unsupported transfer syntaxes. <br /> <br />
+
+				If you simply want to validate the DICOM file, but not permenantly save the files in our database and on our server, select the option before uploading.
 				</p>
 		</div>
 </div>
@@ -43,6 +45,12 @@
 		<div class="checkbox">
 				<label>
 						<input type="checkbox" id="accept_tos" /> I accept the <a href="/main/tos">Terms of Service</a> and <a href="/main/privacy">Privacy Policy</a>
+				</label>
+		</div>
+
+		<div class="checkbox">
+				<label>
+						<input type="checkbox" id="validate_only" name="validate_only" /> Validate DICOM file, but do <strong>not</strong> save these DICOM files on dcmdb's server.</a>
 				</label>
 		</div>
 

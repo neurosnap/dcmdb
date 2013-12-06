@@ -63,9 +63,8 @@ def handle_upload(request):
 	}
 
 
-	# POST request
-	#   meaning user has triggered an upload action
 	if request.method == 'POST':
+
 		# figure out the path where files will be uploaded to
 		temp_path = MEDIA_DIR
 
@@ -101,9 +100,6 @@ def handle_upload(request):
 			# uploader can display the appropriate message
 			error = False
 
-			# check against options for errors
-
-			# file size
 			if file.size > options["maxfilesize"]:
 				error = "maxFileSize"
 			if file.size < options["minfilesize"]:
@@ -169,6 +165,19 @@ def handle_upload(request):
 				}]), mimetype=response_type)
 
 			dcm = processdicom(filename = filename)
+
+			if request.POST['validate_only']:
+
+				validate = dcm.validate(dump = True)
+
+				os.remove(filename)
+
+				return HttpResponse(simplejson.dumps([{ 
+					"success": True,
+					"validate_only": True, 
+					"msg": validate,
+					"name": file.name
+				}]), mimetype=response_type)
 
 			#Save 
 			args = {
