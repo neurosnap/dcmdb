@@ -9,7 +9,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from dcmupload.models import Study, Series, Image
-from dcmupload.processdicom import processdicom
+#from dcmupload.processdicom import processdicom
+from dcmupload.dcmproc import dcmproc
 
 import bleach
 import json as simplejson
@@ -166,12 +167,15 @@ def handle_upload(request):
 						"name": file.name
 					}]), content_type=response_type)
 
-			dcm = processdicom(filename = filename)
+			#dcm = processdicom(filename = filename)
+			dcm = dcmproc(filename = filename)
 
 			if "validate_only" in request.POST and request.POST['validate_only']:
 
-				(val_out, val_err) = dcm.validate(dump = True)
+				#(val_out, val_err) = dcm.validate(dump = True)
+				(val_out, val_err) = dcm.validate()
 				validate = str(val_out) + ' ' + str(val_err)
+
 				try:
 					os.remove(filename)
 				except:
@@ -185,8 +189,11 @@ def handle_upload(request):
 				}]), content_type=response_type)
 
 			#Save 
+			# "dcm": dcm.getDCM(),
+			pydcm = dicom.read_file(filename)
+
 			args = {
-				"dcm": dcm.getDCM(),
+				"dcm": pydcm,
 				"filename": file_name[:-4],
 				"request": request,
 			}
@@ -194,6 +201,9 @@ def handle_upload(request):
 			new_series = add_dcm_record(**args)
 
 			if not new_series['success']:
+
+				dcm = None
+				pydcm = None
 				#remove recently uploaded dcm file
 				os.remove(filename)
 
@@ -208,7 +218,7 @@ def handle_upload(request):
 
 			#save image and thumbnail
 			
-			save_image = dcm.extractImage(filename)
+			save_image = dcm.extractImage()
 			
 			if save_image['success']:
 				# set image generated flag to true in series record
@@ -237,6 +247,9 @@ def handle_upload(request):
 
 			# generate the json data
 			response_data = simplejson.dumps([response_data])
+
+			dcm = None
+			pydcm = None
 
 			# return the data to the uploading plugin
 			return HttpResponse(response_data, content_type=response_type)
