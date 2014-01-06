@@ -21,6 +21,8 @@ export PYTHONPATH=$DJANGODIR:$PYTHONPATH
 # Create the run directory if it doesn't exist
 RUNDIR=$(dirname $SOCKFILE)
 test -d $RUNDIR || mkdir -p $RUNDIR
+
+# MOUNT EBS: sudo mount /dev/xvdf /mnt/media
  
 # Start your Django Unicorn
 # Programs meant to be run under supervisor should not daemonize themselves (do not use --daemon)
