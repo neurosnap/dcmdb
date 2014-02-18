@@ -1,4 +1,4 @@
-dcmupload/dcmproc/*
+dcmupload/dcmproc
 dicomdb/settings_prod.py
 dicomdb/settings_dev.py
 dicomdb/secret_key.py
