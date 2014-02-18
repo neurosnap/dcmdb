@@ -58,7 +58,8 @@
 
 		<div class="col-md-12">
 
-			<!-- The fileinput-button span is used to style the file input field as button -->
+						{% if uploadable %}
+						<!-- The fileinput-button span is used to style the file input field as button -->
 						<span class="btn btn-success fileinput-button">
 								<span class="glyphicon glyphicon-plus"></span>
 								<span>Add DICOM files</span>
@@ -74,6 +75,11 @@
 								<span class="glyphicon glyphicon-ban-circle"></span>
 								<span>Clear Uploads</span>
 						</button>
+						{% else %}
+
+						<div class="alert alert-danger">Oops, dcmproc library not found in dcmdb/dcmupload directory, cannot upload anything.</div>
+
+						{% endif %}
 
 						<!-- The loading indicator is shown during file processing -->
 						<span class="fileupload-loading"></span>

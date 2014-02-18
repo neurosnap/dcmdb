@@ -9,8 +9,17 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from dcmupload.models import Study, Series, Image
-#from dcmupload.processdicom import processdicom
-from dcmupload.dcmproc import dcmproc
+
+# dcmproc library
+try:
+	
+	from dcmupload.dcmproc.dcmproc import dcmproc
+	uploadable = True
+
+except ImportError:
+
+	uploadable = False
+
 
 import bleach
 import json as simplejson
@@ -26,7 +35,9 @@ MEDIA_DIR = settings.MEDIA_ROOT
 @ensure_csrf_cookie
 def dcmupload(request):
 
-	context = {}
+	context = {
+		"uploadable": uploadable
+	}
 
 	return render_to_response('dcmupload.html', context, context_instance = RequestContext(request))
 
@@ -39,6 +50,10 @@ def blank(request):
 
 @csrf_exempt
 def handle_upload(request):
+
+	if not uploadable:
+
+		return HttpResponseBadRequest('dcmproc library not found')
 
 	 # used to generate random unique id
 	import uuid
@@ -257,8 +272,6 @@ def handle_upload(request):
 #Creates a new record in our database for the DICOM file
 #Right now we hard-coded a list of keys we are interested in
 def add_dcm_record(**kwargs):
-
-	#dcm, dcm_dir, filename, title, public, request, study
 
 	# Study
 	study_instance_uid = None
