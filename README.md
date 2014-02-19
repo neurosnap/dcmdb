@@ -36,6 +36,15 @@ INSTALL
 Windows 
 ---------
 
+##### Prereqs
+
+  *  Python 2.7 (determine whether 32 or 64 bit)
+  *  Microsoft Visual C++ Redistributable Package 
+  (identical 32 or 64 bit as python) 
+  [32 bit](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=29) 
+  [64 bit](http://www.microsoft.com/en-us/download/details.aspx?id=15336)
+  *  Git
+
 ##### Download DCMDB
 
 SSH: git@github.com:neurosnap/dcmdb.git
