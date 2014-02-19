@@ -39,7 +39,7 @@ Windows
 ##### Prereqs
 
   *  Python 2.7 (determine whether 32 or 64 bit)
-  *  Microsoft Visual C++ Redistributable Package 
+  *  Microsoft Visual C++ 2008 Redistributable Package 
   (identical 32 or 64 bit as python) 
   [32 bit](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=29) 
   [64 bit](http://www.microsoft.com/en-us/download/details.aspx?id=15336)
