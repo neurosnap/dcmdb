@@ -45,6 +45,15 @@ Windows
   [64 bit](http://www.microsoft.com/en-us/download/details.aspx?id=15336)
   *  Git
 
+##### Install Postgresql
+
+http://www.postgresql.org/download/windows/
+
+Set password for "postgres" user
+Open pgAdmin III
+Connect to PostgreSQL
+Create database "dcmdb" set owner to "postgres"
+
 ##### Download DCMDB
 
 SSH - git@github.com:neurosnap/dcmdb.git
@@ -90,15 +99,6 @@ bleach==1.2.2
 html5lib==0.95
 yolk==0.4.3
 ```
-
-##### Install Postgresql
-
-http://www.postgresql.org/download/windows/
-
-Set password for "postgres" user
-Open pgAdmin III
-Connect to PostgreSQL
-Create database "dcmdb" set owner to "postgres"
 
 ##### Set up local django settings file
 
