@@ -47,7 +47,7 @@ Windows
 
 ##### Download DCMDB
 
-[SSH](git@github.com:neurosnap/dcmdb.git)
+SSH - git@github.com:neurosnap/dcmdb.git
 
 [HTTPS](https://github.com/neurosnap/dcmdb.git)
 
@@ -195,7 +195,7 @@ yolk==0.4.3
 
 ##### Download DCMDB
 
-[SSH](git@github.com:neurosnap/dcmdb.git)
+SSH - git@github.com:neurosnap/dcmdb.git
 
 [HTTPS](https://github.com/neurosnap/dcmdb.git)
 
