@@ -111,7 +111,7 @@ else:
 	try:
 		from settings_dev import *
 	except ImportError:
-		pass
+		print("dicomdb/settings_dev.py missing")
 
 	DEBUG = True
 
