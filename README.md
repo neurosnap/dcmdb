@@ -33,114 +33,7 @@ It uses gunicorn as the WSGI HTTP Server and nginx as the Proxy HTTP Server.
 INSTALL
 =========
 
-Windows 
----------
-
-##### Prereqs
-
-  *  Python 2.7 (determine whether 32 or 64 bit)
-  *  Microsoft Visual C++ 2008 Redistributable Package 
-  (identical 32 or 64 bit as python) 
-  [32 bit](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=29) 
-  [64 bit](http://www.microsoft.com/en-us/download/details.aspx?id=15336)
-  *  Git
-
-##### Download DCMDB
-
-SSH - git@github.com:neurosnap/dcmdb.git
-
-[HTTPS](https://github.com/neurosnap/dcmdb.git)
-
-```
-$ git clone git@github.com:neurosnap/dcmdb.git
-$ cd dcmdb
-```
-
-Download: https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
-Install setuptools
-
-##### setuptools
-```
-$ cd /path/to/ez_setup.py
-$ python ez_setup.py install
-```
-
-##### Install PIP
-```
-$ easy_install pip
-```
-
-##### Install the rest of the dependencies that actually work through PIP
-```
-$ pip install -r dependencies.txt
-```
-
-dependencies.txt
-```
-Django==1.5.4
-South==0.8.2
-psycopg2==2.5.1
-argparse==1.2.1
-nose==1.3.0
-pydicom==0.9.8
-pyparsing==2.0.1
-python-dateutil==2.1
-six==1.4.1
-bleach==1.2.2
-html5lib==0.95
-yolk==0.4.3
-```
-
-##### Install Postgresql
-
-http://www.postgresql.org/download/windows/
-
-Set password for "postgres" user
-Open pgAdmin III
-Connect to PostgreSQL
-Create database "dcmdb" set owner to "postgres"
-
-##### Set up local django settings file
-
-Create dicomdb/settings_dev.py file
-```
-DATABASES = {
-  "default": {
-    "ENGINE": "django.db.backends.postgresql_psycopg2",
-    "NAME": "dcmdb",
-    "USER": "postgres",
-    "PASSWORD": ""
-  }
-}
-
-EMAIL_HOST_USER = ''
-EMAIL_PASS = ''
-```
-
-##### Run 
-
-```
-$ python manage.py syncdb
-$ python manage.py migrate
-$ python manage.py runserver
-```
-
-Then, in browser http://localhost:8000
-
-There is one django group that is used as a flag for email validation
-
-If you get an error like "GROUP not found" when going to /users:
-
-  * Go to: http://localhost:8000/admin
-  * Login and select "Groups"
-  * Add Group "email_validated"
-  * Save
-
-Done!
-
-
-HOW TO DEVELOP ON DEBIAN-DIST (UBUNTU)
----------
+#### HOW TO DEVELOP ON DEBIAN-DIST (UBUNTU)
 
 ```
 $ apt-get update
@@ -183,21 +76,77 @@ dependencies.txt
 Django==1.5.4
 Pillow==2.2.1
 South==0.8.2
+gunicorn==18.0
+matplotlib==1.3.0
 nose==1.3.0
+numpy==1.7.1
 psycopg2==2.5.1
 pydicom==0.9.8
 pyparsing==2.0.1
 python-dateutil==2.1
 setproctitle==1.1.8
 six==1.4.1
+tornado==3.1.1
 yolk==0.4.3
+```
+
+##### HOW TO INSTALL GDCM
+
+###### PRE-REQS
+
+```
+apt-get install cmake-curses-gui
+apt-get install libpcre3 libpcre3-dev
+```
+
+###### SWIG
+
+  * Download the latest version of SWIG
+  * Extract compressed file e.g. swig-2.0.11
+
+```
+$ cd swig-2.0.11
+$ ./configure
+$ make
+$ make install
+```
+
+###### GDCM
+
+  * Download the latest version of GDCM
+  * Extract compressed file e.g. gdcm.tar.bz2
+
+```
+$ mkdir gdcm-build
+$ cd gdcm
+$ rm CMakeCache.txt
+$ cd ../gdcm-build
+$ ccmake ../gdcm
+```
+
+  * Screen will come up,
+  * Press [T] to go to advanced mode
+  * SET CMAKE\_C\_FLAGS to -fPIC
+  * SET CMAKE\_CXX\_FLAGS to -fPIC [Could be optional]
+  * Press [C] to configure
+  * SET GDCM\_WRAP\_PYTHON to ON
+  * [G] to generate
+
+```
+$ make
+$ make install
+```
+
+###### Git
+
+```
+$ apt-get install git-core
 ```
 
 ##### Download DCMDB
 
-SSH - git@github.com:neurosnap/dcmdb.git
-
-[HTTPS](https://github.com/neurosnap/dcmdb.git)
+SSH: git@github.com:neurosnap/dcmdb.git
+HTTPS: https://github.com/neurosnap/dcmdb.git
 
 ```
 $ git clone git@github.com:neurosnap/dcmdb.git
@@ -219,7 +168,149 @@ EMAIL_HOST_USER = ''
 EMAIL_PASS = ''
 ```
 
-##### Run
+```
+$ python manage.py syncdb
+$ python manage.py migrate
+$ python manage.py runserver
+```
+
+Then, in browser http://localhost:8000
+
+There is one django group that is used as a flag for email validation
+
+If you get an error like "GROUP not found" when going to /users:
+
+  * Go to: http://localhost:8000/admin
+  * Login and select "Groups"
+  * Add Group "email_validated"
+  * Save
+
+Done!
+
+#### HOW TO DEVELOP ON WINDOWS (Get ready for hell)
+
+##### Install msysgit 32bit (must be 32bit)
+
+I chose msysgit because nothing that is preinstalled with cygwin worked 
+for me very well.  It was a living nightmare getting everything syncd using cygwin.
+
+##### Install python 2.7
+
+Add C:/Python27;C:/Python27/Scripts;C:/Python27/Lib;C:/Python27/DLLs; to environmental variables
+
+Download: https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+Install setuptools
+
+##### setuptools
+```
+$ cd /path/to/ez_setup.py
+$ python ez_setup.py install
+```
+
+##### Install PIP
+```
+$ easy_install pip
+```
+
+##### Install the rest of the dependencies that actually work through PIP
+```
+$ pip install -r dependencies.txt
+```
+
+dependencies.txt
+```
+Django==1.5.4
+South==0.8.2
+argparse==1.2.1
+nose==1.3.0
+pydicom==0.9.8
+pyparsing==2.0.1
+python-dateutil==2.1
+six==1.4.1
+tornado==3.1.1
+bleach==1.2.2
+html5lib==0.95
+yolk==0.4.3
+```
+
+##### Install matplotlib 32 bit v1.3.1+ via installer
+
+  * http://matplotlib.org/downloads.html
+
+##### Install numpy via installer
+
+##### Install pillow via installer
+
+##### Install gdcm v2.4.0+ via installer
+
+  * http://sourceforge.net/projects/gdcm/files/gdcm%202.x/GDCM%202.4.0/
+
+Add C:/Program Files (x86)/GDCM 2.4.0/bin to envrionmental variables
+
+Move C:/Program Files (x86)/GDCM 2.4.0/ to C:/Python27/Lib/site-packages
+  * _gdcmswig.pyd
+  * gdcm.py
+  * gdcmswig.py
+
+##### Install Postgresql
+
+http://www.postgresql.org/download/windows/
+
+Set password for "postgres" user
+Open pgAdmin III
+Connect to PostgreSQL
+Create database "dcmdb" set owner to "postgres"
+
+###### Install psycopg2
+
+I had to download MINGW to install psycopg2.
+
+###### Install MINGW with gcc and g++
+
+  * http://sourceforge.net/projects/mingw/files/ 
+
+###### Configure MINGW
+
+  * Add C:\MinGW\bin to PATH environment variable
+  * Create distutils.cfg in C:\Python27\Lib\distutils
+
+distutils.cfg
+```
+[build]
+
+compiler=mingw32
+```
+
+  * Open cygwinccompiler.py in the same directory
+  * FIND/REPLACE all "-mno-cygwin" with blank ""
+  * SAVE
+
+Open msysgit 
+
+```
+$ pip install psycopg2
+```
+
+##### Download DCMDB
+```
+$ git clone git@github.com:neurosnap/dcmdb.git
+$ cd dcmdb
+```
+
+Create dicomdb/settings_dev.py file
+```
+DATABASES = {
+  "default": {
+    "ENGINE": "django.db.backends.postgresql_psycopg2",
+    "NAME": "dcmdb",
+    "USER": "postgres",
+    "PASSWORD": ""
+  }
+}
+
+EMAIL_HOST_USER = ''
+EMAIL_PASS = ''
+```
 
 ```
 $ python manage.py syncdb
