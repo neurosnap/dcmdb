@@ -1,27 +1,22 @@
 from __future__ import print_function
 import os
-from django.utils.crypto import get_random_string
-import socket
 
-# current directory
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-# where media files get downloaded to
 MEDIA_ROOT = BASE_DIR + '/media/'
-# where all the static files get dumped
 STATIC_ROOT = BASE_DIR + '/static/'
 STATIC_URL = '/static/'
 
-ROOT_URLCONF = 'dicomdb.urls'
-WSGI_APPLICATION = 'dicomdb.wsgi.application'
+ROOT_URLCONF = 'dcmdb.urls'
+WSGI_APPLICATION = 'dcmdb.wsgi.application'
 
-HOST = socket.gethostname()
+# EASY FLAG TO REMOVE URLS AND PUSH 
+# SITE INTO UNDER CONSTRUCTION
+UNDER_CONSTRUCTION = False
+DEBUG = False
+#used for email primarily
+DOMAIN = "dcmdb.org"
 
-# EASY FLAG TO REMOVE URLS AND PUSH SITE INTO DEVELOPMENT
-#SITE_STATE = "dev"
-SITE_STATE = "live"
-
-TEMPLATE_DEBUG = True
-
+#TEMPLATE_DEBUG = True
 TEMPLATE_DIRS = (
 	BASE_DIR + "/templates/",
 	BASE_DIR + "/main/templates/",
@@ -30,7 +25,6 @@ TEMPLATE_DIRS = (
 	BASE_DIR + "/dcmupload/templates",
 )
 
-# Additional locations of static files
 STATICFILES_DIRS = (
 	BASE_DIR + '/templates/static/',
 	BASE_DIR + '/main/static/',
@@ -39,7 +33,6 @@ STATICFILES_DIRS = (
 	BASE_DIR + "/dcmupload/static/",
 )
 
-# Application definition
 INSTALLED_APPS = (
 	'django.contrib.admin',
 	'django.contrib.auth',
@@ -64,7 +57,6 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-# EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -73,16 +65,20 @@ EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
+#override default settings in these files
+try:
+	from settings_env import *
+except ImportError:
+	pass
+
 def generate_secret_key(filename):
+
+	from django.utils.crypto import get_random_string
 
 	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
 	key = get_random_string(50, chars)
@@ -91,45 +87,13 @@ def generate_secret_key(filename):
 	f = open(filename,'w')
 	print(key_contents, file = f)
 
-#override default settings in these files
-#production
-if HOST == "dcmdb.org":
-
-	try:
-		from settings_prod import *
-	except ImportError:
-		pass
-
-	DEBUG = False
-
-	#user for email primarily
-	DOMAIN = HOST
-
-#development
-else:
-
-	try:
-		from settings_dev import *
-	except ImportError:
-		print("dicomdb/settings_dev.py missing")
-
-	DEBUG = True
-
-	#user for emails primarily
-	DOMAIN = "127.0.0.1:8000"
-
 #On fresh clone, no secret_key.py exists so automate the generation
 #user executing django will need write access for this to work
 #properly, or one can simply generate a one-time key using the same script
 try:
-
 	from secret_key import *
-
 except ImportError:
-
-	#get path of settings directory
 	SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
-	#generate a new django secret key
 	generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
 
 	from secret_key import *

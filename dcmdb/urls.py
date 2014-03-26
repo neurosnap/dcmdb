@@ -2,19 +2,11 @@ from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
-
+from main import views as main_views
 admin.autodiscover()
 
-from main import views as main_views
+if settings.UNDER_CONSTRUCTION:
 
-#import socket
-#host = socket.gethostname()
-#host = "dev"
-#host = "dcmdb.org"
-
-if settings.SITE_STATE == "dev":
-
-    #uc = under construction
     urlpatterns = patterns('',
         url(r'^$', main_views.uc, name = "uc"),
         url(r'^main/about/', main_views.about_uc, name = "about_uc"),
