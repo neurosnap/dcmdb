@@ -69,11 +69,11 @@ $(function() {
 				});
 
 				Caman.Event.listen("processComplete", function(job) {
-						$("#dcmview_status").html(job.name);
+						$("#viewer_status").html(job.name);
 				});
 
 				Caman.Event.listen("renderFinished", function() {
-						$("#dcmview_status").html("Render finished!");
+						$("#viewer_status").html("Render finished!");
 				});
 
 			$(".dcm_series").on("click", function(e) {
@@ -88,8 +88,8 @@ $(function() {
 
 					var switch_img = $(this).find("img").attr("fname");
 
-					if ($("#dcmview_image").length > 0 && !$("#dcmview_image").is(":hidden"))
-							$("#dcmview_image").hide();
+					if ($("#viewer_image").length > 0 && !$("#viewer_image").is(":hidden"))
+							$("#viewer_image").hide();
 					else
 							$(".preload_dcm").hide();
 
@@ -103,13 +103,13 @@ $(function() {
 
 					if (!found_img && $("#filters_on").is(":checked")) {
 
-						$("#dcmview_status").html("Loading ...");
+						$("#viewer_status").html("Loading ...");
 
 						Caman("#dcm_" + switch_img, function() {
 
 								dcm.applyFilters(this);
 
-								$("#dcmview_status").html("Applying filters ...");
+								$("#viewer_status").html("Applying filters ...");
 
 								dcm.cm_arr.push(switch_img);
 
@@ -179,9 +179,9 @@ $(function() {
 
 dcm.getActiveImg = function() {
 
-		if (!$("#dcmview_image").is(":hidden")) {
+		if (!$("#viewer_image").is(":hidden")) {
 
-				return "dcmview_image";
+				return "viewer_image";
 
 		} else {
 

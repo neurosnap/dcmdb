@@ -1,4 +1,3 @@
-dcmupload/dcmproc
 uploader/dcmproc
 dcmdb/settings_env.py
 dcmdb/secret_key.py

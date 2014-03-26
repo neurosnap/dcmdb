@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from dcmview import views
+from viewer import views
 
 urlpatterns = patterns('',
 	url(r'^viewer/(?P<dcm_uid>.*)$', views.view, name='dcmview'),

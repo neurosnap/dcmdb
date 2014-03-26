@@ -22,7 +22,7 @@ else:
         url(r'^main/', include('main.urls')),
         url(r'^users/', include('users.urls')),
         url(r'^admin/', include(admin.site.urls)),
-        url(r'^dcmview/', include('dcmview.urls')),
+        url(r'^viewer/', include('viewer.urls')),
         url(r'^uploader/', include('uploader.urls')),
         url(r'^down/', include('down.urls')),
         url(r'^media/(?P<path>.*)$',

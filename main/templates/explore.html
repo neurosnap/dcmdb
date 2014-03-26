@@ -18,11 +18,11 @@
 			{% if image %}
 				{% for item in image %}
 					{% if item.image_gen %}
-					<a href="/dcmview/study/{{ item.dcm_series.dcm_study.UID }}">
+					<a href="/viewer/study/{{ item.dcm_series.dcm_study.UID }}">
 						<img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail dcmthumb" /> 
 					</a>
 					{% else %}
-					<a href="/dcmview/study/{{ item.dcm_series.dcm_study.UID }}">
+					<a href="/viewer/study/{{ item.dcm_series.dcm_study.UID }}">
 						<img src="holder.js/150x150" class="img-thumbnail dcmthumb" /> 
 					</a>
 					{% endif %}

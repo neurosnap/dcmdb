@@ -2,7 +2,7 @@
 
 {% block css %}
 <link href="{{STATIC_URL}}css/jquery.fileupload-ui.css" rel="stylesheet">
-<link href="{{STATIC_URL}}css/dcmupload.css" rel="stylesheet">
+<link href="{{STATIC_URL}}css/uploader.css" rel="stylesheet">
 {% endblock %}
 
 {% block js %}
@@ -12,7 +12,7 @@
 <script src="{{STATIC_URL}}js/jquery.fileupload.js" type="text/javascript"></script>
 <script src="{{STATIC_URL}}js/jquery.fileupload-process.js" type="text/javascript"></script>
 <script src="{{STATIC_URL}}js/jquery.fileupload-ui.js" type="text/javascript"></script>
-<script src="{{STATIC_URL}}js/dcmupload.js" type="text/javascript"></script>
+<script src="{{STATIC_URL}}js/uploader.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
@@ -39,7 +39,7 @@
 
 <hr />
 
-<form id="fileupload" action="/dcmupload/handle_upload" method="POST" enctype="multipart/form-data">
+<form id="fileupload" action="/uploader/handle_upload" method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 
 		<div class="checkbox">
@@ -77,7 +77,7 @@
 						</button>
 						{% else %}
 
-						<div class="alert alert-danger">Oops, dcmproc library not found in dcmdb/dcmupload directory, cannot upload anything.</div>
+						<div class="alert alert-danger">Oops, dcmproc library not found in dcmdb/uploader directory, cannot upload anything.</div>
 
 						{% endif %}
 

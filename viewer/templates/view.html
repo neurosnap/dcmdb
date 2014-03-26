@@ -2,7 +2,7 @@
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/view.css" />
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/dcmview.css" />
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/viewer.css" />
 
 {% if image.image_gen %}
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/jquery-ui-1.10.3.custom.min.css" />
@@ -16,14 +16,11 @@
 <script type="text/javascript" src="{{STATIC_URL}}js/jquery-ui-1.10.3.custom.min.js"> </script>
 <script type="text/javascript" src="{{STATIC_URL}}js/caman.full.min.js"> </script>
 {% endif %}
-
-<script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script>
-
-<script type="text/javascript" src="{{STATIC_URL}}js/dcmview.js"> </script>
+<script type="text/javascript" src="{{STATIC_URL}}js/viewer.js"> </script>
 
 {% if image %}
 <script type="text/javascript">
-	//obj singleton used in dcmview.js
+	//obj singleton used in viewer.js
 	var dcm = {
 
 		"dicom": {{ dcm|safe }},
@@ -44,14 +41,14 @@
 	</li>
 	<li>
 		{% if study %}
-		<a href="/dcmview/study/{{ study.UID }}">Study</a>
+		<a href="/viewer/study/{{ study.UID }}">Study</a>
 		{% else %}
 		Study
 		{% endif %}
 	</li>
 	<li>
 		{% if series %}
-		<a href="/dcmview/series/{{ series.UID }}">Series</a>
+		<a href="/viewer/series/{{ series.UID }}">Series</a>
 		{% else %}
 		Series
 		{% endif %}
@@ -112,12 +109,12 @@
 				<h4>Diagnostic Image <span id="zoom" class="glyphicon glyphicon-zoom-in"></span> </h4>
 				{% if image.image_gen %}
 				<div id="dcm_cont">
-				<img src="/media/{{ image.filename }}.png" style="height: 100%;" class="img-rounded img-responsive" id="dcmview_image" />
+				<img src="/media/{{ image.filename }}.png" style="height: 100%;" class="img-rounded img-responsive" id="viewer_image" />
 					{% for item in all_images %}
 					<img src="/media/{{ item.filename }}.png" style="display: none;" class="img-rounded img-responsive preload_dcm" id="dcm_{{ item.filename }}" />
 					{% endfor %}
 				</div>
-				<div id="dcmview_status" class="alert alert-warning" style="margin: 5px;">Image Rendered</div>
+				<div id="viewer_status" class="alert alert-warning" style="margin: 5px;">Image Rendered</div>
 				{% endif %}
 			</div>
 		</div>
@@ -133,11 +130,11 @@
 					{% for item in all_images %}
 
 						{% if item.image_gen %}
-						<a href="/dcmview/viewer/{{ item.UID }}" class="dcm_series tp" data-trigger="hover" data-placement="top" data-content="{{ item.image_number }}">
+						<a href="/viewer/viewer/{{ item.UID }}" class="dcm_series tp" data-trigger="hover" data-placement="top" data-content="{{ item.image_number }}">
 							<img src="/media/{{ item.filename }}_thumb.png" fname="{{ item.filename }}" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
 						</a>
 						{% else %}
-						<img src="holder.js/100x100" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
+						<!-- <img src="holder.js/100x100" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" /> -->
 						{% endif %}
 					{% endfor %}
 				{% endif %}

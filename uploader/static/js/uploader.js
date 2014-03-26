@@ -28,7 +28,7 @@ $(function() {
 		});
 
 		$('#fileupload').fileupload({
-				"url": "/dcmupload/handle_upload",
+				"url": "/uploader/handle_upload",
 				"dataType": 'json',
 				"maxNumberOfFiles": maxFiles,
 				"limitConcurrentUploads": 3,
