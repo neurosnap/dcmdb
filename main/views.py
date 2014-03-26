@@ -1,15 +1,12 @@
+import json
+from itertools import chain
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
-from dcmupload.models import Study, Series, Image
 from django.views.decorators.csrf import ensure_csrf_cookie
-# JSON encode/decode
-import json
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Q
-from itertools import chain
-
-#uc is under construction
+from uploader.models import Study, Series, Image
 
 @ensure_csrf_cookie
 def explore(request):

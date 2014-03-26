@@ -22,7 +22,7 @@ TEMPLATE_DIRS = (
 	BASE_DIR + "/main/templates/",
 	BASE_DIR + "/users/templates/",
 	BASE_DIR + "/dcmview/templates",
-	BASE_DIR + "/dcmupload/templates",
+	BASE_DIR + "/uploader/templates",
 )
 
 STATICFILES_DIRS = (
@@ -30,7 +30,7 @@ STATICFILES_DIRS = (
 	BASE_DIR + '/main/static/',
 	BASE_DIR + '/users/static/',
 	BASE_DIR + "/dcmview/static/",
-	BASE_DIR + "/dcmupload/static/",
+	BASE_DIR + "/uploader/static/",
 )
 
 INSTALLED_APPS = (
@@ -44,7 +44,7 @@ INSTALLED_APPS = (
 	'main',
 	'users',
 	'dcmview',
-	'dcmupload',
+	'uploader',
 	'down',
 )
 

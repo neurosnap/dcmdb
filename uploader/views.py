@@ -8,12 +8,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from dcmupload.models import Study, Series, Image
+from uploader.models import Study, Series, Image
 
 # dcmproc library
 try:
     
-    from dcmupload.dcmproc.dcmproc import dcmproc
+    from uploader.dcmproc.dcmproc import dcmproc
     uploadable = True
 
 except ImportError:
@@ -33,13 +33,13 @@ BASE_DIR = settings.BASE_DIR
 MEDIA_DIR = settings.MEDIA_ROOT
 
 @ensure_csrf_cookie
-def dcmupload(request):
+def uploader(request):
 
     context = {
         "uploadable": uploadable
     }
 
-    return render_to_response('dcmupload.html', context, context_instance = RequestContext(request))
+    return render_to_response('uploader.html', context, context_instance = RequestContext(request))
 
 @csrf_exempt
 def blank(request):

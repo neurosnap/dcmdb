@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dcmupload.models import Study, Series, Image
+from uploader.models import Study, Series, Image
 
 admin.site.register(Study)
 admin.site.register(Series)

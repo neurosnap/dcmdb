@@ -1,26 +1,15 @@
+import json
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-#uses django's admin User model and default setup
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-#DICOMS table
-from dcmupload.models import Study, Series, Image
-#redirects to different page
 from django.shortcuts import redirect
-#auth default for django
 from django.contrib.auth.models import User, Group
-#ObjectDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
-#Force CSRF Cookie
 from django.views.decorators.csrf import ensure_csrf_cookie
-# email
 from django.core.mail import EmailMessage
-#mail exception
-#from smtplib import SMTPException
-# JSON encode/decode
-import json
-#from django.db.models import Count
 from django.conf import settings
+from uploader.models import Study, Series, Image
 
 domain = settings.DOMAIN
 

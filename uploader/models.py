@@ -23,7 +23,7 @@ class Study(models.Model):
 	def __unicode__(self):
 		return self.UID
 
-# Create your models here.
+
 class Series(models.Model):
 
 	dcm_study = models.ForeignKey(Study)
@@ -44,6 +44,7 @@ class Series(models.Model):
 
 	def __unicode__(self):
 		return self.UID
+
 
 class Image(models.Model):
 

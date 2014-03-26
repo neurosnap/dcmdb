@@ -1,18 +1,16 @@
+import os
+import datetime
+import json
+import zipfile
+import StringIO
+import dicom
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie
-#you bastard!
-import dicom
-from dcmupload.models import Study, Series, Image
-import json
-import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
-import zipfile
-import StringIO
-import os
-
+from uploader.models import Study, Series, Image
 from django.conf import settings
 
 BASE_DIR = settings.BASE_DIR
