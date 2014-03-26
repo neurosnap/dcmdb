@@ -1,54 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
 	<head>
-	
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name=”description” content=”DCMDB is an open-source, open-access search engine for medical diagnostic images (DICOM)”>
 
-		<meta name=”description” content=”DCMDB is an open-source, open-access search engine for medical diagnostic images (DICOMS)”>
-
-		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
-		<!-- <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap-theme.min.css" /> -->
-		<!-- <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/flat-ui.css" /> -->
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+		<link href="{{STATIC_URL}}css/style.css" rel="stylesheet">
 		{% block css %}{% endblock %}
-		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
 		<title>DCMDB | Public DICOM Search Engine</title>
-		
-		<script type="text/javascript">
-			var id = '{{ id }}';
-		</script>
-
-		<script type="text/javascript" src="{{STATIC_URL}}js/jquery-2.0.3.min.js"> </script>
-		<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"> </script>
-		<!-- <script type="text/javascript" src="{{STATIC_URL}}js/holder.js"> </script> -->
-		<script type="text/javascript" src="{{STATIC_URL}}js/dicom_core.js"> </script>
-		{% block js %}{% endblock %}
-	
 	</head>
-
 	<body>
-
 		<nav class="navbar navbar-default" role="navigation">
-
 			<div class="navbar-header">
-
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-
 				<a class="navbar-brand" href="/">dcmdb</a>
-
 			</div>
-
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
-
 				<ul class="nav navbar-nav dcm_nav">
-
 					<li><a href="/main/explore"><span class="glyphicon glyphicon-th-large"></span> Explore</a></li>
 					<li><a href="/uploader/"><span class="glyphicon glyphicon-export"></span> Upload</a></li>
 					<li class="dropdown">
@@ -62,37 +37,30 @@
 					</li>
 					{% if user and user.is_staff %}
 					<li class="dropdown">
-
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Account <b class="caret"></b></a>
-
 						{% if user.is_authenticated %}
-							<ul class="dropdown-menu">
-								<li><a href="/users"><span class="glyphicon glyphicon-signal"></span> Portal</a></li>
-								<li><a href="/users/updateInfo"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-								<li><a href="/users/logout"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
-							</ul>
+						<ul class="dropdown-menu">
+							<li><a href="/users"><span class="glyphicon glyphicon-signal"></span> Portal</a></li>
+							<li><a href="/users/updateInfo"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+							<li><a href="/users/logout"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
+						</ul>
 						{% else %}
-							<ul class="dropdown-menu">
-								<li><a href="/users/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-								<li><a href="/users/register"><span class="glyphicon glyphicon-pencil"></span> Register</a></li>
-							</ul>
+						<ul class="dropdown-menu">
+							<li><a href="/users/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+							<li><a href="/users/register"><span class="glyphicon glyphicon-pencil"></span> Register</a></li>
+						</ul>
 						{% endif %}
-
 					</li>
 					{% endif %}
 					{% if user and user.is_authenticated and user.is_staff %}
 					<li class="dropdown">
-
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Manage <b class="caret"></b></a>
-
-							<ul class="dropdown-menu">
-								<li><a href="/"><span class="glyphicon glyphicon-signal"></span> Media</a></li>
-								<li><a href="/"><span class="glyphicon glyphicon-inbox"></span> DMCA Requests</a></li>
-							</ul>
-
+						<ul class="dropdown-menu">
+							<li><a href="/"><span class="glyphicon glyphicon-signal"></span> Media</a></li>
+							<li><a href="/"><span class="glyphicon glyphicon-inbox"></span> DMCA Requests</a></li>
+						</ul>
 					</li>
 					{% endif %}
-
 				</ul>
 
 				{% if not hide_search %}
@@ -101,22 +69,21 @@
 					<div class="form-group" style="width: 300px;">
 						<input type="text" class="form-control" name="dcm_query" id="dcm_query" placeholder="Search">
 					</div>
-
 					<button type="submit" class="btn btn-primary" id="dcm_search"><span class="glyphicon glyphicon-search"></span> Search</button>
-
 				</form>
 				{% endif %}
-
 			</div>
-
 		</nav>
-		
 		<div id="content" class="container">
-			
 			{% block content %}{% endblock %}
-			
 		</div>
-	
-	</body>
+		<script type="text/javascript">
+			var id = '{{ id }}';
+		</script>
 
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="{{STATIC_URL}}js/dicom_core.js"></script>
+		{% block js %}{% endblock %}
+	</body>
 </html>
