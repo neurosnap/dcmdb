@@ -14,7 +14,7 @@ BASE_DIR = settings.BASE_DIR
 MEDIA_DIR = settings.MEDIA_ROOT
 
 @ensure_csrf_cookie
-def view(request, dcm_uid):
+def image(request, dcm_uid):
 
 	try:
 
@@ -29,7 +29,7 @@ def view(request, dcm_uid):
 			"msg": "Oops, it appears the SOP Instance UID: " + dcm_uid + " does not exist in our system yet."
 		}
 
-		return render_to_response('view.html', context, context_instance = RequestContext(request))
+		return render_to_response('image.html', context, context_instance = RequestContext(request))
 
 	filepath = MEDIA_DIR + '/' + image.filename + '.dcm'
 	dcm = dicom.read_file(filepath)
@@ -43,7 +43,7 @@ def view(request, dcm_uid):
 		"dcm": dcm_dict
 	}
 
-	return render_to_response('view.html', context, context_instance = RequestContext(request))
+	return render_to_response('image.html', context, context_instance = RequestContext(request))
 
 @ensure_csrf_cookie
 def study(request, dcm_uid):

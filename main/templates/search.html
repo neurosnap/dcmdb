@@ -6,19 +6,12 @@
 
 {% block content %}
 <div class="row">
-
 	<div class="col-lg-2">
-
 		<div class="input-group">
-
 			<h5>Search</h5>
-
 		</div>
-
 	</div>
-
 	<div class="col-lg-7">
-
 		<form role="search" method="POST" action="/main/search">
 			{% csrf_token %}
 			<div class="col-lg-10">
@@ -26,15 +19,11 @@
 					<input type="text" class="form-control" id="dcm_query" name="dcm_query" placeholder="Find a DICOM file e.g. 1.3.6.1.4.1.5962.1.2.1.20040826185059.5457" value="{{ query }}">
 				</div>
 			</div>
-
 			<div class="col-lg-2">
 				<button class="btn btn-default" type="submit">Search</button>
 			</div>
-
 		</form>
-
 	</div>
-
 </div>
 
 {% if image %}
@@ -47,9 +36,9 @@
 	{% for item in image %}
 	<div class="row">
 		<div class="col-lg-4">
-			<a href="/dcmview/study/{{ item.dcm_series.dcm_study.UID }}">Study</a>
-			<a href="/dcmview/series/{{ item.dcm_series.UID }}">Series</a>
-			<a href="/dcmview/viewer/{{ item.UID }}">DCM</a> <br />
+			<a href="/viewer/study/{{ item.dcm_series.dcm_study.UID }}">Study</a>
+			<a href="/viewer/series/{{ item.dcm_series.UID }}">Series</a>
+			<a href="/viewer/image/{{ item.UID }}">DCM</a> <br />
 			{% if item.image_gen %}
 			<img src="/media/{{ item.filename }}_thumb.png" class="img-thumbnail dcmthumb" />
 			{% else %}

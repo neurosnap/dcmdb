@@ -7,13 +7,10 @@
 {% endblock %}
 
 {% block content %}
-
 	<div class="page-header">
 		<h3>Explore</h3>
 	</div>
-
 	<div id="explore" class="row">
-
 		<div class="col-md-12">
 			{% if image %}
 				{% for item in image %}
@@ -30,9 +27,6 @@
 			{% else %}
 			<div class="alert alert-info">Apparently our repository is empty ...</div>
 			{% endif %}
-
 		</div>
-
 	</div>
-
 {% endblock %}

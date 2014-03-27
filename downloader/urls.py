@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, url
-
-from down import views
+from downloader import views
 
 urlpatterns = patterns('',
 	url(r'^zip/dcm/(?P<uid>.*)$', views.zip_dcm, name='dlzipdcm'),

@@ -59,7 +59,7 @@
 <div class="row">
 	{% for image in images %}
 	<div class="col-md-3">
-			<a href="/viewer/viewer/{{ image.UID }}" class="tp" data-trigger="hover" data-placement="top" data-content="{{ image.UID }}">
+			<a href="/viewer/image/{{ image.UID }}" class="tp" data-trigger="hover" data-placement="top" data-content="{{ image.UID }}">
 				{% if image.image_gen %}
 				<img src="/media/{{ image.filename }}_thumb.png" class="img-thumbnail dcmthumb" />
 				{% else %}

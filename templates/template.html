@@ -33,6 +33,7 @@
 							<li><a href="/main/dicom"><span class="glyphicon glyphicon-file"></span> What is DICOM?</a></li>
 							<li><a href="/main/tos"><span class="glyphicon glyphicon-asterisk"></span> Terms of Service</a></li>
 							<li><a href="/main/privacy"><span class="glyphicon glyphicon-send"></span> Privacy Policy</a></li>
+							<li><a href="/main/transfer_syntax"><span class="glyphicon glyphicon-barcode"></span> Transfer Syntax</a></li>
 						</ul>
 					</li>
 					{% if user and user.is_staff %}
@@ -67,7 +68,7 @@
 				<form class="navbar-form navbar-left" role="search" method="POST" action="/main/search">
 					{% csrf_token %}
 					<div class="form-group" style="width: 300px;">
-						<input type="text" class="form-control" name="dcm_query" id="dcm_query" placeholder="Search">
+						<input type="text" class="form-control" style="width:100%;" name="dcm_query" id="dcm_query" placeholder="Search">
 					</div>
 					<button type="submit" class="btn btn-primary" id="dcm_search"><span class="glyphicon glyphicon-search"></span> Search</button>
 				</form>

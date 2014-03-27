@@ -45,7 +45,7 @@ INSTALLED_APPS = (
 	'users',
 	'viewer',
 	'uploader',
-	'down',
+	'downloader',
 )
 
 MIDDLEWARE_CLASSES = (

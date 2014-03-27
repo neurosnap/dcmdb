@@ -22,11 +22,9 @@
 <script type="text/javascript">
 	//obj singleton used in viewer.js
 	var dcm = {
-
 		"dicom": {{ dcm|safe }},
 		"image_gen": {% if image.image_gen %}true{% else %}false{% endif %},
 		"datatable": null
-
 	};
 </script>
 {% endif %}
@@ -130,7 +128,7 @@
 					{% for item in all_images %}
 
 						{% if item.image_gen %}
-						<a href="/viewer/viewer/{{ item.UID }}" class="dcm_series tp" data-trigger="hover" data-placement="top" data-content="{{ item.image_number }}">
+						<a href="/viewer/image/{{ item.UID }}" class="dcm_series tp" data-trigger="hover" data-placement="top" data-content="{{ item.image_number }}">
 							<img src="/media/{{ item.filename }}_thumb.png" fname="{{ item.filename }}" class="img-thumbnail" style="margin: 2px; width: 100px; height: 100px;" />
 						</a>
 						{% else %}
@@ -166,9 +164,9 @@
 
   			<div class="tab-pane" style="margin: 20px;" id="export">
 
-				<a class="btn btn-info" href="/down/zip/dcm/{{ image.UID }}">Download DCM</a> <br /> <br />
-				<a class="btn btn-primary" href="/down/zip/series/{{ series.UID }}">Download Series</a> <br /> <br />
-				<a class="btn btn-success" href="/down/zip/study/{{ study.UID }}">Download Study</a> <br /> <br />
+				<a class="btn btn-info" href="/downloader/zip/dcm/{{ image.UID }}">Download DCM</a> <br /> <br />
+				<a class="btn btn-primary" href="/downloader/zip/series/{{ series.UID }}">Download Series</a> <br /> <br />
+				<a class="btn btn-success" href="/downloader/zip/study/{{ study.UID }}">Download Study</a> <br /> <br />
 
 			</div>
 

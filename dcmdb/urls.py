@@ -24,7 +24,7 @@ else:
         url(r'^admin/', include(admin.site.urls)),
         url(r'^viewer/', include('viewer.urls')),
         url(r'^uploader/', include('uploader.urls')),
-        url(r'^down/', include('down.urls')),
+        url(r'^downloader/', include('downloader.urls')),
         url(r'^media/(?P<path>.*)$',
             'django.views.static.serve',
             {'document_root': settings.MEDIA_ROOT, }),
