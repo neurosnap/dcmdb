@@ -8,6 +8,7 @@ db.sqlite3
 conf/gunicorn_start
 conf/nginx.conf
 conf/supervisor.conf
+conf/README.md
 
 *.orig
 .installed.cfg
