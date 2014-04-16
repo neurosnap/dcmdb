@@ -5,6 +5,9 @@ dicomdb/secret_key.py
 media/*
 static/*
 db.sqlite3
+conf/gunicorn_start
+conf/nginx.conf
+conf/supervisor.conf
 
 *.orig
 .installed.cfg
