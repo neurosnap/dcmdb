@@ -16,6 +16,8 @@
 		
 		<script type="text/javascript">
 			var id = '{{ id }}';
+			//chartbeat
+			var _sf_startpt = (new Date()).getTime();
 		</script>
 
 		<script type="text/javascript" src="{{STATIC_URL}}js/jquery-2.0.3.min.js"> </script>
@@ -120,7 +122,25 @@
 		<div id="content" class="container">	
 			{% block content %}{% endblock %}	
 		</div>
-	
+		
+		<!-- charbeat -->
+		<script type="text/javascript">
+			var _sf_async_config = { uid: 55525, domain: 'dcmdb.org', useCanonical: true };
+			(function() {
+				function loadChartbeat() {
+					window._sf_endpt = (new Date()).getTime();
+					var e = document.createElement('script');
+					e.setAttribute('language', 'javascript');
+					e.setAttribute('type', 'text/javascript');
+					e.setAttribute('src','//static.chartbeat.com/js/chartbeat.js');
+					document.body.appendChild(e);
+				};
+				var oldonload = window.onload;
+				window.onload = (typeof window.onload != 'function') ?
+				loadChartbeat : function() { oldonload(); loadChartbeat(); };
+			})();
+		</script>
+
 	</body>
 
 </html>
